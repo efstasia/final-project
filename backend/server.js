@@ -9,6 +9,7 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.set('useCreateIndex', true); //added due to deprecation error 26868
 mongoose.Promise = Promise;
 
+// a schema to sign up/sign in to the user page
 const userSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -24,13 +25,31 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  firstName: {
+    type: String,
+    required: true,
+  },
+  lastName: {
+    type: String,
+    required: true,
+  },
   accessToken: {
     type: String,
     default: () => crypto.randomBytes(128).toString('hex'),
   },
 });
 
+// a schema to add the rating to the database
+const ratingSchema = new mongoose.Schema({
+  ratingText: {
+    type: String,
+    required: true,
+  },
+});
+
 const User = mongoose.model('User', userSchema);
+
+const Rating = mongoose.model('Rating', ratingSchema);
 
 // Defines the port the app will run on. Defaults to 8080, but can be
 // overridden when starting the server. For example:
@@ -64,6 +83,7 @@ const authenticateUser = async (req, res, next) => {
 //   res.status(200).json({ response: User, success: true });
 // });
 
+// not sure what this does
 app.get('/secret', authenticateUser);
 app.get('/secret', async (req, res) => {
   // const main = await User.find({});
@@ -71,7 +91,7 @@ app.get('/secret', async (req, res) => {
 });
 
 app.post('/signup', async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password, email, firstName, lastName } = req.body;
 
   try {
     const salt = bcrypt.genSaltSync(); // this creates a randomizer to randomize the password string
@@ -83,6 +103,8 @@ app.post('/signup', async (req, res) => {
     const newUser = await new User({
       username,
       email,
+      firstName,
+      lastName,
       password: bcrypt.hashSync(password, salt), // the "salt" passes the randomizer to the password
     }).save();
 
@@ -92,6 +114,8 @@ app.post('/signup', async (req, res) => {
         username: newUser.username,
         accessToken: newUser.accessToken,
         email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
       },
       success: true,
     });
@@ -114,6 +138,18 @@ app.post('/signup', async (req, res) => {
         response: error,
         success: false,
       });
+    } else if (firstName === '') {
+      res.status(400).json({
+        message: 'Validation failed: provide first name',
+        response: error,
+        success: false,
+      });
+    } else if (lastName === '') {
+      res.status(400).json({
+        message: 'Validation failed: provide last name',
+        response: error,
+        success: false,
+      });
     } else {
       res.status(400).json({
         message: 'Validation failed: please provide username and password',
@@ -127,7 +163,7 @@ app.post('/signup', async (req, res) => {
 //  res.status(400).json({ response: error, success: false }); OUR ORIGINAL CODE INSIDE THE CATCH
 
 app.post('/signin', async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password } = req.body;
 
   try {
     const user = await User.findOne({ username });
