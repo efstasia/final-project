@@ -84,9 +84,9 @@ const authenticateUser = async (req, res, next) => {
 // });
 
 // not sure what this does
-app.get('/secret', authenticateUser);
-app.get('/secret', async (req, res) => {
-  // const main = await User.find({});
+app.get('/main', authenticateUser);
+app.get('/main', async (req, res) => {
+  main = await User.find({});
   res.json({ response: main, success: true, message: 'our secret page' });
 });
 
