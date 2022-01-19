@@ -34,7 +34,7 @@ const SignupPage = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password, email }),
+      body: JSON.stringify({ username, password }),
     };
 
     fetch('http://localhost:8080/signin', options)

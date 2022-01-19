@@ -10,7 +10,7 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = Promise;
 
 // a schema to sign up/sign in to the user page
-const userSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
@@ -38,18 +38,17 @@ const userSchema = new mongoose.Schema({
     default: () => crypto.randomBytes(128).toString('hex'),
   },
 });
+const User = mongoose.model('User', UserSchema);
 
 // a schema to add the rating to the database
-const ratingSchema = new mongoose.Schema({
+const RatingSchema = new mongoose.Schema({
   ratingText: {
     type: String,
     required: true,
   },
 });
 
-const User = mongoose.model('User', userSchema);
-
-const Rating = mongoose.model('Rating', ratingSchema);
+const Rating = mongoose.model('Rating', RatingSchema);
 
 // Defines the port the app will run on. Defaults to 8080, but can be
 // overridden when starting the server. For example:
@@ -62,10 +61,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 const authenticateUser = async (req, res, next) => {
+  const accessToken = req.header('Authorization');
   try {
-    const user = await User.findOne({
-      accessToken: req.header('Authorization'),
-    });
+    const user = await User.findOne({ accessToken });
     if (user) {
       next(); // built in function for express that makes the app move along if there's for example an user
     } else {
@@ -86,8 +84,19 @@ const authenticateUser = async (req, res, next) => {
 // not sure what this does
 app.get('/main', authenticateUser);
 app.get('/main', async (req, res) => {
-  main = await User.find({});
+  const main = await Rating.find({});
   res.json({ response: main, success: true, message: 'our secret page' });
+});
+
+app.post('/ratings', async (req, res) => {
+  const { ratingText } = req.body;
+
+  try {
+    const newRatingText = await new Rating({ ratingText }).save();
+    res.status(201).json({ response: newRatingText, success: true });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
 });
 
 app.post('/signup', async (req, res) => {

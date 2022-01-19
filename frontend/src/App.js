@@ -5,18 +5,20 @@ import { Provider } from 'react-redux';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 
 import { user } from './reducers/user';
+import { ratings } from './reducers/ratings';
 
 import { StartPage } from './components/StartPage';
 import { MainPage } from './components/MainPage';
 import SignupPage from './components/SignupPage';
-// import { UserPage } from './components/UserPage';
+import { UserPage } from './components/UserPage';
 
 const reducer = combineReducers({
   user: user.reducer,
+  ratings: ratings.reducer,
 });
 const store = configureStore({ reducer });
 
-const App = () => {
+export const App = () => {
   return (
     <BrowserRouter>
       <Provider store={store}>
@@ -28,11 +30,9 @@ const App = () => {
           {/* main page once logged in */}
           <Route path='/main' element={<MainPage />} />
           {/* user page */}
-          {/* <Route path='/user' element={<UserPage />} /> */}
+          <Route path='/user' element={<UserPage />} />
         </Routes>
       </Provider>
     </BrowserRouter>
   );
 };
-
-export default App;

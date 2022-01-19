@@ -38,9 +38,7 @@ export const user = createSlice({
       store.username = action.payload;
     },
     setAccessToken: (store, action) => {
-      // const { accessToken } = action.payload;
       store.accessToken = action.payload;
-      // localStorage.setItem('accessToken', accessToken);
     },
     setError: (store, action) => {
       store.error = action.payload;
