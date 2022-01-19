@@ -45,6 +45,10 @@ const RatingSchema = new mongoose.Schema({
   ratingText: {
     type: String,
     required: true,
+    createdAt: {
+      type: Date,
+      default: () => new Date(), // could also pass Date.now and change the type to Number
+    },
   },
 });
 
@@ -83,9 +87,11 @@ const authenticateUser = async (req, res, next) => {
 //     .json({ response: main, success: true, message: 'our secret page' });
 // });
 
+// added descending order, doesn't work for text in caps or when two inputs in row?? DOES IT WORK NOW?
 app.get('/ratings', authenticateUser);
 app.get('/ratings', async (req, res) => {
-  const main = await Rating.find({});
+  const main = await Rating.find({}).sort({ ratingText: -1 });
+
   res
     .status(201)
     .json({ response: main, success: true, message: 'our secret page' });
@@ -99,6 +105,21 @@ app.post('/ratings', async (req, res) => {
     res.status(201).json({ response: newRatingText, success: true });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
+  }
+});
+
+app.delete('/ratings/:ratingId', async (req, res) => {
+  const { ratingId } = req.params;
+
+  try {
+    const deletedRating = await Rating.findOneAndDelete({ _id: ratingId });
+    if (deletedRating) {
+      res.status(200).json(deletedRating);
+    } else {
+      res.status(404).json({ message: `rating by id ${ratingId} not found` });
+    }
+  } catch (err) {
+    res.status(400).json({ message: 'could not delete', error: err });
   }
 });
 

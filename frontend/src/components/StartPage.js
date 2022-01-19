@@ -8,6 +8,7 @@ export const StartPage = () => {
       <h1>Start page</h1>
       <p>Already a member? otherwise sign up</p>
       <Link to='/signup'>Signup</Link>
+      {/* add info about page here */}
     </div>
   );
 };
