@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { uniqid } from 'uniqid';
+import uniqid from 'uniqid';
 
 export const ratings = createSlice({
   name: 'ratings',
   initialState: {
-    items: ['bajsmacka'],
+    items: [],
   },
 
   reducers: {
@@ -13,10 +13,13 @@ export const ratings = createSlice({
       const newRating = {
         id: uniqid(),
         text: action.payload,
-        createdAt: new Date(),
+        //   createdAt: new Date(),
       };
 
       store.items = [...store.items, newRating];
+    },
+    setRating: (store, action) => {
+      store.items = action.payload;
     },
 
     deleteRating: (store, action) => {

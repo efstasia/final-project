@@ -74,18 +74,21 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
-//Start defining your routes here--->can sign in with out any info(response: user was small?)
-//app.get('/content', authenticateUser); // we first have to authenticate the user before we get the main content
-// app.get('/content', async (req, res) => {
+// not sure what this does
+// app.get('/main', authenticateUser);
+// app.get('/main', async (req, res) => {
 //   const main = await User.find({});
-//   res.status(200).json({ response: User, success: true });
+//   res
+//     .status(201)
+//     .json({ response: main, success: true, message: 'our secret page' });
 // });
 
-// not sure what this does
-app.get('/main', authenticateUser);
-app.get('/main', async (req, res) => {
+app.get('/ratings', authenticateUser);
+app.get('/ratings', async (req, res) => {
   const main = await Rating.find({});
-  res.json({ response: main, success: true, message: 'our secret page' });
+  res
+    .status(201)
+    .json({ response: main, success: true, message: 'our secret page' });
 });
 
 app.post('/ratings', async (req, res) => {

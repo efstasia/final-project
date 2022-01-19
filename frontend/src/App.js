@@ -7,6 +7,7 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { user } from './reducers/user';
 import { ratings } from './reducers/ratings';
 
+import { Header } from './components/Header';
 import { StartPage } from './components/StartPage';
 import { MainPage } from './components/MainPage';
 import SignupPage from './components/SignupPage';
@@ -21,6 +22,7 @@ const store = configureStore({ reducer });
 export const App = () => {
   return (
     <BrowserRouter>
+      <Header />
       <Provider store={store}>
         <Routes>
           {/* information */}

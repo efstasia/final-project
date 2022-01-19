@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export const UserPage = () => {
   const navigate = useNavigate();
@@ -22,5 +22,10 @@ export const UserPage = () => {
       },
     };
   });
-  return <p>skriv bara någon placeholder text där..</p>;
+  return (
+    <div>
+      <Link to='/main'>Back to your ratings</Link>
+      <p>second signed in page, user details</p>
+    </div>
+  );
 };

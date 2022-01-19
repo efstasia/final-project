@@ -34,7 +34,10 @@ const SignupPage = () => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({
+        username: usernameSignin,
+        password: passwordSignin,
+      }),
     };
 
     fetch('http://localhost:8080/signin', options)
@@ -46,6 +49,7 @@ const SignupPage = () => {
             dispatch(user.actions.setUsername(data.response.username));
             dispatch(user.actions.setAccessToken(data.response.accessToken));
             dispatch(user.actions.setError(null));
+            // navigate('/main');  unnecessary?
             localStorage.setItem(
               'user',
               JSON.stringify({
