@@ -15,23 +15,28 @@ const UserSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+    trim: true,
   },
   username: {
     type: String,
     unique: true,
     required: true,
+    trim: true,
   },
   password: {
     type: String,
     required: true,
+    trim: true,
   },
   firstName: {
     type: String,
     required: true,
+    trim: true,
   },
   lastName: {
     type: String,
     required: true,
+    trim: true,
   },
   accessToken: {
     type: String,
@@ -45,10 +50,33 @@ const RatingSchema = new mongoose.Schema({
   ratingText: {
     type: String,
     required: true,
+    trim: true,
     createdAt: {
       type: Date,
       default: () => new Date(), // could also pass Date.now and change the type to Number
     },
+  },
+  restaurantName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  selectRating: {
+    type: Number,
+    min: 1,
+    max: 10,
+    default: 1,
+    required: true,
+  },
+  selectCategory: {
+    type: String,
+    enum: ['Pizza', 'Pasta', 'Hamburger', 'Sushi'],
+    default: 'Pizza',
+    required: true,
+  },
+  radioInput: {
+    type: String,
+    possibleValues: ['Yes', 'No'],
   },
 });
 
@@ -87,7 +115,6 @@ const authenticateUser = async (req, res, next) => {
 //     .json({ response: main, success: true, message: 'our secret page' });
 // });
 
-// added descending order, doesn't work for text in caps or when two inputs in row?? DOES IT WORK NOW?
 app.get('/ratings', authenticateUser);
 app.get('/ratings', async (req, res) => {
   const main = await Rating.find({}).sort({ ratingText: -1 });
@@ -98,11 +125,26 @@ app.get('/ratings', async (req, res) => {
 });
 
 app.post('/ratings', async (req, res) => {
-  const { ratingText } = req.body;
+  const {
+    ratingText,
+    restaurantName,
+    selectRating,
+    selectCategory,
+    radioInput,
+  } = req.body;
 
   try {
-    const newRatingText = await new Rating({ ratingText }).save();
-    res.status(201).json({ response: newRatingText, success: true });
+    const newRatingText = await new Rating({
+      ratingText,
+      restaurantName,
+      selectRating,
+      selectCategory,
+      radioInput,
+    }).save();
+    res.status(201).json({
+      response: newRatingText,
+      success: true,
+    });
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
