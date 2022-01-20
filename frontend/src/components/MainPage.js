@@ -7,15 +7,26 @@ import { user } from '../reducers/user';
 import { ratings } from '../reducers/ratings';
 
 const InputWrapper = styled.div`
-  border: 2px solid red;
+  /* transition: height 0.25s linear; */
 
   form {
     display: flex;
     flex-direction: column;
     border: 2px solid green;
-    width: 100%;
+    /* width: 100%; */
     align-items: center;
-    gap: 10px;
+    gap: 7px;
+    width: 50%;
+    margin: auto;
+    /* transition: all 0.5s ease-in-out; */
+
+    textarea {
+      resize: none;
+    }
+
+    /* .toggle-button {
+      transition: all 0.5s ease-in-out;
+    } */
   }
 `;
 
@@ -34,22 +45,22 @@ export const MainPage = () => {
   const dispatch = useDispatch();
 
   const accessToken = useSelector(store => store.user.accessToken);
-  const ratingItems = useSelector(store => store.ratings.setRating);
+  // const delete =
+  // const ratingItems = useSelector(store => store.ratings.setRating);
 
   const handleWriteRating = () => {
     setCanWrite(true);
+  };
+
+  const handleInputClose = () => {
+    setCanWrite(false);
   };
 
   const handleFormSubmit = event => {
     event.preventDefault();
   };
 
-  //   const addRating = () => {
-  //     dispatch(ratings.actions.addRating(input));
-  //     setInput('');
-  //   };
-
-  //   // if there is no accessToken then redirect to login
+  // if there is no accessToken then redirect to login
   useEffect(() => {
     if (!accessToken) {
       navigate('/');
@@ -93,8 +104,8 @@ export const MainPage = () => {
     event.preventDefault();
   };
 
-  // this deletes a rating  - need to be fixed so we don't need to refresh website to see
-  const onDeleteRating = ratingId => {
+  // this deletes a rating
+  const onDeleteRating = (ratingId, _id) => {
     const options = {
       method: 'DELETE',
     };
@@ -103,8 +114,7 @@ export const MainPage = () => {
       .then(res => res.json())
       .then(data => {
         const remainingRatings = rating.filter(rate => rate._id !== data._id);
-
-        return remainingRatings;
+        return setRating(remainingRatings); // this deletes the rating WITHOUT refresh
       });
   };
 
@@ -131,7 +141,15 @@ export const MainPage = () => {
         // setRadioInput(data.response);
         // console.log(data.response);
       });
-  }, [accessToken, dispatch, input]);
+  }, [
+    accessToken,
+    dispatch,
+    input,
+    // restaurantName,
+    // selectRating,
+    // selectCategory,
+    // radioInput,
+  ]);
 
   const handleLogout = () => {
     dispatch(user.actions.logout());
@@ -141,9 +159,11 @@ export const MainPage = () => {
   return (
     <div>
       <Link to='/user'>To your profile</Link>
-      {!canWrite && (
-        <button onClick={() => handleWriteRating()}>ADD RATING</button>
-      )}
+      <div>
+        {!canWrite && (
+          <button onClick={() => handleWriteRating()}>ADD RATING</button>
+        )}
+      </div>
       <InputWrapper>
         {canWrite && (
           <form onSubmit={handleFormSubmit}>
@@ -182,11 +202,11 @@ export const MainPage = () => {
             <label htmlFor='category'>category</label>
             <select
               id='category'
-              value={selectRating}
+              value={selectCategory}
               onChange={event => setSelectCategory(event.target.value)}
             >
               {/* is value needed here? */}
-              <option>choose rating here</option>
+              <option>choose category here</option>
               <option value='Pizza'>Pizza</option>
               <option value='Pasta'>Pasta</option>
               <option>Hamburger</option>
@@ -198,18 +218,23 @@ export const MainPage = () => {
             <input
               id='radio-buttons'
               type='radio'
-              name='yes'
-              value={radioInput}
+              name='recommend'
+              value='yes'
+              onChange={event => setRadioInput(event.target.value)}
             />
             <label htmlFor='no'>no</label>
             <input
               id='radio-buttons'
               type='radio'
-              name='no'
-              value={radioInput}
+              name='recommend'
+              value='no'
+              onChange={event => setRadioInput(event.target.value)}
             />
 
             <button onClick={onRatingPost}>Add rating</button>
+            <button onClick={handleInputClose} className='toggle-button'>
+              close
+            </button>
           </form>
         )}
       </InputWrapper>
