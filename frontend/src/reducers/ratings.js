@@ -31,5 +31,6 @@ export const ratings = createSlice({
     setError: (store, action) => {
       store.error = action.payload;
     },
+    //do we need to add a reducer for search, filter etc?
   },
 });

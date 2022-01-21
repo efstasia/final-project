@@ -12,5 +12,5 @@ const HeaderContainer = styled.div`
 `;
 
 export const Header = () => {
-  return <HeaderContainer>HEADER</HeaderContainer>;
+  return <HeaderContainer>MINECHIES</HeaderContainer>;
 };

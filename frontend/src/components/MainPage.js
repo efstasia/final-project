@@ -7,8 +7,6 @@ import { user } from '../reducers/user';
 import { ratings } from '../reducers/ratings';
 
 const InputWrapper = styled.div`
-  /* transition: height 0.25s linear; */
-
   form {
     display: flex;
     flex-direction: column;
@@ -18,7 +16,6 @@ const InputWrapper = styled.div`
     gap: 7px;
     width: 50%;
     margin: auto;
-    /* transition: all 0.5s ease-in-out; */
 
     textarea {
       resize: none;
@@ -32,7 +29,7 @@ const InputWrapper = styled.div`
 
 // signed in content, first page you see
 export const MainPage = () => {
-  const [validationError, setValidationError] = useState(null);
+  const [validationError, setValidationError] = useState(null); // setValidationErrors needs to be connected to backend error msg
   const [rating, setRating] = useState([]);
   const [canWrite, setCanWrite] = useState(false);
   const [input, setInput] = useState('');
@@ -45,8 +42,6 @@ export const MainPage = () => {
   const dispatch = useDispatch();
 
   const accessToken = useSelector(store => store.user.accessToken);
-  // const delete =
-  // const ratingItems = useSelector(store => store.ratings.setRating);
 
   const handleWriteRating = () => {
     setCanWrite(true);
@@ -105,7 +100,7 @@ export const MainPage = () => {
   };
 
   // this deletes a rating
-  const onDeleteRating = (ratingId, _id) => {
+  const onDeleteRating = ratingId => {
     const options = {
       method: 'DELETE',
     };
@@ -113,7 +108,7 @@ export const MainPage = () => {
     fetch(`http://localhost:8080/ratings/${ratingId}`, options)
       .then(res => res.json())
       .then(data => {
-        const remainingRatings = rating.filter(rate => rate._id !== data._id);
+        const remainingRatings = rating.filter(rate => rate._id !== data._id);   // need something similar in search function?
         return setRating(remainingRatings); // this deletes the rating WITHOUT refresh
       });
   };
@@ -130,16 +125,10 @@ export const MainPage = () => {
     fetch('http://localhost:8080/ratings', options)
       .then(res => res.json())
       .then(data => {
-        // if (data.success) {
         dispatch(ratings.actions.addRating(data.response));
         dispatch(ratings.actions.setError(null));
-        //  dispatch(ratings.actions.setRating(data.response));
+
         setRating(data.response);
-        // setRestaurantName(data.response);
-        // setSelectRating(data.response);
-        // setSelectCategory(data.response);
-        // setRadioInput(data.response);
-        // console.log(data.response);
       });
   }, [
     accessToken,
@@ -154,7 +143,6 @@ export const MainPage = () => {
   const handleLogout = () => {
     dispatch(user.actions.logout());
   };
-  //   console.log(ratingItems);
 
   return (
     <div>

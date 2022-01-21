@@ -124,6 +124,24 @@ app.get('/ratings', async (req, res) => {
     .json({ response: main, success: true, message: 'our secret page' });
 });
 
+// app.get('/ratings/:restaurantName', authenticateUser);
+// app.get('/ratings/:restaurantName', async (req, res) => {
+//   const restaurantName = req.params;
+
+//   try {
+//     const restaurant = await Rating.findOne({ restaurantName });
+//     if (restaurant) {
+//       res
+//         .status(201)
+//         .json({ response: restaurant, message: 'here is your restaurant' });
+//     }
+//   } catch (error) {
+//     res.status(400).json({ response: error, success: false });
+//   }
+// });
+
+// add a GET for ratings/restaurant
+
 app.post('/ratings', async (req, res) => {
   const {
     ratingText,
