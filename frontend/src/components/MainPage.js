@@ -27,6 +27,12 @@ const InputWrapper = styled.div`
   }
 `;
 
+const RatingContainer = styled.div`
+  border: 2px solid black;
+  width: 50%;
+  margin: auto;
+`;
+
 // signed in content, first page you see
 export const MainPage = () => {
   const [validationError, setValidationError] = useState(null); // setValidationErrors needs to be connected to backend error msg
@@ -42,6 +48,7 @@ export const MainPage = () => {
   const dispatch = useDispatch();
 
   const accessToken = useSelector(store => store.user.accessToken);
+  const userId = useSelector(store => store.user.userId);
 
   const handleWriteRating = () => {
     setCanWrite(true);
@@ -64,10 +71,11 @@ export const MainPage = () => {
 
   // this handles the POSTING of ratings, added wednesday evening
   const onRatingPost = event => {
-    const options = {
+    const optionsAll = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: accessToken,
       },
       body: JSON.stringify({
         ratingText: input,
@@ -78,9 +86,26 @@ export const MainPage = () => {
       }),
     };
 
-    fetch('http://localhost:8080/ratings', options)
+    const optionsUser = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: accessToken,
+      },
+      body: JSON.stringify({
+        ratingText: input,
+        restaurantName,
+        selectRating,
+        selectCategory,
+        radioInput,
+        user: userId,
+      }),
+    };
+    fetch(`http://localhost:8080/feed`, optionsAll)
       .then(res => res.json())
       .then(data => {
+        fetch('http://localhost:8080/userpage', optionsUser);
+
         if (data.success) {
           batch(() => {
             dispatch(ratings.actions.addRating(data.response));
@@ -96,8 +121,49 @@ export const MainPage = () => {
           });
         }
       });
+
     event.preventDefault();
   };
+
+  // // post ratings to feed
+  // fetch('http://localhost:8080/ratings', options)
+  //   .then(res => res.json())
+  //   .then(data => {
+  //     if (data.success) {
+  //       batch(() => {
+  //         dispatch(ratings.actions.addRating(data.response));
+  //         dispatch(ratings.actions.setError(null));
+  //         // navigate('/main');  unnecessary?
+  //         setInput('');
+  //         setCanWrite(false);
+  //       });
+  //     } else {
+  //       batch(() => {
+  //         dispatch(ratings.actions.addRating([]));
+  //         dispatch(ratings.actions.setError(data.response));
+  //       });
+  //     }
+  //   });
+
+  // //post ratings to user
+  // fetch('http://localhost:8080/user', options)
+  //   .then(res => res.json())
+  //   .then(data => {
+  //     if (data.success) {
+  //       batch(() => {
+  //         dispatch(ratings.actions.addRating(data.response));
+  //         dispatch(ratings.actions.setError(null));
+  //         // navigate('/main');  unnecessary?
+  //         setInput('');
+  //         setCanWrite(false);
+  //       });
+  //     } else {
+  //       batch(() => {
+  //         dispatch(ratings.actions.addRating([]));
+  //         dispatch(ratings.actions.setError(data.response));
+  //       });
+  //     }
+  //   });
 
   // this deletes a rating
   const onDeleteRating = ratingId => {
@@ -105,10 +171,10 @@ export const MainPage = () => {
       method: 'DELETE',
     };
 
-    fetch(`http://localhost:8080/ratings/${ratingId}`, options)
+    fetch(`http://localhost:8080/feed/${ratingId}`, options)
       .then(res => res.json())
       .then(data => {
-        const remainingRatings = rating.filter(rate => rate._id !== data._id);   // need something similar in search function?
+        const remainingRatings = rating.filter(rate => rate._id !== data._id); // need something similar in search function?
         return setRating(remainingRatings); // this deletes the rating WITHOUT refresh
       });
   };
@@ -122,12 +188,11 @@ export const MainPage = () => {
       },
     };
 
-    fetch('http://localhost:8080/ratings', options)
+    fetch('http://localhost:8080/feed', options)
       .then(res => res.json())
       .then(data => {
         dispatch(ratings.actions.addRating(data.response));
         dispatch(ratings.actions.setError(null));
-
         setRating(data.response);
       });
   }, [
@@ -146,7 +211,7 @@ export const MainPage = () => {
 
   return (
     <div>
-      <Link to='/user'>To your profile</Link>
+      <Link to='/userpage'>To your profile</Link>
       <div>
         {!canWrite && (
           <button onClick={() => handleWriteRating()}>ADD RATING</button>
@@ -228,16 +293,18 @@ export const MainPage = () => {
       </InputWrapper>
       {/* add everything from backend/useState in the map */}
 
-      {rating.map(item => (
-        <div key={item._id}>
-          <p>
-            RESTAURANT NAME: {item.restaurantName} RATING TEXT:
-            {item.ratingText} RATING: {item.selectRating} CATEGORY:{' '}
-            {item.selectCategory} RECOMMEND? {item.radioInput}
-          </p>
-          <button onClick={() => onDeleteRating(item._id)}>DELETE</button>
-        </div>
-      ))}
+      <RatingContainer>
+        {rating.map(item => (
+          <div key={item._id}>
+            <p>
+              RESTAURANT NAME: {item.restaurantName} RATING TEXT:
+              {item.ratingText} RATING: {item.selectRating} CATEGORY:{' '}
+              {item.selectCategory} RECOMMEND? {item.radioInput}
+            </p>
+            <button onClick={() => onDeleteRating(item._id)}>DELETE</button>
+          </div>
+        ))}
+      </RatingContainer>
 
       {/* this handles the error messages */}
       {validationError !== null && <p>{validationError}</p>}

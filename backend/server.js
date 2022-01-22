@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 
-const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/authAPI';
+const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/finalProject';
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.set('useCreateIndex', true); //added due to deprecation error 26868
 mongoose.Promise = Promise;
@@ -43,7 +43,6 @@ const UserSchema = new mongoose.Schema({
     default: () => crypto.randomBytes(128).toString('hex'),
   },
 });
-const User = mongoose.model('User', UserSchema);
 
 // a schema to add the rating to the database
 const RatingSchema = new mongoose.Schema({
@@ -80,7 +79,48 @@ const RatingSchema = new mongoose.Schema({
   },
 });
 
+const ProfileSchema = new mongoose.Schema({
+  ratingText: {
+    type: String,
+    required: true,
+    trim: true,
+    createdAt: {
+      type: Date,
+      default: () => new Date(), // could also pass Date.now and change the type to Number
+    },
+  },
+  restaurantName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  selectRating: {
+    type: Number,
+    min: 1,
+    max: 10,
+    default: 1,
+    required: true,
+  },
+  selectCategory: {
+    type: String,
+    enum: ['Pizza', 'Pasta', 'Hamburger', 'Sushi'],
+    default: 'Pizza',
+    required: true,
+  },
+  radioInput: {
+    type: String,
+    possibleValues: ['Yes', 'No'],
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
+});
+
+// --- models --- //
+const User = mongoose.model('User', UserSchema);
 const Rating = mongoose.model('Rating', RatingSchema);
+const Profile = mongoose.model('Profile', ProfileSchema);
 
 // Defines the port the app will run on. Defaults to 8080, but can be
 // overridden when starting the server. For example:
@@ -106,43 +146,9 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
-// not sure what this does
-// app.get('/main', authenticateUser);
-// app.get('/main', async (req, res) => {
-//   const main = await User.find({});
-//   res
-//     .status(201)
-//     .json({ response: main, success: true, message: 'our secret page' });
-// });
-
-app.get('/ratings', authenticateUser);
-app.get('/ratings', async (req, res) => {
-  const main = await Rating.find({}).sort({ ratingText: -1 });
-
-  res
-    .status(201)
-    .json({ response: main, success: true, message: 'our secret page' });
-});
-
-// app.get('/ratings/:restaurantName', authenticateUser);
-// app.get('/ratings/:restaurantName', async (req, res) => {
-//   const restaurantName = req.params;
-
-//   try {
-//     const restaurant = await Rating.findOne({ restaurantName });
-//     if (restaurant) {
-//       res
-//         .status(201)
-//         .json({ response: restaurant, message: 'here is your restaurant' });
-//     }
-//   } catch (error) {
-//     res.status(400).json({ response: error, success: false });
-//   }
-// });
-
-// add a GET for ratings/restaurant
-
-app.post('/ratings', async (req, res) => {
+// --- POST to feed --- //
+app.post('/feed', authenticateUser);
+app.post('/feed', async (req, res) => {
   const {
     ratingText,
     restaurantName,
@@ -168,7 +174,60 @@ app.post('/ratings', async (req, res) => {
   }
 });
 
-app.delete('/ratings/:ratingId', async (req, res) => {
+// --- GET ratings to feed --- //
+app.get('/feed', authenticateUser);
+app.get('/feed', async (req, res) => {
+  const main = await Rating.find({}).sort({ ratingText: -1 });
+
+  res
+    .status(201)
+    .json({ response: main, success: true, message: 'the rating feed' });
+});
+
+// --- POST to user profile --- //
+// this posts the ratings to the USER page
+//app.post('/userpage', authenticateUser);
+app.post('/userpage', async (req, res) => {
+  // '/ratings/:userId'
+  const {
+    ratingText,
+    restaurantName,
+    selectRating,
+    selectCategory,
+    radioInput,
+    user,
+  } = req.body;
+
+  try {
+    const newUserRatingText = await new Profile({
+      ratingText,
+      restaurantName,
+      selectRating,
+      selectCategory,
+      radioInput,
+      user: req.user,
+    }).save();
+    res.status(201).json({
+      response: newUserRatingText,
+      success: true,
+    });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+// --- get USER profile --- //
+//app.get('/userpage/:userId', authenticateUser);
+app.get('/userpage', async (req, res) => {
+  const page = await Rating.find({}).sort({ ratingText: -1 });
+
+  res
+    .status(201)
+    .json({ response: page, success: true, message: 'the rating feed' });
+});
+
+// --- delete feed, maybe not neccesary?--- //
+app.delete('/feed/:ratingId', async (req, res) => {
   const { ratingId } = req.params;
 
   try {
@@ -182,7 +241,30 @@ app.delete('/ratings/:ratingId', async (req, res) => {
     res.status(400).json({ message: 'could not delete', error: err });
   }
 });
+// --- delete on user page --- //
+//app.delete('/feed/:userId', authenticateUser);
+app.delete('/userpage/:userRatingId', async (req, res) => {
+  const { userRatingId } = req.params; // body or params?
+  // const { user } = req.body;
 
+  try {
+    // const userRatings = await User.findById(user);
+    const deletedUserRating = await Rating.findOneAndDelete({
+      _id: userRatingId,
+    });
+    if (deletedUserRating) {
+      res.status(200).json(deletedUserRating);
+    } else {
+      res
+        .status(404)
+        .json({ message: `rating by id ${userRatingId} not found` });
+    }
+  } catch (err) {
+    res.status(400).json({ message: 'could not delete', error: err });
+  }
+});
+
+// --- signup --- //
 app.post('/signup', async (req, res) => {
   const { username, password, email, firstName, lastName } = req.body;
 
@@ -253,8 +335,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-//  res.status(400).json({ response: error, success: false }); OUR ORIGINAL CODE INSIDE THE CATCH
-
+// --- signin --- //
 app.post('/signin', async (req, res) => {
   const { username, password } = req.body;
 
@@ -300,7 +381,26 @@ app.post('/signin', async (req, res) => {
   }
 });
 
-//   res.status(403).json({ message: 'error', response: error, success: false });
+// --- TRIED TO CRATE THE SEARCH BAR --- //
+// app.get('/ratings/:restaurantName', authenticateUser);
+// app.get('/ratings/:restaurantName', async (req, res) => {
+//   const restaurantName = req.params;
+
+//   try {
+//     const restaurant = await Rating.findOne({ restaurantName });
+//     if (restaurant) {
+//       res
+//         .status(201)
+//         .json({ response: restaurant, message: 'here is your restaurant' });
+//     }
+//   } catch (error) {
+//     res.status(400).json({ response: error, success: false });
+//   }
+// });
+
+// add a GET for ratings/restaurant
+
+// do we really need two endpoints to GET either user ratings or feed ratings?
 
 // Start the server
 app.listen(port, () => {

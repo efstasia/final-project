@@ -30,9 +30,9 @@ export const App = () => {
           {/* signin/signup */}
           <Route path='/signup' element={<SignupPage />} />
           {/* main page once logged in */}
-          <Route path='/main' element={<MainPage />} />
+          <Route path='/feed' element={<MainPage />} />
           {/* user page */}
-          <Route path='/user' element={<UserPage />} />
+          <Route path='/userpage' element={<UserPage />} />
         </Routes>
       </Provider>
     </BrowserRouter>
