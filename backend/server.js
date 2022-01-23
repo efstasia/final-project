@@ -130,6 +130,7 @@ const port = process.env.PORT || 8080;
 const app = express();
 
 // Add middlewares to enable cors and json body parsing
+
 app.use(cors());
 app.use(express.json());
 const authenticateUser = async (req, res, next) => {
@@ -189,13 +190,14 @@ app.get('/feed', async (req, res) => {
 //app.post('/userpage', authenticateUser);
 app.post('/userpage', async (req, res) => {
   // '/ratings/:userId'
+  const { userId } = req.params;
   const {
     ratingText,
     restaurantName,
     selectRating,
     selectCategory,
     radioInput,
-    user,
+    // user, is this needed?
   } = req.body;
 
   try {
@@ -206,6 +208,7 @@ app.post('/userpage', async (req, res) => {
       selectCategory,
       radioInput,
       user: req.user,
+      _id: userId,
     }).save();
     res.status(201).json({
       response: newUserRatingText,
@@ -217,9 +220,39 @@ app.post('/userpage', async (req, res) => {
 });
 
 // --- get USER profile --- //
+app.get('/userpage/', async (req, res) => {
+  //const { userId } = req.params;
+  const { username, email, firstName, lastName } = req.body; // add password here?
+
+  const profile = await User.findOne({ username, email, firstName, lastName });
+  try {
+    if (profile) {
+      res.status(200).json({
+        response: {
+          username: profile.username,
+          email: profile.email,
+          firstName: profile.firstName,
+          lastName: profile.lastName,
+          //  _id: userId,
+        },
+      });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
 //app.get('/userpage/:userId', authenticateUser);
-app.get('/userpage', async (req, res) => {
-  const page = await Rating.find({}).sort({ ratingText: -1 });
+app.get('/userpage/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  // const ratings = await Profile.find({ user: userId }).sort({
+  //   createdAt: 'desc',
+  // });
+  // res.status(201).json({ response: ratings, success: true });
+
+  // -- this codes makes it possible to POST to feed and user, but everyone can see it -- //
+  const page = await Rating.find({ user: userId }).sort({ ratingText: -1 });
 
   res
     .status(201)

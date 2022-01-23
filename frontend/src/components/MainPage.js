@@ -91,6 +91,7 @@ export const MainPage = () => {
       headers: {
         'Content-Type': 'application/json',
         Authorization: accessToken,
+        'Access-Control-Allow-Origin': '*',
       },
       body: JSON.stringify({
         ratingText: input,
@@ -104,7 +105,7 @@ export const MainPage = () => {
     fetch(`http://localhost:8080/feed`, optionsAll)
       .then(res => res.json())
       .then(data => {
-        fetch('http://localhost:8080/userpage', optionsUser);
+        fetch(`http://localhost:8080/userpage`, optionsUser);
 
         if (data.success) {
           batch(() => {

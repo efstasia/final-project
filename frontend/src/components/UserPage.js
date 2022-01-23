@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 
 import { ratings } from '../reducers/ratings';
+import { user } from '../reducers/user';
 
 import styled from 'styled-components';
 
@@ -12,17 +13,19 @@ const RatingContainer = styled.div`
   margin: auto;
 `;
 
-export const UserPage = () => {
+export const UserPage = ({ userId }) => {
   const [rating, setRating] = useState([]);
   const [deleteRating, setDeleteRating] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const ratingItems = useSelector(store => store.ratings.items);
   const accessToken = useSelector(store => store.user.accessToken);
-  const userId = useSelector(store => store.user.userId);
+  //const userId = useSelector(store => store.user.userId);
   //   // if there is no accessToken then redirect to login
 
+  // --- fetches the ratings. GET method --- //
   useEffect(() => {
     const options = {
       method: 'GET',
@@ -31,7 +34,7 @@ export const UserPage = () => {
       },
     };
 
-    fetch(`http://localhost:8080/userpage`, options) // needs ${userId}
+    fetch(`http://localhost:8080/userpage/${userId}`, options) // needs ${userId}
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -43,12 +46,35 @@ export const UserPage = () => {
           dispatch(ratings.actions.setRating([]));
         }
       });
-  }, [accessToken, dispatch, userId]);
+  }, [accessToken, dispatch]);
+
   useEffect(() => {
     if (!accessToken) {
       navigate('/');
     }
   }, [accessToken, navigate]);
+
+  useEffect(() => {
+    const options = {
+      method: 'GET',
+      headers: {
+        Authorization: accessToken,
+      },
+    };
+    fetch(`http://localhost:8080/userpage/`, options)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          dispatch(user.actions.setEmail(data.response));
+          dispatch(user.actions.setUsername(data.response));
+          dispatch(user.actions.setFirstName(data.response));
+          dispatch(user.actions.setLastName(data.response));
+          setUserInfo(data.response);
+          console.log(data.response);
+        }
+        console.log('USER INFO', data.response);
+      });
+  }, [accessToken, dispatch, setUserInfo]);
 
   const onDeleteUserRating = userRatingId => {
     const options = {
@@ -64,10 +90,19 @@ export const UserPage = () => {
         return setDeleteRating(remainingRatings); // this deletes the rating WITHOUT refresh
       });
   };
+
   return (
     <div>
       <Link to='/feed'>Back to feed</Link>
       <p>USER PAGE</p>
+      {userInfo.map(item => (
+        <div>
+          <p>
+            USERNAME:
+            {item.username}
+          </p>
+        </div>
+      ))}
       <RatingContainer>
         {rating.map(item => (
           <div key={item._id}>
