@@ -77,6 +77,10 @@ const RatingSchema = new mongoose.Schema({
     type: String,
     possibleValues: ['Yes', 'No'],
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
 });
 
 const ProfileSchema = new mongoose.Schema({
@@ -120,7 +124,7 @@ const ProfileSchema = new mongoose.Schema({
 // --- models --- //
 const User = mongoose.model('User', UserSchema);
 const Rating = mongoose.model('Rating', RatingSchema);
-const Profile = mongoose.model('Profile', ProfileSchema);
+//const Profile = mongoose.model('Profile', ProfileSchema);
 
 // Defines the port the app will run on. Defaults to 8080, but can be
 // overridden when starting the server. For example:
@@ -156,6 +160,7 @@ app.post('/feed', async (req, res) => {
     selectRating,
     selectCategory,
     radioInput,
+    user,
   } = req.body;
 
   try {
@@ -165,6 +170,7 @@ app.post('/feed', async (req, res) => {
       selectRating,
       selectCategory,
       radioInput,
+      user: req.user,
     }).save();
     res.status(201).json({
       response: newRatingText,
@@ -186,18 +192,20 @@ app.get('/feed', async (req, res) => {
 });
 
 // --- POST to user profile --- //
-// this posts the ratings to the USER page
+
+// --- this POSTS the ratings to the USER page --- //
 //app.post('/userpage', authenticateUser);
 app.post('/userpage', async (req, res) => {
   // '/ratings/:userId'
-  const { userId } = req.params;
+  // const { userId } = req.params;
   const {
     ratingText,
     restaurantName,
     selectRating,
     selectCategory,
     radioInput,
-    // user, is this needed?
+    // user: req.user
+    // userId, // is this needed?
   } = req.body;
 
   try {
@@ -208,7 +216,6 @@ app.post('/userpage', async (req, res) => {
       selectCategory,
       radioInput,
       user: req.user,
-      _id: userId,
     }).save();
     res.status(201).json({
       response: newUserRatingText,
@@ -219,9 +226,9 @@ app.post('/userpage', async (req, res) => {
   }
 });
 
-// --- get USER profile --- //
-app.get('/userpage/', async (req, res) => {
-  //const { userId } = req.params;
+// --- get USER profile info --- //
+app.get('/feed/:userId', async (req, res) => {
+  const { userId } = req.params;
   const { username, email, firstName, lastName } = req.body; // add password here?
 
   const profile = await User.findOne({ username, email, firstName, lastName });
@@ -233,7 +240,7 @@ app.get('/userpage/', async (req, res) => {
           email: profile.email,
           firstName: profile.firstName,
           lastName: profile.lastName,
-          //  _id: userId,
+          userId,
         },
       });
     }
@@ -242,21 +249,16 @@ app.get('/userpage/', async (req, res) => {
   }
 });
 
-//app.get('/userpage/:userId', authenticateUser);
-app.get('/userpage/:userId', async (req, res) => {
+// -- GET the users own ratings -- //
+app.get('/feed/:userId', authenticateUser);
+app.get('/feed/:userId', async (req, res) => {
   const { userId } = req.params;
 
-  // const ratings = await Profile.find({ user: userId }).sort({
-  //   createdAt: 'desc',
-  // });
-  // res.status(201).json({ response: ratings, success: true });
-
-  // -- this codes makes it possible to POST to feed and user, but everyone can see it -- //
-  const page = await Rating.find({ user: userId }).sort({ ratingText: -1 });
-
-  res
-    .status(201)
-    .json({ response: page, success: true, message: 'the rating feed' });
+  const ratings = await Rating.find({ user: userId }).sort({
+    createdAt: 'desc',
+  });
+  res.status(201).json({ response: ratings, success: true });
+  console.log(userId);
 });
 
 // --- delete feed, maybe not neccesary?--- //
@@ -274,23 +276,22 @@ app.delete('/feed/:ratingId', async (req, res) => {
     res.status(400).json({ message: 'could not delete', error: err });
   }
 });
+
 // --- delete on user page --- //
 //app.delete('/feed/:userId', authenticateUser);
-app.delete('/userpage/:userRatingId', async (req, res) => {
-  const { userRatingId } = req.params; // body or params?
+app.delete('/userpage/:userId', async (req, res) => {
+  const { userId } = req.params; // body or params?
   // const { user } = req.body;
 
   try {
-    // const userRatings = await User.findById(user);
-    const deletedUserRating = await Rating.findOneAndDelete({
-      _id: userRatingId,
+    //const userRatings = await User.findById(user);
+    const deletedUserRating = await Profile.findOneAndDelete({
+      _id: userId,
     });
     if (deletedUserRating) {
       res.status(200).json(deletedUserRating);
     } else {
-      res
-        .status(404)
-        .json({ message: `rating by id ${userRatingId} not found` });
+      res.status(404).json({ message: `rating by id ${userId} not found` });
     }
   } catch (err) {
     res.status(400).json({ message: 'could not delete', error: err });

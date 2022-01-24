@@ -9,15 +9,15 @@ export const ratings = createSlice({
   },
 
   reducers: {
-    addRating: (store, action) => {
-      const newRating = {
-        id: uniqid(),
-        text: action.payload,
-        //   createdAt: new Date(),
-      };
+    // addRating: (store, action) => {
+    //   const newRating = {
+    //     id: uniqid(),
+    //     text: action.payload,
+    //     //   createdAt: new Date(),
+    //   };
 
-      store.items = [...store.items, newRating];
-    },
+    //   store.items = [...store.items, newRating];
+    // },
     setRating: (store, action) => {
       store.items = action.payload;
     },

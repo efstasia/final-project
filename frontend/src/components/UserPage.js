@@ -13,7 +13,7 @@ const RatingContainer = styled.div`
   margin: auto;
 `;
 
-export const UserPage = ({ userId }) => {
+export const UserPage = () => {
   const [rating, setRating] = useState([]);
   const [deleteRating, setDeleteRating] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
@@ -22,7 +22,7 @@ export const UserPage = ({ userId }) => {
 
   const ratingItems = useSelector(store => store.ratings.items);
   const accessToken = useSelector(store => store.user.accessToken);
-  //const userId = useSelector(store => store.user.userId);
+  const userId = useSelector(store => store.user.userId);
   //   // if there is no accessToken then redirect to login
 
   // --- fetches the ratings. GET method --- //
@@ -34,19 +34,20 @@ export const UserPage = ({ userId }) => {
       },
     };
 
-    fetch(`http://localhost:8080/userpage/${userId}`, options) // needs ${userId}
+    fetch(`http://localhost:8080/feed/${userId}`, options) // needs ${userId}
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          dispatch(ratings.actions.addRating(data.response));
+          dispatch(ratings.actions.setRating(data.response));
           dispatch(ratings.actions.setError(null));
 
           setRating(data.response);
         } else {
           dispatch(ratings.actions.setRating([]));
         }
+        console.log(data.response);
       });
-  }, [accessToken, dispatch]);
+  }, [accessToken, dispatch, userId, ratingItems]);
 
   useEffect(() => {
     if (!accessToken) {
@@ -54,27 +55,28 @@ export const UserPage = ({ userId }) => {
     }
   }, [accessToken, navigate]);
 
-  useEffect(() => {
-    const options = {
-      method: 'GET',
-      headers: {
-        Authorization: accessToken,
-      },
-    };
-    fetch(`http://localhost:8080/userpage/`, options)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          dispatch(user.actions.setEmail(data.response));
-          dispatch(user.actions.setUsername(data.response));
-          dispatch(user.actions.setFirstName(data.response));
-          dispatch(user.actions.setLastName(data.response));
-          setUserInfo(data.response);
-          console.log(data.response);
-        }
-        console.log('USER INFO', data.response);
-      });
-  }, [accessToken, dispatch, setUserInfo]);
+  // --- getting the user info -- //
+  // useEffect(() => {
+  //   const options = {
+  //     method: 'GET',
+  //     headers: {
+  //       Authorization: accessToken,
+  //     },
+  //   };
+  //   fetch(`http://localhost:8080/userpage/${userId}`, options)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       if (data.success) {
+  //         dispatch(user.actions.setEmail(data.response));
+  //         dispatch(user.actions.setUsername(data.response));
+  //         dispatch(user.actions.setFirstName(data.response));
+  //         dispatch(user.actions.setLastName(data.response));
+  //         setUserInfo(data.response);
+  //         console.log(data.response);
+  //       }
+  //       console.log('USER INFO', data.response);
+  //     });
+  // }, [accessToken, dispatch, setUserInfo, userId, ratingItems]);
 
   const onDeleteUserRating = userRatingId => {
     const options = {

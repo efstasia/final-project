@@ -69,7 +69,7 @@ export const MainPage = () => {
     }
   }, [accessToken, navigate]);
 
-  // this handles the POSTING of ratings, added wednesday evening
+  // this handles the POSTING of ratings
   const onRatingPost = event => {
     const optionsAll = {
       method: 'POST',
@@ -83,42 +83,38 @@ export const MainPage = () => {
         selectRating,
         selectCategory,
         radioInput,
-      }),
-    };
-
-    const optionsUser = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: accessToken,
-        'Access-Control-Allow-Origin': '*',
-      },
-      body: JSON.stringify({
-        ratingText: input,
-        restaurantName,
-        selectRating,
-        selectCategory,
-        radioInput,
         user: userId,
       }),
     };
+    // const optionsUser = {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: accessToken,
+    //     // 'Access-Control-Allow-Origin': '*',
+    //   },
+    //   body: JSON.stringify({
+    //     ratingText: input,
+    //     restaurantName,
+    //     selectRating,
+    //     selectCategory,
+    //     radioInput,
+    //     user: userId,
+    //   }),
+    // };
+
     fetch(`http://localhost:8080/feed`, optionsAll)
       .then(res => res.json())
       .then(data => {
-        fetch(`http://localhost:8080/userpage`, optionsUser);
-
         if (data.success) {
           batch(() => {
-            dispatch(ratings.actions.addRating(data.response));
-            dispatch(ratings.actions.setError(null));
+            dispatch(user.actions.setUserId(data.response.userId));
+            // dispatch(ratings.actions.setError(data.response));
+            // dispatch(ratings.actions.setError(null));
             // navigate('/main');  unnecessary?
             setInput('');
             setCanWrite(false);
-          });
-        } else {
-          batch(() => {
-            dispatch(ratings.actions.addRating([]));
-            dispatch(ratings.actions.setError(data.response));
+            // setRating(data.response);
           });
         }
       });
@@ -192,14 +188,15 @@ export const MainPage = () => {
     fetch('http://localhost:8080/feed', options)
       .then(res => res.json())
       .then(data => {
-        dispatch(ratings.actions.addRating(data.response));
+        dispatch(ratings.actions.setRating(data.response));
         dispatch(ratings.actions.setError(null));
         setRating(data.response);
+        console.log(data.response);
       });
   }, [
     accessToken,
     dispatch,
-    input,
+    // rating,
     // restaurantName,
     // selectRating,
     // selectCategory,
