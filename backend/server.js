@@ -83,48 +83,9 @@ const RatingSchema = new mongoose.Schema({
   },
 });
 
-const ProfileSchema = new mongoose.Schema({
-  ratingText: {
-    type: String,
-    required: true,
-    trim: true,
-    createdAt: {
-      type: Date,
-      default: () => new Date(), // could also pass Date.now and change the type to Number
-    },
-  },
-  restaurantName: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  selectRating: {
-    type: Number,
-    min: 1,
-    max: 10,
-    default: 1,
-    required: true,
-  },
-  selectCategory: {
-    type: String,
-    enum: ['Pizza', 'Pasta', 'Hamburger', 'Sushi'],
-    default: 'Pizza',
-    required: true,
-  },
-  radioInput: {
-    type: String,
-    possibleValues: ['Yes', 'No'],
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-  },
-});
-
 // --- models --- //
 const User = mongoose.model('User', UserSchema);
 const Rating = mongoose.model('Rating', RatingSchema);
-//const Profile = mongoose.model('Profile', ProfileSchema);
 
 // Defines the port the app will run on. Defaults to 8080, but can be
 // overridden when starting the server. For example:

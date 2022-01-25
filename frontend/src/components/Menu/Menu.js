@@ -5,7 +5,7 @@ import { StyledMenu } from './Menu.styled';
 export const Menu = ({ open }) => {
   return (
     <StyledMenu open={open}>
-      <a href='/feed'>
+      <a href='/MainPage'>
         <span role='img' aria-label='price'>
           &#x1f4b8;
         </span>

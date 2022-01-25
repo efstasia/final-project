@@ -47,7 +47,7 @@ export const user = createSlice({
       store.userId = null;
       store.username = null;
       store.accessToken = null;
-      localStorage.removeItem('accessToken'); // problem: when u sign out, then refresh on '/', then click sign up, you get redirected as if you were signed in (to /main)
+      localStorage.removeItem('accessToken');
     },
   },
 });
