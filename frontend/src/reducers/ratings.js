@@ -21,6 +21,9 @@ export const ratings = createSlice({
     setRating: (store, action) => {
       store.items = action.payload;
     },
+    setRestaurant: (store, action) => {
+      store.restaurant = action.payload;
+    },
 
     deleteRating: (store, action) => {
       const decreasedItems = store.items.filter(

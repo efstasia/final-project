@@ -36,7 +36,7 @@ const RatingContainer = styled.div`
 // signed in content, first page you see
 export const MainPage = () => {
   const [validationError, setValidationError] = useState(null); // setValidationErrors needs to be connected to backend error msg
-  const [rating, setRating] = useState([]);
+  const [ratingInput, setRatingInput] = useState([]);
   const [canWrite, setCanWrite] = useState(false);
   const [input, setInput] = useState('');
   const [restaurantName, setRestaurantName] = useState('');
@@ -49,6 +49,7 @@ export const MainPage = () => {
 
   const accessToken = useSelector(store => store.user.accessToken);
   const userId = useSelector(store => store.user.userId);
+  const rating = useSelector(store => store.ratings.items);
 
   const handleWriteRating = () => {
     setCanWrite(true);
@@ -86,22 +87,6 @@ export const MainPage = () => {
         user: userId,
       }),
     };
-    // const optionsUser = {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //     Authorization: accessToken,
-    //     // 'Access-Control-Allow-Origin': '*',
-    //   },
-    //   body: JSON.stringify({
-    //     ratingText: input,
-    //     restaurantName,
-    //     selectRating,
-    //     selectCategory,
-    //     radioInput,
-    //     user: userId,
-    //   }),
-    // };
 
     fetch(`http://localhost:8080/feed`, optionsAll)
       .then(res => res.json())
@@ -109,6 +94,7 @@ export const MainPage = () => {
         if (data.success) {
           batch(() => {
             dispatch(user.actions.setUserId(data.response.userId));
+            dispatch(ratings.actions.setRating(data.response.rating));
             // dispatch(ratings.actions.setError(data.response));
             // dispatch(ratings.actions.setError(null));
             // navigate('/main');  unnecessary?
@@ -132,7 +118,7 @@ export const MainPage = () => {
       .then(res => res.json())
       .then(data => {
         const remainingRatings = rating.filter(rate => rate._id !== data._id); // need something similar in search function?
-        return setRating(remainingRatings); // this deletes the rating WITHOUT refresh
+        return setRatingInput(remainingRatings); // this deletes the rating WITHOUT refresh
       });
   };
 
@@ -150,49 +136,49 @@ export const MainPage = () => {
       .then(data => {
         dispatch(ratings.actions.setRating(data.response));
         dispatch(ratings.actions.setError(null));
-        setRating(data.response);
         console.log(data.response);
+        setRatingInput(data.response);
       });
-  }, [accessToken, dispatch]);
-
-  const handleLogout = () => {
-    dispatch(user.actions.logout());
-  };
+  }, [dispatch, accessToken]);
 
   return (
     <div>
-      <Link to="/userpage">To your profile</Link>
+      <Link to='/userpage'>To your profile</Link>
       <div>
         {!canWrite && (
           <button onClick={() => handleWriteRating()}>ADD RATING</button>
         )}
+        <label htmlFor='searchbar'>SEARCH</label>
+
+        <input type='text' id='searchbar' placeholder='search' />
+        <button>search</button>
       </div>
       <InputWrapper>
         {canWrite && (
           <form onSubmit={handleFormSubmit}>
-            <label htmlFor="restaurant">Restaurant</label>
+            <label htmlFor='restaurant'>Restaurant</label>
             <input
-              type="text"
+              type='text'
               value={restaurantName}
               onChange={event => setRestaurantName(event.target.value)}
             />
-            <label htmlFor="ratingText">Rating text</label>
+            <label htmlFor='ratingText'>Rating text</label>
             <textarea
-              rows="4"
-              cols="50"
+              rows='4'
+              cols='50'
               value={input}
               onChange={event => setInput(event.target.value)}
             ></textarea>
-            <label htmlFor="rating">rating 1-10</label>
+            <label htmlFor='rating'>rating 1-10</label>
             <select
-              id="rating"
+              id='rating'
               value={selectRating}
               onChange={event => setSelectRating(event.target.value)}
             >
               {/* is value needed here? */}
               <option>choose rating here</option>
-              <option value="1">1</option>
-              <option value="2">2</option>
+              <option value='1'>1</option>
+              <option value='2'>2</option>
               <option>3</option>
               <option>4</option>
               <option>5</option>
@@ -202,40 +188,40 @@ export const MainPage = () => {
               <option>9</option>
               <option>10</option>
             </select>
-            <label htmlFor="category">category</label>
+            <label htmlFor='category'>category</label>
             <select
-              id="category"
+              id='category'
               value={selectCategory}
               onChange={event => setSelectCategory(event.target.value)}
             >
               {/* is value needed here? */}
               <option>choose category here</option>
-              <option value="Pizza">Pizza</option>
-              <option value="Pasta">Pasta</option>
+              <option value='Pizza'>Pizza</option>
+              <option value='Pasta'>Pasta</option>
               <option>Hamburger</option>
               <option>Sushi</option>
               <option>Indian food</option>
             </select>
-            <label htmlFor="radio-buttons">Would you recommend?</label>
-            <label htmlFor="yes">yes</label>
+            <label htmlFor='radio-buttons'>Would you recommend?</label>
+            <label htmlFor='yes'>yes</label>
             <input
-              id="radio-buttons"
-              type="radio"
-              name="recommend"
-              value="yes"
+              id='radio-buttons'
+              type='radio'
+              name='recommend'
+              value='yes'
               onChange={event => setRadioInput(event.target.value)}
             />
-            <label htmlFor="no">no</label>
+            <label htmlFor='no'>no</label>
             <input
-              id="radio-buttons"
-              type="radio"
-              name="recommend"
-              value="no"
+              id='radio-buttons'
+              type='radio'
+              name='recommend'
+              value='no'
               onChange={event => setRadioInput(event.target.value)}
             />
 
             <button onClick={onRatingPost}>Add rating</button>
-            <button onClick={handleInputClose} className="toggle-button">
+            <button onClick={handleInputClose} className='toggle-button'>
               close
             </button>
           </form>
@@ -244,11 +230,11 @@ export const MainPage = () => {
       {/* add everything from backend/useState in the map */}
 
       <RatingContainer>
-        {rating.map(item => (
+        {ratingInput.map(item => (
           <div key={item._id}>
             <p>
               RESTAURANT NAME: {item.restaurantName} RATING TEXT:
-              {item.ratingText} RATING: {item.selectRating} CATEGORY:{' '}
+              {item.ratingText} RATING: {item.selectRating} CATEGORY:
               {item.selectCategory} RECOMMEND? {item.radioInput}
             </p>
             <button onClick={() => onDeleteRating(item._id)}>DELETE</button>
@@ -260,7 +246,6 @@ export const MainPage = () => {
       {validationError !== null && <p>{validationError}</p>}
 
       <h1>Hello world, this is the signed in content</h1>
-      <button onClick={handleLogout}>SIGN OUT</button>
     </div>
   );
 };

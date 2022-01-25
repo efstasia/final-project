@@ -31,6 +31,7 @@ export const UserPage = () => {
   const username = useSelector(store => store.user.username);
   const firstName = useSelector(store => store.user.firstName);
   const lastName = useSelector(store => store.user.lastName);
+  console.log('RATING ITEMS', ratingItems);
   //   // if there is no accessToken then redirect to login
 
   // --- fetches the ratings. GET method --- //
@@ -81,7 +82,7 @@ export const UserPage = () => {
   // --- getting the user info -- //
   return (
     <div>
-      <Title>Welcome, {username}! This is your profile.</Title>
+      <Title>Welcome, {firstName}! This is your profile.</Title>
       <RatingContainer>
         <p>USERNAME: {username}</p>
         <p>EMAIL: {email}</p>
