@@ -5,18 +5,8 @@ import { StyledMenu } from './Menu.styled';
 export const Menu = ({ open }) => {
   return (
     <StyledMenu open={open}>
-      <a href='/MainPage'>
-        <span role='img' aria-label='price'>
-          &#x1f4b8;
-        </span>
-        Pricing
-      </a>
-      <a href='/userpage'>
-        <span role='img' aria-label='contact'>
-          &#x1f4e9;
-        </span>
-        Contact
-      </a>
+      <a href='/feed'>Feed</a>
+      <a href='/userpage'>Profile</a>
     </StyledMenu>
   );
 };

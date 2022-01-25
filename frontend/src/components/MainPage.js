@@ -122,46 +122,6 @@ export const MainPage = () => {
     event.preventDefault();
   };
 
-  // // post ratings to feed
-  // fetch('http://localhost:8080/ratings', options)
-  //   .then(res => res.json())
-  //   .then(data => {
-  //     if (data.success) {
-  //       batch(() => {
-  //         dispatch(ratings.actions.addRating(data.response));
-  //         dispatch(ratings.actions.setError(null));
-  //         // navigate('/main');  unnecessary?
-  //         setInput('');
-  //         setCanWrite(false);
-  //       });
-  //     } else {
-  //       batch(() => {
-  //         dispatch(ratings.actions.addRating([]));
-  //         dispatch(ratings.actions.setError(data.response));
-  //       });
-  //     }
-  //   });
-
-  // //post ratings to user
-  // fetch('http://localhost:8080/user', options)
-  //   .then(res => res.json())
-  //   .then(data => {
-  //     if (data.success) {
-  //       batch(() => {
-  //         dispatch(ratings.actions.addRating(data.response));
-  //         dispatch(ratings.actions.setError(null));
-  //         // navigate('/main');  unnecessary?
-  //         setInput('');
-  //         setCanWrite(false);
-  //       });
-  //     } else {
-  //       batch(() => {
-  //         dispatch(ratings.actions.addRating([]));
-  //         dispatch(ratings.actions.setError(data.response));
-  //       });
-  //     }
-  //   });
-
   // this deletes a rating
   const onDeleteRating = ratingId => {
     const options = {
@@ -193,15 +153,7 @@ export const MainPage = () => {
         setRating(data.response);
         console.log(data.response);
       });
-  }, [
-    accessToken,
-    dispatch,
-    // rating,
-    // restaurantName,
-    // selectRating,
-    // selectCategory,
-    // radioInput,
-  ]);
+  }, [accessToken, dispatch]);
 
   const handleLogout = () => {
     dispatch(user.actions.logout());
@@ -209,7 +161,7 @@ export const MainPage = () => {
 
   return (
     <div>
-      <Link to='/userpage'>To your profile</Link>
+      <Link to="/userpage">To your profile</Link>
       <div>
         {!canWrite && (
           <button onClick={() => handleWriteRating()}>ADD RATING</button>
@@ -218,29 +170,29 @@ export const MainPage = () => {
       <InputWrapper>
         {canWrite && (
           <form onSubmit={handleFormSubmit}>
-            <label htmlFor='restaurant'>Restaurant</label>
+            <label htmlFor="restaurant">Restaurant</label>
             <input
-              type='text'
+              type="text"
               value={restaurantName}
               onChange={event => setRestaurantName(event.target.value)}
             />
-            <label htmlFor='ratingText'>Rating text</label>
+            <label htmlFor="ratingText">Rating text</label>
             <textarea
-              rows='4'
-              cols='50'
+              rows="4"
+              cols="50"
               value={input}
               onChange={event => setInput(event.target.value)}
             ></textarea>
-            <label htmlFor='rating'>rating 1-10</label>
+            <label htmlFor="rating">rating 1-10</label>
             <select
-              id='rating'
+              id="rating"
               value={selectRating}
               onChange={event => setSelectRating(event.target.value)}
             >
               {/* is value needed here? */}
               <option>choose rating here</option>
-              <option value='1'>1</option>
-              <option value='2'>2</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
               <option>3</option>
               <option>4</option>
               <option>5</option>
@@ -250,40 +202,40 @@ export const MainPage = () => {
               <option>9</option>
               <option>10</option>
             </select>
-            <label htmlFor='category'>category</label>
+            <label htmlFor="category">category</label>
             <select
-              id='category'
+              id="category"
               value={selectCategory}
               onChange={event => setSelectCategory(event.target.value)}
             >
               {/* is value needed here? */}
               <option>choose category here</option>
-              <option value='Pizza'>Pizza</option>
-              <option value='Pasta'>Pasta</option>
+              <option value="Pizza">Pizza</option>
+              <option value="Pasta">Pasta</option>
               <option>Hamburger</option>
               <option>Sushi</option>
               <option>Indian food</option>
             </select>
-            <label htmlFor='radio-buttons'>Would you recommend?</label>
-            <label htmlFor='yes'>yes</label>
+            <label htmlFor="radio-buttons">Would you recommend?</label>
+            <label htmlFor="yes">yes</label>
             <input
-              id='radio-buttons'
-              type='radio'
-              name='recommend'
-              value='yes'
+              id="radio-buttons"
+              type="radio"
+              name="recommend"
+              value="yes"
               onChange={event => setRadioInput(event.target.value)}
             />
-            <label htmlFor='no'>no</label>
+            <label htmlFor="no">no</label>
             <input
-              id='radio-buttons'
-              type='radio'
-              name='recommend'
-              value='no'
+              id="radio-buttons"
+              type="radio"
+              name="recommend"
+              value="no"
               onChange={event => setRadioInput(event.target.value)}
             />
 
             <button onClick={onRatingPost}>Add rating</button>
-            <button onClick={handleInputClose} className='toggle-button'>
+            <button onClick={handleInputClose} className="toggle-button">
               close
             </button>
           </form>

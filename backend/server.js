@@ -77,7 +77,7 @@ const RatingSchema = new mongoose.Schema({
     type: String,
     possibleValues: ['Yes', 'No'],
   },
-  user: {
+  ratingBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
@@ -152,8 +152,6 @@ app.get('/feed', async (req, res) => {
     .json({ response: main, success: true, message: 'the rating feed' });
 });
 
-// --- POST to user profile --- //
-
 // --- this POSTS the ratings to the USER page --- //
 //app.post('/userpage', authenticateUser);
 app.post('/userpage', async (req, res) => {
@@ -188,21 +186,36 @@ app.post('/userpage', async (req, res) => {
 });
 
 // --- get USER profile info --- //
+app.get('/userpage/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const profile = await User.findById(userId);
+    res.status(200).json({
+      response: profile,
+      success: true,
+    });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
 app.get('/feed/:userId', async (req, res) => {
   const { userId } = req.params;
-  const { username, email, firstName, lastName } = req.body; // add password here?
 
-  const profile = await User.findOne({ username, email, firstName, lastName });
+  const profile = await Rating.findById(userId);
   try {
     if (profile) {
       res.status(200).json({
         response: {
-          username: profile.username,
-          email: profile.email,
-          firstName: profile.firstName,
-          lastName: profile.lastName,
+          ratingText,
+          restaurantName,
+          selectRating,
+          selectCategory,
+          radioInput,
           userId,
         },
+        success: true,
       });
     }
   } catch (error) {
@@ -211,16 +224,16 @@ app.get('/feed/:userId', async (req, res) => {
 });
 
 // -- GET the users own ratings -- //
-app.get('/feed/:userId', authenticateUser);
-app.get('/feed/:userId', async (req, res) => {
-  const { userId } = req.params;
+// app.get('/feed/:userId', authenticateUser);
+// app.get('/feed/:userId', async (req, res) => {
+//   const { userId } = req.params;
 
-  const ratings = await Rating.find({ user: userId }).sort({
-    createdAt: 'desc',
-  });
-  res.status(201).json({ response: ratings, success: true });
-  console.log(userId);
-});
+//   const ratings = await Rating.find({ user: userId }).sort({
+//     createdAt: 'desc',
+//   });
+//   res.status(201).json({ response: ratings, success: true });
+//   console.log(userId);
+// });
 
 // --- delete feed, maybe not neccesary?--- //
 app.delete('/feed/:ratingId', async (req, res) => {
