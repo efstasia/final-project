@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, Link } from 'react-router-dom';
-
-import { ratings } from '../reducers/ratings';
-import { user } from '../reducers/user';
+import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
+
+const Title = styled.p`
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+`;
 
 const RatingContainer = styled.div`
   border: 2px solid black;
   width: 50%;
   margin: auto;
+  text-align: center;
 `;
 
 export const UserPage = () => {
@@ -77,15 +81,13 @@ export const UserPage = () => {
   // --- getting the user info -- //
   return (
     <div>
-      <Link to="/feed">Back to feed</Link>
-      <p>USER PAGE</p>
-
-      <div>
+      <Title>Welcome, {username}! This is your profile.</Title>
+      <RatingContainer>
         <p>USERNAME: {username}</p>
         <p>EMAIL: {email}</p>
         <p>FIRSTNAME: {firstName}</p>
         <p>LASTNAME: {lastName}</p>
-      </div>
+      </RatingContainer>
 
       {/* <RatingContainer>
         {rating.map(item => (
