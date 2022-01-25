@@ -35,7 +35,16 @@ export const App = () => {
       <BrowserRouter>
         <Provider store={store}>
           <Routes>
-            <Route path='/' element={<StartPage />} />
+            <Route path="/" element={<StartPage />} />
+
+            {/* signin/signup */}
+            <Route path="/signup" element={<SignupPage />} />
+
+            {/* main page once logged in */}
+            <Route path="/feed" element={<MainPage />} />
+
+            {/* user page */}
+            <Route path="/userpage" element={<UserPage />} />
           </Routes>
         </Provider>
 
@@ -44,39 +53,3 @@ export const App = () => {
     </>
   );
 };
-
-{
-  /* <BrowserRouter>
-        
-        <Provider store={store}>
-          <Routes>
-            {/* information */
-}
-{
-  /* <Route path='/' element={<StartPage />} /> */
-}
-{
-  /* signin/signup */
-}
-{
-  /* <Route path='/signup' element={<SignupPage />} /> */
-}
-{
-  /* main page once logged in */
-}
-{
-  /* <Route path='/feed' element={<MainPage />} /> */
-}
-{
-  /* user page */
-}
-{
-  /* <Route path='/userpage' element={<UserPage />} /> */
-}
-{
-  /* </Routes>
-        </Provider> */
-}
-{
-  /* </BrowserRouter> */
-}

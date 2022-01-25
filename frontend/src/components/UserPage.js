@@ -22,40 +22,14 @@ export const UserPage = () => {
 
   const ratingItems = useSelector(store => store.ratings.items);
   const accessToken = useSelector(store => store.user.accessToken);
-  const userId = useSelector(store => store.user.userId);
+  // const userId = useSelector(store => store.user.userId);
+  const email = useSelector(store => store.user.email);
+  const username = useSelector(store => store.user.username);
+  const firstName = useSelector(store => store.user.firstName);
+  const lastName = useSelector(store => store.user.lastName);
   //   // if there is no accessToken then redirect to login
 
   // --- fetches the ratings. GET method --- //
-  useEffect(() => {
-    const options = {
-      method: 'GET',
-      headers: {
-        Authorization: accessToken,
-      },
-    };
-
-    fetch(`http://localhost:8080/feed/${userId}`, options) // needs ${userId}
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          dispatch(ratings.actions.setRating(data.response));
-          dispatch(ratings.actions.setError(null));
-
-          setRating(data.response);
-        } else {
-          dispatch(ratings.actions.setRating([]));
-        }
-        console.log(data.response);
-      });
-  }, [accessToken, dispatch, userId, ratingItems]);
-
-  useEffect(() => {
-    if (!accessToken) {
-      navigate('/');
-    }
-  }, [accessToken, navigate]);
-
-  // --- getting the user info -- //
   // useEffect(() => {
   //   const options = {
   //     method: 'GET',
@@ -63,20 +37,27 @@ export const UserPage = () => {
   //       Authorization: accessToken,
   //     },
   //   };
-  //   fetch(`http://localhost:8080/userpage/${userId}`, options)
+
+  //   fetch(`http://localhost:8080/feed/${userId}`, options) // needs ${userId}
   //     .then(res => res.json())
   //     .then(data => {
   //       if (data.success) {
-  //         dispatch(user.actions.setEmail(data.response));
-  //         dispatch(user.actions.setUsername(data.response));
-  //         dispatch(user.actions.setFirstName(data.response));
-  //         dispatch(user.actions.setLastName(data.response));
-  //         setUserInfo(data.response);
-  //         console.log(data.response);
+  //         dispatch(ratings.actions.setRating(data.response));
+  //         dispatch(ratings.actions.setError(null));
+
+  //         setRating(data.response);
+  //       } else {
+  //         dispatch(ratings.actions.setRating([]));
   //       }
-  //       console.log('USER INFO', data.response);
+  //       console.log(data.response);
   //     });
-  // }, [accessToken, dispatch, setUserInfo, userId, ratingItems]);
+  // }, [dispatch]);
+
+  useEffect(() => {
+    if (!accessToken) {
+      navigate('/');
+    }
+  }, [accessToken, navigate]);
 
   const onDeleteUserRating = userRatingId => {
     const options = {
@@ -93,19 +74,20 @@ export const UserPage = () => {
       });
   };
 
+  // --- getting the user info -- //
   return (
     <div>
-      <Link to='/feed'>Back to feed</Link>
+      <Link to="/feed">Back to feed</Link>
       <p>USER PAGE</p>
-      {userInfo.map(item => (
-        <div>
-          <p>
-            USERNAME:
-            {item.username}
-          </p>
-        </div>
-      ))}
-      <RatingContainer>
+
+      <div>
+        <p>USERNAME: {username}</p>
+        <p>EMAIL: {email}</p>
+        <p>FIRSTNAME: {firstName}</p>
+        <p>LASTNAME: {lastName}</p>
+      </div>
+
+      {/* <RatingContainer>
         {rating.map(item => (
           <div key={item._id}>
             <p>
@@ -116,7 +98,7 @@ export const UserPage = () => {
             <button onClick={() => onDeleteUserRating(item._id)}>DELETE</button>
           </div>
         ))}
-      </RatingContainer>
+      </RatingContainer> */}
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 export const StyledBurger = styled.button`
   position: absolute;
   top: 5%;

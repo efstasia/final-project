@@ -51,14 +51,14 @@ const SignupPage = () => {
             dispatch(user.actions.setAccessToken(data.response.accessToken));
             dispatch(user.actions.setError(null));
             // navigate('/main');  unnecessary?
-            localStorage.setItem(
-              'user',
-              JSON.stringify({
-                userId: data.response.userId,
-                username: data.response.username,
-                accessToken: data.response.accessToken,
-              })
-            );
+            // localStorage.setItem(
+            //   'user',
+            //   JSON.stringify({
+            //     userId: data.response.userId,
+            //     username: data.response.username,
+            //     accessToken: data.response.accessToken,
+            //   })
+            // );
           });
         } else {
           batch(() => {
@@ -77,7 +77,6 @@ const SignupPage = () => {
 
   const onFormSubmit = event => {
     event.preventDefault();
-    //   gå igenom när jag inte har migrän
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -96,6 +95,17 @@ const SignupPage = () => {
             dispatch(user.actions.setAccessToken(data.response.accessToken));
             dispatch(user.actions.setEmail(data.response.email));
             dispatch(user.actions.setError(null));
+            localStorage.setItem(
+              'user',
+              JSON.stringify({
+                userId: data.response.userId,
+                username: data.response.username,
+                firstName: data.response.firstName,
+                lastName: data.response.lastName,
+                email: data.response.email,
+                accessToken: data.response.accessToken,
+              })
+            );
           });
         } else {
           batch(() => {
@@ -116,38 +126,38 @@ const SignupPage = () => {
   return (
     <div>
       <form onSubmit={onFormSubmit}>
-        <label htmlFor='email'>Email</label>
+        <label htmlFor="email">Email</label>
         <input
           value={email}
           onChange={e => setEmail(e.target.value)}
-          id='email'
+          id="email"
         />
-        <label htmlFor='username'>Username</label>
+        <label htmlFor="username">Username</label>
         <input
           value={username}
-          id='username'
+          id="username"
           onChange={e => setUsername(e.target.value)}
         />
-        <label htmlFor='password'>Password</label>
+        <label htmlFor="password">Password</label>
         <input
-          type='password'
+          type="password"
           value={password}
-          id='password'
+          id="password"
           onChange={e => setPassword(e.target.value)}
         />
-        <label htmlFor='firstName'>First name</label>
+        <label htmlFor="firstName">First name</label>
         <input
           value={firstName}
-          id='firstName'
+          id="firstName"
           onChange={e => setFirstName(e.target.value)}
         />
-        <label htmlFor='lastName'>Last name</label>
+        <label htmlFor="lastName">Last name</label>
         <input
           value={lastName}
-          id='lastName'
+          id="lastName"
           onChange={e => setLastName(e.target.value)}
         />
-        <button type='submit'>submit</button>
+        <button type="submit">submit</button>
       </form>
       {validationError !== null && (
         <p style={{ fontSize: '21px', color: 'red' }}>{validationError}</p>
@@ -155,20 +165,20 @@ const SignupPage = () => {
 
       <h2>already a member? SIGN IN</h2>
       <form onSubmit={onSignInSubmit}>
-        <label htmlFor='usernameSignup'>Username</label>
+        <label htmlFor="usernameSignup">Username</label>
         <input
           value={usernameSignin}
-          id='usernameSignup'
+          id="usernameSignup"
           onChange={e => setUsernameSignin(e.target.value)}
         />
-        <label htmlFor='passwordSignin'>Password</label>
+        <label htmlFor="passwordSignin">Password</label>
         <input
-          type='password'
+          type="password"
           value={passwordSignin}
-          id='passwordSign'
+          id="passwordSign"
           onChange={e => setPasswordSignin(e.target.value)}
         />
-        <button type='submit'>SIGN IN</button>
+        <button type="submit">SIGN IN</button>
       </form>
     </div>
   );
