@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
 
+import { ratings } from '../reducers/ratings';
 const Title = styled.p`
   text-align: center;
   font-weight: bold;
@@ -33,6 +34,7 @@ export const UserPage = () => {
   const username = useSelector(store => store.user.username);
   const firstName = useSelector(store => store.user.firstName);
   const lastName = useSelector(store => store.user.lastName);
+
   console.log('RATING ITEMS', ratingItems);
 
   const { profileImageUrl } = profileImageData;
@@ -56,13 +58,13 @@ export const UserPage = () => {
           // dispatch(ratings.actions.setError(null));
 
           setRating(data.response);
-          console.log(data);
+          console.log(data.response);
         } else {
           // dispatch(ratings.actions.setRating([]));
         }
         console.log(data.response);
       });
-  }, [dispatch]);
+  }, [dispatch, accessToken, userId]);
 
   // -- upload images -- //
   const uploadImage = () => {
@@ -103,13 +105,13 @@ export const UserPage = () => {
       method: 'DELETE',
     };
 
-    fetch(`http://localhost:8080/userpage/${userRatingId}`, options)
+    fetch(`http://localhost:8080/feed/${userRatingId}`, options)
       .then(res => res.json())
       .then(data => {
         const remainingRatings = deleteRating.filter(
           rate => rate._id !== data._id
-        ); // need something similar in search function?
-        return setDeleteRating(remainingRatings); // this deletes the rating WITHOUT refresh
+        );
+        return remainingRatings;
       });
   };
 

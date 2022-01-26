@@ -32,10 +32,10 @@ export const user = createSlice({
       store.username = action.payload;
     },
     setFirstName: (store, action) => {
-      store.username = action.payload;
+      store.firstName = action.payload;
     },
     setLastName: (store, action) => {
-      store.username = action.payload;
+      store.lastName = action.payload;
     },
     setAccessToken: (store, action) => {
       store.accessToken = action.payload;

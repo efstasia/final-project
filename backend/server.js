@@ -191,8 +191,8 @@ app.get('/userpage/:userId', async (req, res) => {
 app.get('/feed/:userId', async (req, res) => {
   const { userId } = req.params;
 
-  const userRatings = await Rating.find({ user: userId });
   try {
+    const userRatings = await Rating.find({ user: userId });
     if (userRatings) {
       res.status(200).json({
         response: userRatings,
@@ -244,22 +244,21 @@ app.delete('/feed/:ratingId', async (req, res) => {
 
 // --- delete on user page --- //
 //app.delete('/feed/:userId', authenticateUser);
-app.delete('/userpage/:userId', async (req, res) => {
-  const { userId } = req.params; // body or params?
+app.delete('/userpage/:userRatingId', async (req, res) => {
+  const { userRatingId } = req.params; // body or params?
   // const { user } = req.body;
-
+  const deletedUserRating = await Profile.findOneAndDelete({
+    ratingId: userRatingId,
+  });
   try {
-    //const userRatings = await User.findById(user);
-    const deletedUserRating = await Profile.findOneAndDelete({
-      _id: userId,
-    });
     if (deletedUserRating) {
-      res.status(200).json(deletedUserRating);
-    } else {
-      res.status(404).json({ message: `rating by id ${userId} not found` });
+      res.status(200).json({
+        response: deletedUserRating,
+        success: true,
+      });
     }
-  } catch (err) {
-    res.status(400).json({ message: 'could not delete', error: err });
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
   }
 });
 
@@ -346,6 +345,9 @@ app.post('/signin', async (req, res) => {
         response: {
           userId: user._id,
           username: user.username,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
           accessToken: user.accessToken,
         },
         success: true,
@@ -398,27 +400,6 @@ app.post('/signin', async (req, res) => {
 //     });
 //   }
 // });
-
-// --- TRIED TO CRATE THE SEARCH BAR --- //
-// app.get('/ratings/:restaurantName', authenticateUser);
-// app.get('/ratings/:restaurantName', async (req, res) => {
-//   const restaurantName = req.params;
-
-//   try {
-//     const restaurant = await Rating.findOne({ restaurantName });
-//     if (restaurant) {
-//       res
-//         .status(201)
-//         .json({ response: restaurant, message: 'here is your restaurant' });
-//     }
-//   } catch (error) {
-//     res.status(400).json({ response: error, success: false });
-//   }
-// });
-
-// add a GET for ratings/restaurant
-
-// do we really need two endpoints to GET either user ratings or feed ratings?
 
 // Start the server
 app.listen(port, () => {

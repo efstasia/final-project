@@ -16,11 +16,9 @@ const InputWrapper = styled.div`
     gap: 7px;
     width: 50%;
     margin: auto;
-
     textarea {
       resize: none;
     }
-
     /* .toggle-button {
       transition: all 0.5s ease-in-out;
     } */
@@ -161,6 +159,21 @@ export const MainPage = () => {
   //   return a.items > b.items ? 1 : -1;
   // });
 
+  const backgroundColor = selectCategory => {
+    if (selectCategory === 'Pizza') {
+      return 'blue';
+    }
+    if (selectCategory === 'Hamburger') {
+      return 'pink';
+    }
+    if (selectCategory === 'Sushi') {
+      return 'orange';
+    }
+    if (selectCategory === 'Pasta') {
+      return 'purple';
+    }
+  };
+
   return (
     <div>
       <Link to='/userpage'>To your profile</Link>
@@ -270,6 +283,13 @@ export const MainPage = () => {
                 src='https://postimg.cc/Mnd0YKDx'
                 alt='fast food'
               ></FoodImage> */}
+              <div
+                style={{
+                  height: '30px',
+
+                  background: backgroundColor(item.selectCategory),
+                }}
+              ></div>
               <p>
                 RESTAURANT NAME: {item.restaurantName} RATING TEXT:
                 {item.ratingText} RATING: {item.selectRating} CATEGORY:
