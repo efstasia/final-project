@@ -33,6 +33,12 @@ const RatingContainer = styled.div`
   margin: auto;
 `;
 
+const FoodImage = styled.img`
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+`;
+
 // signed in content, first page you see
 export const MainPage = () => {
   const [validationError, setValidationError] = useState(null); // setValidationErrors needs to be connected to backend error msg
@@ -43,6 +49,8 @@ export const MainPage = () => {
   const [selectRating, setSelectRating] = useState(0);
   const [selectCategory, setSelectCategory] = useState('');
   const [radioInput, setRadioInput] = useState('');
+  const [searchRestaurant, setSearchRestaurant] = useState('');
+  // const [username, setUsername] = useState('')
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -50,6 +58,8 @@ export const MainPage = () => {
   const accessToken = useSelector(store => store.user.accessToken);
   const userId = useSelector(store => store.user.userId);
   const rating = useSelector(store => store.ratings.items);
+  const username = useSelector(store => store.user.username);
+  // console.log('USER ID', userId);
 
   const handleWriteRating = () => {
     setCanWrite(true);
@@ -95,17 +105,23 @@ export const MainPage = () => {
           batch(() => {
             dispatch(user.actions.setUserId(data.response.userId));
             dispatch(ratings.actions.setRating(data.response.rating));
-            // dispatch(ratings.actions.setError(data.response));
-            // dispatch(ratings.actions.setError(null));
-            // navigate('/main');  unnecessary?
+            dispatch(user.actions.setUsername(data.response.username));
             setInput('');
             setCanWrite(false);
-            // setRating(data.response);
           });
         }
       });
 
     event.preventDefault();
+  };
+
+  const onSearchRestaurant = () => {
+    fetch(`http://localhost:8080/restaurant?restaurantName=${searchRestaurant}`)
+      .then(res => res.json())
+      .then(data => {
+        dispatch(ratings.actions.setRating(data.response));
+        setSearchRestaurant('');
+      });
   };
 
   // this deletes a rating
@@ -136,10 +152,14 @@ export const MainPage = () => {
       .then(data => {
         dispatch(ratings.actions.setRating(data.response));
         dispatch(ratings.actions.setError(null));
+        dispatch(user.actions.setUsername(data.response.username));
         console.log(data.response);
-        setRatingInput(data.response);
       });
   }, [dispatch, accessToken]);
+
+  // const sortAsc = rating.sort((a, b) => {
+  //   return a.items > b.items ? 1 : -1;
+  // });
 
   return (
     <div>
@@ -149,9 +169,22 @@ export const MainPage = () => {
           <button onClick={() => handleWriteRating()}>ADD RATING</button>
         )}
         <label htmlFor='searchbar'>SEARCH</label>
+        <input
+          type='text'
+          id='searchbar'
+          placeholder='search'
+          onChange={event => setSearchRestaurant(event.target.value)}
+        />
 
-        <input type='text' id='searchbar' placeholder='search' />
-        <button>search</button>
+        <button
+          onClick={() => onSearchRestaurant(restaurantName)}
+          type='submit'
+        >
+          search
+        </button>
+        {/* {rating.map(sort => (
+          <div>{sort.selectRating}</div>
+        ))} */}
       </div>
       <InputWrapper>
         {canWrite && (
@@ -230,16 +263,23 @@ export const MainPage = () => {
       {/* add everything from backend/useState in the map */}
 
       <RatingContainer>
-        {ratingInput.map(item => (
-          <div key={item._id}>
-            <p>
-              RESTAURANT NAME: {item.restaurantName} RATING TEXT:
-              {item.ratingText} RATING: {item.selectRating} CATEGORY:
-              {item.selectCategory} RECOMMEND? {item.radioInput}
-            </p>
-            <button onClick={() => onDeleteRating(item._id)}>DELETE</button>
-          </div>
-        ))}
+        {rating &&
+          rating.map(item => (
+            <div key={item._id}>
+              {/* <FoodImage
+                src='https://postimg.cc/Mnd0YKDx'
+                alt='fast food'
+              ></FoodImage> */}
+              <p>
+                RESTAURANT NAME: {item.restaurantName} RATING TEXT:
+                {item.ratingText} RATING: {item.selectRating} CATEGORY:
+                {item.selectCategory} RECOMMEND? {item.radioInput}
+              </p>
+              <p>{username}</p>
+              <button onClick={() => onDeleteRating(item._id)}>DELETE</button>
+            </div>
+          ))}
+        {!rating && <div>No ratings to show</div>}
       </RatingContainer>
 
       {/* this handles the error messages */}

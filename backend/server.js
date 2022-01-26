@@ -3,11 +3,32 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
+import multer from 'multer';
+import cloudinaryFramework from 'cloudinary';
+import cloudinaryStorage from 'multer-storage-cloudinary';
 
 const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/finalProject';
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.set('useCreateIndex', true); //added due to deprecation error 26868
 mongoose.Promise = Promise;
+
+// -- cloudinary setup to store images -- //
+// const cloudinary = cloudinaryFramework.v2;
+// cloudinary.config({
+//   cloud_name: 'minechies',
+//   api_key: process.env.CLOUDINARY_API_KEY,
+//   api_secret: process.env.CLOUDINARY_API_SECRET,
+// });
+
+// const storage = cloudinaryStorage({
+//   cloudinary,
+//   params: {
+//     folder: 'profileImages',
+//     allowedFormats: ['jpg', 'png', 'jpeg'],
+//     transformation: [{ width: 100, height: 100, crop: 'limit' }],
+//   },
+// });
+// const parser = multer({ storage });
 
 // a schema to sign up/sign in to the user page
 const UserSchema = new mongoose.Schema({
@@ -77,7 +98,7 @@ const RatingSchema = new mongoose.Schema({
     type: String,
     possibleValues: ['Yes', 'No'],
   },
-  ratingBy: {
+  user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
@@ -131,7 +152,7 @@ app.post('/feed', async (req, res) => {
       selectRating,
       selectCategory,
       radioInput,
-      user: req.user,
+      user,
     }).save();
     res.status(201).json({
       response: newRatingText,
@@ -152,39 +173,6 @@ app.get('/feed', async (req, res) => {
     .json({ response: main, success: true, message: 'the rating feed' });
 });
 
-// --- this POSTS the ratings to the USER page --- //
-//app.post('/userpage', authenticateUser);
-app.post('/userpage', async (req, res) => {
-  // '/ratings/:userId'
-  // const { userId } = req.params;
-  const {
-    ratingText,
-    restaurantName,
-    selectRating,
-    selectCategory,
-    radioInput,
-    // user: req.user
-    // userId, // is this needed?
-  } = req.body;
-
-  try {
-    const newUserRatingText = await new Profile({
-      ratingText,
-      restaurantName,
-      selectRating,
-      selectCategory,
-      radioInput,
-      user: req.user,
-    }).save();
-    res.status(201).json({
-      response: newUserRatingText,
-      success: true,
-    });
-  } catch (error) {
-    res.status(400).json({ response: error, success: false });
-  }
-});
-
 // --- get USER profile info --- //
 app.get('/userpage/:userId', async (req, res) => {
   const { userId } = req.params;
@@ -199,22 +187,15 @@ app.get('/userpage/:userId', async (req, res) => {
     res.status(400).json({ response: error, success: false });
   }
 });
-
+// -- GETTING the users personal ratings -- //
 app.get('/feed/:userId', async (req, res) => {
   const { userId } = req.params;
 
-  const profile = await Rating.findById(userId);
+  const userRatings = await Rating.find({ user: userId });
   try {
-    if (profile) {
+    if (userRatings) {
       res.status(200).json({
-        response: {
-          ratingText,
-          restaurantName,
-          selectRating,
-          selectCategory,
-          radioInput,
-          userId,
-        },
+        response: userRatings,
         success: true,
       });
     }
@@ -223,17 +204,27 @@ app.get('/feed/:userId', async (req, res) => {
   }
 });
 
-// -- GET the users own ratings -- //
-// app.get('/feed/:userId', authenticateUser);
-// app.get('/feed/:userId', async (req, res) => {
-//   const { userId } = req.params;
+app.get('/restaurant', async (req, res) => {
+  // on FE /restaurant?username=${name} or restaurantName
+  const restaurantName = req.query.restaurantName;
+  // const username = req.query.username
 
-//   const ratings = await Rating.find({ user: userId }).sort({
-//     createdAt: 'desc',
-//   });
-//   res.status(201).json({ response: ratings, success: true });
-//   console.log(userId);
-// });
+  const findRestaurant = await Rating.find({ restaurantName: restaurantName });
+  try {
+    if (findRestaurant.length > 0) {
+      res.status(200).json({
+        response: findRestaurant,
+        success: true,
+      });
+    } else {
+      res
+        .status(404)
+        .json({ response: 'restaurant not found', success: false });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
 
 // --- delete feed, maybe not neccesary?--- //
 app.delete('/feed/:ratingId', async (req, res) => {
@@ -388,6 +379,25 @@ app.post('/signin', async (req, res) => {
     });
   }
 });
+
+// -- add profile picture -- //
+// app.post('/userpage/image', authenticateUser);
+// app.post('/userpage/image', parser.single('image'), async (req, res) => {
+//   const userId = req.user.id;
+//   try {
+//     await User.findOneAndUpdate(
+//       { userId },
+//       { profileImageUrl: req.file.path },
+//       { new: true }
+//     );
+//     res.status(200).json({ success: 'Profile picture added' });
+//   } catch (error) {
+//     res.status(400).json({
+//       message:
+//         'Sorry, could not save profile picture, formats allowed: png, jpg or jpeg',
+//     });
+//   }
+// });
 
 // --- TRIED TO CRATE THE SEARCH BAR --- //
 // app.get('/ratings/:restaurantName', authenticateUser);
