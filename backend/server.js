@@ -134,6 +134,7 @@ const authenticateUser = async (req, res, next) => {
 };
 
 // --- POST to feed --- //
+// add the POPULATE here
 app.post('/feed', authenticateUser);
 app.post('/feed', async (req, res) => {
   const {
@@ -187,6 +188,47 @@ app.get('/userpage/:userId', async (req, res) => {
     res.status(400).json({ response: error, success: false });
   }
 });
+
+// -- PATCH user info -- //
+app.patch('/user', async (req, res) => {
+  // req.query - ?user=id?
+  const userId = req.query.id;
+
+  try {
+    // salt -> randomizer
+    const salt = bcrypt.genSaltSync();
+    // if user change password -> hashing the password
+    // if the req.body.password is empty (no change at all by user) -> delete the req.body
+    if (req.body.password) {
+      req.body.password = bcrypt.hashSync(req.body.password, salt);
+    } else {
+      delete req.body.password;
+    }
+    // console.log(req.body)
+
+    const updatedUserProfile = await User.findOneAndUpdate(
+      { _id: userId },
+      req.body,
+      { new: true, useFindAndModify: false }
+    );
+    if (updatedUserProfile) {
+      res.status(200).json({ response: updatedUserProfile, success: true });
+    } else {
+      res.status(404).json({
+        message: 'User not found',
+        response: 'User not found',
+        success: false,
+      });
+    }
+  } catch (err) {
+    res.status(400).json({
+      message: 'Could not edit user, invalid request',
+      response: err,
+      success: false,
+    });
+  }
+});
+
 // -- GETTING the users personal ratings -- //
 app.get('/feed/:userId', async (req, res) => {
   const { userId } = req.params;

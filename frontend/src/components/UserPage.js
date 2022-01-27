@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, batch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
 
-import { ratings } from '../reducers/ratings';
+import { user } from '../reducers/user';
+
 const Title = styled.p`
   text-align: center;
   font-weight: bold;
@@ -23,6 +24,7 @@ export const UserPage = () => {
   const [deleteRating, setDeleteRating] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
   const [profileImageData, setprofileImageData] = useState({});
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const imageInput = useRef();
@@ -115,6 +117,29 @@ export const UserPage = () => {
       });
   };
 
+  const onChangeUserInfo = () => {
+    const options = {
+      method: 'PATCH',
+      headers: {
+        // Authorization: accessToken,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ firstName, lastName, email, password }),
+    };
+
+    fetch('http://localhost:8080/user', options)
+      .then(res => res.json())
+      .then(data => {
+        batch(() => {
+          dispatch(user.actions.setFirstName(data.response.firstName));
+          dispatch(user.actions.setLastName(data.response.lastName));
+          dispatch(user.actions.setEmail(data.response.email));
+          dispatch(user.actions.setError(null));
+        });
+        // console.log(userProfile)
+      });
+  };
+
   // --- getting the user info -- //
   return (
     <div>
@@ -136,6 +161,7 @@ export const UserPage = () => {
         <p>EMAIL: {email}</p>
         <p>FIRSTNAME: {firstName}</p>
         <p>LASTNAME: {lastName}</p>
+        <button onClick={onChangeUserInfo}>eddor info</button>
       </RatingContainer>
 
       <RatingContainer>

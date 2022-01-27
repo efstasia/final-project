@@ -6,6 +6,7 @@ export const ratings = createSlice({
   name: 'ratings',
   initialState: {
     items: [],
+    createdAt: '',
   },
 
   reducers: {

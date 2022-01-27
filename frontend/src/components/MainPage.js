@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 import styled from 'styled-components';
+import moment from 'moment';
 
 import { user } from '../reducers/user';
 import { ratings } from '../reducers/ratings';
@@ -48,7 +49,7 @@ export const MainPage = () => {
   const [selectCategory, setSelectCategory] = useState('');
   const [radioInput, setRadioInput] = useState('');
   const [searchRestaurant, setSearchRestaurant] = useState('');
-  // const [username, setUsername] = useState('')
+  //const [username, setUsername] = useState('');
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -57,6 +58,7 @@ export const MainPage = () => {
   const userId = useSelector(store => store.user.userId);
   const rating = useSelector(store => store.ratings.items);
   const username = useSelector(store => store.user.username);
+  console.log(username);
   // console.log('USER ID', userId);
 
   const handleWriteRating = () => {
@@ -150,7 +152,8 @@ export const MainPage = () => {
       .then(data => {
         dispatch(ratings.actions.setRating(data.response));
         dispatch(ratings.actions.setError(null));
-        dispatch(user.actions.setUsername(data.response.username));
+        //  dispatch(user.actions.setUsername(data.response.username));
+
         console.log(data.response);
       });
   }, [dispatch, accessToken]);
@@ -295,10 +298,12 @@ export const MainPage = () => {
                 {item.ratingText} RATING: {item.selectRating} CATEGORY:
                 {item.selectCategory} RECOMMEND? {item.radioInput}
               </p>
+              <p> {moment(item.createdAt).format('LL')}</p>
               <p>{username}</p>
               <button onClick={() => onDeleteRating(item._id)}>DELETE</button>
             </div>
           ))}
+
         {!rating && <div>No ratings to show</div>}
       </RatingContainer>
 
