@@ -54,7 +54,7 @@ export const App = () => {
           </Routes>
         </Provider>
 
-        <Footer />
+        {/* <Footer /> */}
       </BrowserRouter>
     </>
   );

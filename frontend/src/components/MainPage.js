@@ -6,6 +6,7 @@ import moment from 'moment';
 
 import { user } from '../reducers/user';
 import { ratings } from '../reducers/ratings';
+import { SortingSelect } from './SortingSelect';
 
 const InputWrapper = styled.div`
   form {
@@ -28,8 +29,22 @@ const InputWrapper = styled.div`
 
 const RatingContainer = styled.div`
   border: 2px solid black;
-  width: 50%;
+  width: 70%;
   margin: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+`;
+
+const RatingText = styled.div`
+  border: 2px solid black;
+`;
+
+const ProfileImage = styled.div`
+  height: 40px;
+  width: 40px;
+  background: #161616;
+  border-radius: 50%;
 `;
 
 const FoodImage = styled.img`
@@ -58,7 +73,7 @@ export const MainPage = () => {
   const userId = useSelector(store => store.user.userId);
   const rating = useSelector(store => store.ratings.items);
   const username = useSelector(store => store.user.username);
-  console.log(username);
+  console.log(rating);
   // console.log('USER ID', userId);
 
   const handleWriteRating = () => {
@@ -139,24 +154,24 @@ export const MainPage = () => {
   };
 
   // handles  the GETTING of rating to show
-  useEffect(() => {
-    const options = {
-      method: 'GET',
-      headers: {
-        Authorization: accessToken,
-      },
-    };
+  // useEffect(() => {
+  //   const options = {
+  //     method: 'GET',
+  //     headers: {
+  //       Authorization: accessToken,
+  //     },
+  //   };
 
-    fetch('http://localhost:8080/feed', options)
-      .then(res => res.json())
-      .then(data => {
-        dispatch(ratings.actions.setRating(data.response));
-        dispatch(ratings.actions.setError(null));
-        //  dispatch(user.actions.setUsername(data.response.username));
+  //   fetch('http://localhost:8080/feed', options)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       dispatch(ratings.actions.setRating(data.response));
+  //       dispatch(ratings.actions.setError(null));
+  //       //  dispatch(user.actions.setUsername(data.response.username));
 
-        console.log(data.response);
-      });
-  }, [dispatch, accessToken]);
+  //       console.log(data.response);
+  //     });
+  // }, [dispatch, accessToken]);
 
   // const sortAsc = rating.sort((a, b) => {
   //   return a.items > b.items ? 1 : -1;
@@ -179,7 +194,7 @@ export const MainPage = () => {
 
   return (
     <div>
-      <Link to='/userpage'>To your profile</Link>
+      {/* <Link to='/userpage'>To your profile</Link> */}
       <div>
         {!canWrite && (
           <button onClick={() => handleWriteRating()}>ADD RATING</button>
@@ -198,6 +213,7 @@ export const MainPage = () => {
         >
           search
         </button>
+        <SortingSelect />
         {/* {rating.map(sort => (
           <div>{sort.selectRating}</div>
         ))} */}
@@ -286,21 +302,32 @@ export const MainPage = () => {
                 src='https://postimg.cc/Mnd0YKDx'
                 alt='fast food'
               ></FoodImage> */}
-              <div
-                style={{
-                  height: '30px',
+              <RatingText>
+                <div
+                  style={{
+                    height: '30px',
 
-                  background: backgroundColor(item.selectCategory),
-                }}
-              ></div>
-              <p>
-                RESTAURANT NAME: {item.restaurantName} RATING TEXT:
-                {item.ratingText} RATING: {item.selectRating} CATEGORY:
-                {item.selectCategory} RECOMMEND? {item.radioInput}
-              </p>
-              <p> {moment(item.createdAt).format('LL')}</p>
-              <p>{username}</p>
-              <button onClick={() => onDeleteRating(item._id)}>DELETE</button>
+                    background: backgroundColor(item.selectCategory),
+                  }}
+                ></div>
+                <p>RESTAURANT NAME: {item.restaurantName}</p>
+                <p>
+                  RATING TEXT:
+                  {item.ratingText}
+                </p>
+                <p>RATING: {item.selectRating} </p>
+                <p>
+                  CATEGORY:
+                  {item.selectCategory}
+                </p>
+                <p>RECOMMEND? {item.radioInput}</p>
+                <p> {moment(item.createdAt).format('LL')}</p>
+                <p>
+                  <ProfileImage></ProfileImage>
+                  {username}
+                </p>
+                <button onClick={() => onDeleteRating(item._id)}>DELETE</button>
+              </RatingText>
             </div>
           ))}
 

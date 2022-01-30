@@ -161,7 +161,7 @@ export const UserPage = () => {
         <p>EMAIL: {email}</p>
         <p>FIRSTNAME: {firstName}</p>
         <p>LASTNAME: {lastName}</p>
-        <button onClick={onChangeUserInfo}>eddor info</button>
+        <button onClick={onChangeUserInfo}>edit info</button>
       </RatingContainer>
 
       <RatingContainer>

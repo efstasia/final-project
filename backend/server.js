@@ -246,6 +246,7 @@ app.get('/feed/:userId', async (req, res) => {
   }
 });
 
+// -- for the search path of restaurants -- //
 app.get('/restaurant', async (req, res) => {
   // on FE /restaurant?username=${name} or restaurantName
   const restaurantName = req.query.restaurantName;
