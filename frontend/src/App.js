@@ -4,18 +4,25 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { useOnClickOutside } from './hooks';
+import { ThemeProvider } from 'styled-components';
+import { GlobalStyles } from './styles/Globalstyles';
+import { lightTheme, darkTheme } from './styles/Themes';
+import { useDarkMode } from './components/UseDarkMode';
+import Toggle from './components/Toggler';
 
 import { user } from './reducers/user';
 import { ratings } from './reducers/ratings';
 
 import { Header } from './components/Header';
 import { StartPage } from './components/StartPage';
-import { MainPage } from './components/MainPage';
 import SignupPage from './components/SignupPage';
 import { UserPage } from './components/UserPage';
 import { Footer } from './components/Footer';
 import { Burger } from './components/Burger/Burger';
 import { Menu } from './components/Menu/Menu';
+import { SortingSelect } from './components/SortingSelect';
+import { AddRating } from './components/AddRating';
+import { SearchBar } from './components/SearchBar';
 
 const reducer = combineReducers({
   user: user.reducer,
@@ -25,6 +32,9 @@ const store = configureStore({ reducer });
 
 export const App = () => {
   const [open, setOpen] = useState(false);
+  const [theme, themeToggler] = useDarkMode();
+
+  const themeMode = theme === 'light' ? lightTheme : darkTheme;
 
   const node = useRef();
   useOnClickOutside(node, () => setOpen(false));
@@ -34,28 +44,35 @@ export const App = () => {
       <div>
         <Header />
       </div>
-      <BrowserRouter>
-        <Provider store={store}>
-          <div ref={node}>
-            <Burger open={open} setOpen={setOpen} />
-            <Menu open={open} setOpen={setOpen} />
-          </div>
-          <Routes>
-            <Route path='/' element={<StartPage />} />
+      <ThemeProvider theme={themeMode}>
+        <GlobalStyles />
 
-            {/* signin/signup */}
-            <Route path='/signup' element={<SignupPage />} />
+        <Toggle theme={theme} toggleTheme={themeToggler} />
+        <BrowserRouter>
+          <Provider store={store}>
+            <div ref={node}>
+              <Burger open={open} setOpen={setOpen} />
+              <Menu open={open} setOpen={setOpen} />
+            </div>
+            <Routes>
+              <Route path='/' element={<StartPage />} />
 
-            {/* main page once logged in */}
-            <Route path='/feed' element={<MainPage />} />
+              {/* signin/signup */}
+              <Route path='/signup' element={<SignupPage />} />
 
-            {/* user page */}
-            <Route path='/userpage' element={<UserPage />} />
-          </Routes>
-        </Provider>
+              {/* main page once logged in */}
+              <Route path='/feed' element={<SearchBar />} />
+              {/*             
+            <Route path='/add' element={<AddRating />} /> */}
 
-        {/* <Footer /> */}
-      </BrowserRouter>
+              {/* user page */}
+              <Route path='/userpage' element={<UserPage />} />
+            </Routes>
+          </Provider>
+
+          {/* <Footer /> */}
+        </BrowserRouter>
+      </ThemeProvider>
     </>
   );
 };

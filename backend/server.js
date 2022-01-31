@@ -90,7 +90,7 @@ const RatingSchema = new mongoose.Schema({
   },
   selectCategory: {
     type: String,
-    enum: ['Pizza', 'Pasta', 'Hamburger', 'Sushi'],
+    enum: ['Pizza', 'Pasta', 'Hamburger', 'Sushi', 'Other'],
     default: 'Pizza',
     required: true,
   },

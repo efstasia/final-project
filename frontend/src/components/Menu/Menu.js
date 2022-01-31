@@ -3,6 +3,8 @@ import { bool } from 'prop-types';
 import { useDispatch } from 'react-redux';
 import { StyledMenu } from './Menu.styled';
 
+import { Button, LogOutButtonContainer } from '../../styles/Styles';
+
 import { user } from '../../reducers/user';
 
 export const Menu = ({ open }) => {
@@ -17,7 +19,9 @@ export const Menu = ({ open }) => {
       <StyledMenu open={open}>
         <a href='/feed'>Feed</a>
         <a href='/userpage'>Profile</a>
-        <button onClick={handleLogout}>SIGN OUT</button>
+        <LogOutButtonContainer>
+          <Button onClick={handleLogout}>SIGN OUT</Button>
+        </LogOutButtonContainer>
       </StyledMenu>
     </>
   );

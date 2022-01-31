@@ -1,16 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const HeaderContainer = styled.div`
-  height: 150px;
-  color: white;
-  background: #161616;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 32px;
-`;
+import { HeaderContainer } from '../styles/Styles';
 
 export const Header = () => {
-  return <HeaderContainer>MINECHIES</HeaderContainer>;
+  return (
+    <HeaderContainer>
+      <img
+        src='https://i.postimg.cc/LXVg21Qk/message-square-outline.png'
+        alt='logo'
+      />{' '}
+      | MINECHIES
+    </HeaderContainer>
+  );
 };
