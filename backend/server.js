@@ -63,6 +63,10 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: () => crypto.randomBytes(128).toString('hex'),
   },
+  rating: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Rating',
+  },
 });
 
 // a schema to add the rating to the database
@@ -137,6 +141,9 @@ const authenticateUser = async (req, res, next) => {
 // add the POPULATE here
 app.post('/feed', authenticateUser);
 app.post('/feed', async (req, res) => {
+  // const { id } = req.params;
+  // console.log(req.user);
+  // console.log(req.user._id);
   const {
     ratingText,
     restaurantName,
@@ -155,6 +162,10 @@ app.post('/feed', async (req, res) => {
       radioInput,
       user,
     }).save();
+    // const updatedUser = await User.findByIdAndUpdate(id, {
+    //   $push: { rating: newRatingText },
+    // });
+    // res.status(201).json({ response: updatedUser, success: true });
     res.status(201).json({
       response: newRatingText,
       success: true,

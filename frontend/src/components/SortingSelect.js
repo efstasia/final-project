@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import ScrollToTop from 'react-scroll-to-top';
+
 import { ratings } from '../reducers/ratings';
 import { API_URL } from '../utils/urls';
 import styled from 'styled-components';
@@ -128,7 +128,6 @@ export const SortingSelect = props => {
 
   return (
     <div>
-      <ScrollToTop smooth />
       <AddRating canWrite={props.canWrite} />
       <SearchAndSortContainer>
         {/* <SearchBar /> */}

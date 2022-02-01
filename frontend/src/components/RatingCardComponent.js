@@ -17,19 +17,20 @@ import {
 export const RatingCardComponent = ({ item }) => {
   const backgroundColor = selectCategory => {
     if (selectCategory === 'Pizza') {
-      return 'blue';
+      return '#1F6F8B';
     }
     if (selectCategory === 'Hamburger') {
-      return 'pink';
+      return '#346751';
     }
+
     if (selectCategory === 'Sushi') {
-      return 'orange';
+      return ' #C84B31';
     }
     if (selectCategory === 'Pasta') {
-      return 'purple';
+      return '#FFC947';
     }
     if (selectCategory === 'Other') {
-      return 'green';
+      return '#CF455C';
     }
   };
 

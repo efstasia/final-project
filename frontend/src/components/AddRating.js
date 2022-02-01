@@ -5,7 +5,12 @@ import { useDispatch, useSelector, batch } from 'react-redux';
 import { user } from '../reducers/user';
 import { ratings } from '../reducers/ratings';
 
-import { InputWrapper, Form, Button } from '../styles/Styles';
+import {
+  InputWrapper,
+  Form,
+  Button,
+  AddButtonContainer,
+} from '../styles/Styles';
 
 export const AddRating = () => {
   const [restaurantName, setRestaurantName] = useState('');
@@ -34,6 +39,7 @@ export const AddRating = () => {
 
   const onRatingPost = event => {
     window.location.reload(true);
+    event.preventDefault();
     const optionsAll = {
       method: 'POST',
       headers: {
@@ -55,16 +61,23 @@ export const AddRating = () => {
       .then(data => {
         if (data.success) {
           batch(() => {
-            dispatch(user.actions.setUserId(data.response.userId));
-            dispatch(ratings.actions.setRating(data.response.rating));
-            dispatch(user.actions.setUsername(data.response.username));
+            dispatch(ratings.actions.setUser(data.response.user));
+            dispatch(
+              ratings.actions.setRestaurantName(data.response.restaurantName)
+            );
+            dispatch(
+              ratings.actions.setSelectRating(data.response.selectRating)
+            );
+            dispatch(
+              ratings.actions.setSelectCategory(data.response.selectCategory)
+            );
+            dispatch(ratings.actions.setRatingText(data.response.ratingText));
+            dispatch(ratings.actions.setRadioInput(data.response.radioInput));
             setInput('');
             setCanWrite(false);
           });
         }
       });
-
-    event.preventDefault();
   };
 
   return (
@@ -86,6 +99,19 @@ export const AddRating = () => {
       )}
       {canWrite && (
         <Form onSubmit={handleFormSubmit}>
+          <Button
+            style={{
+              borderRadius: '50%',
+              width: '60px',
+              height: '60px',
+              position: 'absolute',
+              left: '90%',
+            }}
+            onClick={handleInputClose}
+            className='toggle-button'
+          >
+            <i className='fas fa-times'></i>
+          </Button>
           <label htmlFor='restaurant'>Restaurant</label>
           <input
             type='text'
@@ -130,30 +156,28 @@ export const AddRating = () => {
             <option value='Sushi'>Sushi</option>
             <option value='Other'>Other</option>
           </select>
-          <div className='radio-button'>
-            <label htmlFor='radio-buttons'>Would you recommend?</label>
-            <label htmlFor='yes'>yes</label>
-            <input
-              id='radio-buttons'
-              type='radio'
-              name='recommend'
-              value='yes'
-              onChange={event => setRadioInput(event.target.value)}
-            />
-            <label htmlFor='no'>no</label>
-            <input
-              id='radio-buttons'
-              type='radio'
-              name='recommend'
-              value='no'
-              onChange={event => setRadioInput(event.target.value)}
-            />
-          </div>
 
-          <button onClick={onRatingPost}>Add rating</button>
-          <button onClick={handleInputClose} className='toggle-button'>
-            close
-          </button>
+          <label htmlFor='radio-buttons'>Would you recommend?</label>
+          <label htmlFor='yes'>yes</label>
+          <input
+            id='radio-buttons'
+            type='radio'
+            name='recommend'
+            value='yes'
+            onChange={event => setRadioInput(event.target.value)}
+          />
+          <label htmlFor='no'>no</label>
+          <input
+            id='radio-buttons'
+            type='radio'
+            name='recommend'
+            value='no'
+            onChange={event => setRadioInput(event.target.value)}
+          />
+
+          <AddButtonContainer>
+            <Button onClick={onRatingPost}>ADD RATING</Button>
+          </AddButtonContainer>
         </Form>
       )}
     </InputWrapper>

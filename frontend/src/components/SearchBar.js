@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 import styled from 'styled-components';
 import moment from 'moment';
+import ScrollToTop from 'react-scroll-to-top';
 
 import { API_URL } from '../utils/urls';
 import { ratings } from '../reducers/ratings';
@@ -42,15 +43,6 @@ export const SearchBar = props => {
 
   // this handles the POSTING of ratings
 
-  // const onSearchRestaurant = event => {
-  //   fetch(`http://localhost:8080/restaurant?restaurantName=${searchRestaurant}`)
-  //     .then(res => res.json())
-  //     .then(data => {
-  //       dispatch(ratings.actions.setRating(data.response));
-  //     });
-  //   // setSearchRestaurant(event.target.value);
-  // };
-
   const onSearchInput = input => {
     let matches = [];
     if (input.length > 0) {
@@ -75,7 +67,7 @@ export const SearchBar = props => {
     fetch(API_URL('feed'), options)
       .then(res => res.json())
       .then(data => {
-        dispatch(ratings.actions.setRating(data.response));
+        dispatch(ratings.actions.setItems(data.response));
         dispatch(ratings.actions.setError(null));
         //  dispatch(user.actions.setUsername(data.response.username));
         console.log(data.response);
@@ -85,6 +77,7 @@ export const SearchBar = props => {
   console.log('restaurant NAME', restaurantName);
   return (
     <div>
+      <ScrollToTop smooth />
       <AddRating canWrite={props.canWrite} />
       <SearchAndSortContainer>
         <label htmlFor='searchbar'>SEARCH</label>
@@ -94,6 +87,7 @@ export const SearchBar = props => {
           placeholder='search'
           onChange={e => onSearchInput(e.target.value)}
         />
+        {/* <SortingSelect /> */}
       </SearchAndSortContainer>
       <RatingContainer>
         {rating && restaurantName.length === 0

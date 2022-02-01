@@ -42,7 +42,6 @@ export const InputWrapper = styled.div`
 // RATING FORM //
 export const Form = styled.form`
   position: absolute;
-  height: 100%;
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -50,24 +49,33 @@ export const Form = styled.form`
   border: 2px solid black;
   box-shadow: 4px 5px 2px black;
   z-index: 1;
+  background: lightsteelblue;
+  color: #161616;
+  font-family: 'Poppins', sans-serif;
+  padding: 5px;
+  border-radius: 2px;
 
   label,
   select,
-  textarea {
-    width: 50%;
-    margin: 10px auto;
-    text-align: center;
-  }
-
+  textarea,
   input {
+    width: 50%;
     text-align: center;
-    align-items: center;
+    margin: 3px auto;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
   }
 
   button {
-    width: 50%;
     margin: 5px auto;
   }
+`;
+
+export const AddButtonContainer = styled.div`
+  display: grid;
+  width: 40%;
+  align-items: center;
+  margin: 0px auto;
 `;
 
 // LOG OUT BUTTON //
@@ -81,7 +89,7 @@ export const Button = styled.button`
     display: inline-block;
     font-family: 'Fredoka One', cursive;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 200;
     line-height: 1.5;
     margin: 0;
     max-width: none;
