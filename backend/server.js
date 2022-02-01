@@ -178,7 +178,7 @@ app.post('/feed', async (req, res) => {
 // --- GET ratings to feed --- //
 app.get('/feed', authenticateUser);
 app.get('/feed', async (req, res) => {
-  const main = await Rating.find({}).sort({ ratingText: -1 });
+  const main = await Rating.find({}).sort({ ratingText: -1 }).populate('user');
 
   res
     .status(201)

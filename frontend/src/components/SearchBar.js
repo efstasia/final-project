@@ -9,7 +9,6 @@ import { API_URL } from '../utils/urls';
 import { ratings } from '../reducers/ratings';
 import { RatingCardComponent } from './RatingCardComponent';
 
-import { SortingSelect } from './SortingSelect';
 import { AddRating } from './AddRating';
 
 import { RatingContainer, SearchAndSortContainer } from '../styles/Styles';
@@ -24,6 +23,8 @@ const FoodImage = styled.img`
 export const SearchBar = props => {
   const [restaurantName, setRestaurantName] = useState([]);
   const [validationError, setValidationError] = useState(null); // setValidationErrors needs to be connected to backend error msg
+  const [data, setData] = useState([]);
+  const [sortType, setSortType] = useState('ratings');
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -41,8 +42,7 @@ export const SearchBar = props => {
     }
   }, [accessToken, navigate]);
 
-  // this handles the POSTING of ratings
-
+  // this handles the searching of ratings //
   const onSearchInput = input => {
     let matches = [];
     if (input.length > 0) {
@@ -55,7 +55,7 @@ export const SearchBar = props => {
     // setInput(input);
   };
 
-  // handles  the GETTING of rating to show
+  // handles  the GETTING of rating to show //
   useEffect(() => {
     const options = {
       method: 'GET',
@@ -74,39 +74,91 @@ export const SearchBar = props => {
       });
   }, [dispatch, accessToken]);
 
+  // this sorts the ratings //
+  useEffect(() => {
+    if (sortType === 'highToLow') {
+      setData([...rating].sort((a, b) => b.selectRating - a.selectRating));
+    } else if (sortType === 'lowToHigh') {
+      setData([...rating].sort((a, b) => a.selectRating - b.selectRating));
+    } else if (sortType === 'all') {
+      setData(rating);
+    }
+  }, [sortType, rating]);
+
   console.log('restaurant NAME', restaurantName);
-  return (
-    <div>
-      <ScrollToTop smooth />
-      <AddRating canWrite={props.canWrite} />
-      <SearchAndSortContainer>
-        <label htmlFor='searchbar'>SEARCH</label>
-        <input
-          type='text'
-          id='searchbar'
-          placeholder='search'
-          onChange={e => onSearchInput(e.target.value)}
-        />
-        {/* <SortingSelect /> */}
-      </SearchAndSortContainer>
-      <RatingContainer>
-        {rating && restaurantName.length === 0
-          ? rating.map(item => (
-              <div key={item._id}>
-                <RatingCardComponent item={item} />
-              </div>
-            ))
-          : restaurantName.map(item => (
+
+  if (data.length > 0) {
+    return (
+      <div>
+        <ScrollToTop smooth />
+        <AddRating canWrite={props.canWrite} />
+        <SearchAndSortContainer>
+          <label htmlFor='searchbar'>SEARCH</label>
+          <input
+            type='text'
+            id='searchbar'
+            placeholder='search'
+            onChange={e => onSearchInput(e.target.value)}
+          />
+          <select onChange={event => setSortType(event.target.value)}>
+            <option value='all' defaultValue>
+              all
+            </option>
+            <option value='highToLow'>high to low</option>
+            <option value='lowToHigh'>low to high</option>
+            <option></option>
+          </select>
+          {/* <SortingSelect /> */}
+        </SearchAndSortContainer>
+        <RatingContainer>
+          {data &&
+            data.map(item => (
               <div key={item._id}>
                 <RatingCardComponent item={item} />
               </div>
             ))}
-      </RatingContainer>
+        </RatingContainer>
+      </div>
+    );
+  } else if (data.length === 0) {
+    return (
+      <div>
+        <ScrollToTop smooth />
+        <AddRating canWrite={props.canWrite} />
+        <SearchAndSortContainer>
+          <label htmlFor='searchbar'>SEARCH</label>
+          <input
+            type='text'
+            id='searchbar'
+            placeholder='search'
+            onChange={e => onSearchInput(e.target.value)}
+          />
+          <select onChange={event => setSortType(event.target.value)}>
+            <option value='all' defaultValue>
+              all
+            </option>
+            <option value='highToLow'>high to low</option>
+            <option value='lowToHigh'>low to high</option>
+            <option></option>
+          </select>
+        </SearchAndSortContainer>
+        <RatingContainer>
+          {rating && restaurantName.length === 0
+            ? rating.map(item => (
+                <div key={item._id}>
+                  <RatingCardComponent item={item} />
+                </div>
+              ))
+            : restaurantName.map(item => (
+                <div key={item._id}>
+                  <RatingCardComponent item={item} />
+                </div>
+              ))}
+        </RatingContainer>
 
-      {/* <SortingSelect /> */}
-
-      {/* this handles the error messages */}
-      {validationError !== null && <p>{validationError}</p>}
-    </div>
-  );
+        {/* this handles the error messages */}
+        {validationError !== null && <p>{validationError}</p>}
+      </div>
+    );
+  }
 };

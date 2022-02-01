@@ -52,7 +52,7 @@ export const RatingCardComponent = ({ item }) => {
     }
   };
 
-  const username = useSelector(store => store.user.username);
+  //const username = useSelector(store => store.user.username);
 
   const dispatch = useDispatch();
 
@@ -90,7 +90,8 @@ export const RatingCardComponent = ({ item }) => {
         <Question>RECOMMEND? </Question> <Answer> {item.radioInput}</Answer>
         <DateAndUser>
           {' '}
-          {moment(item.createdAt).format('LL')} <span> {username}</span>
+          {moment(item.createdAt).format('LL')}{' '}
+          <span> {item.user.username}</span>
         </DateAndUser>
       </RatingText>
       <Button
