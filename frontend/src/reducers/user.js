@@ -1,25 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = localStorage.getItem('user')
-  ? {
-      userId: JSON.parse(localStorage.getItem('user')).userId,
-      username: JSON.parse(localStorage.getItem('user')).username,
-      email: JSON.parse(localStorage.getItem('user')).email,
-      firstName: JSON.parse(localStorage.getItem('user')).firstName,
-      lastName: JSON.parse(localStorage.getItem('user')).lastName,
-      accessToken: JSON.parse(localStorage.getItem('user')).accessToken,
-    }
-  : {
-      userId: null,
-      username: null,
-      accessToken: null,
-      email: null,
-      error: null,
-    };
+// const initialState = localStorage.getItem('user')
+//   ? {
+//       userId: JSON.parse(localStorage.getItem('user')).userId,
+//       username: JSON.parse(localStorage.getItem('user')).username,
+//       email: JSON.parse(localStorage.getItem('user')).email,
+//       firstName: JSON.parse(localStorage.getItem('user')).firstName,
+//       lastName: JSON.parse(localStorage.getItem('user')).lastName,
+//       accessToken: JSON.parse(localStorage.getItem('user')).accessToken,
+//     }
+//   : {
+//       userId: null,
+//       username: null,
+//       accessToken: null,
+//       email: null,
+//       error: null,
+//     };
 
 export const user = createSlice({
   name: 'user',
-  initialState,
+  initialState: {
+    userId: null,
+    username: null,
+    accessToken: null,
+    email: null,
+    error: null,
+    firstName: null,
+    lastName: null,
+  },
   reducers: {
     setEmail: (store, action) => {
       store.email = action.payload;
@@ -47,7 +55,7 @@ export const user = createSlice({
       store.userId = null;
       store.username = null;
       store.accessToken = null;
-      localStorage.removeItem('accessToken');
+      // localStorage.removeItem('accessToken');
     },
   },
 });

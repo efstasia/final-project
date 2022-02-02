@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 export const useDarkMode = () => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState('dark');
 
   // this saves the theme preference of the user
   const setMode = mode => {
@@ -9,7 +9,7 @@ export const useDarkMode = () => {
   };
 
   const themeToggler = () => {
-    theme === 'light' ? setMode('dark') : setMode('light');
+    theme === 'dark' ? setMode('light') : setMode('dark');
   };
 
   useEffect(() => {

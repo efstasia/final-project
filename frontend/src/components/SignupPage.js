@@ -47,24 +47,26 @@ const SignupPage = () => {
           batch(() => {
             console.log(data.response);
             dispatch(user.actions.setUserId(data.response.userId));
+
             dispatch(user.actions.setUsername(data.response.username));
             dispatch(user.actions.setAccessToken(data.response.accessToken));
             dispatch(user.actions.setFirstName(data.response.firstName));
             dispatch(user.actions.setLastName(data.response.lastName));
             dispatch(user.actions.setEmail(data.response.email));
             dispatch(user.actions.setError(null));
-            localStorage.setItem(
-              'user',
-              JSON.stringify({
-                userId: data.response.userId,
-                username: data.response.username,
-                firstName: data.response.firstName,
-                lastName: data.response.lastName,
-                email: data.response.email,
-                accessToken: data.response.accessToken,
-              })
-            );
+            // localStorage.setItem(
+            //   'user',
+            //   JSON.stringify({
+            //     userId: data.response.userId,
+            //     username: data.response.username,
+            //     firstName: data.response.firstName,
+            //     lastName: data.response.lastName,
+            //     email: data.response.email,
+            //     accessToken: data.response.accessToken,
+            //   })
+            // );
           });
+          console.log(data.response.userId);
         } else {
           batch(() => {
             dispatch(user.actions.setUserId(null));
@@ -100,17 +102,17 @@ const SignupPage = () => {
             dispatch(user.actions.setAccessToken(data.response.accessToken));
             dispatch(user.actions.setEmail(data.response.email));
             dispatch(user.actions.setError(null));
-            localStorage.setItem(
-              'user',
-              JSON.stringify({
-                userId: data.response.userId,
-                username: data.response.username,
-                firstName: data.response.firstName,
-                lastName: data.response.lastName,
-                email: data.response.email,
-                accessToken: data.response.accessToken,
-              })
-            );
+            // localStorage.setItem(
+            //   'user',
+            //   JSON.stringify({
+            //     userId: data.response.userId,
+            //     username: data.response.username,
+            //     firstName: data.response.firstName,
+            //     lastName: data.response.lastName,
+            //     email: data.response.email,
+            //     accessToken: data.response.accessToken,
+            //   })
+            // );
           });
         } else {
           batch(() => {

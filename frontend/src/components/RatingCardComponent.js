@@ -65,8 +65,8 @@ export const RatingCardComponent = ({ item }) => {
     fetch(`http://localhost:8080/feed/${ratingId}`, options)
       .then(res => res.json())
       .then(data => {
-        console.log(data);
         dispatch(ratings.actions.setRating(data.response));
+        console.log(data.response);
       });
   };
 
@@ -90,8 +90,8 @@ export const RatingCardComponent = ({ item }) => {
         <Question>RECOMMEND? </Question> <Answer> {item.radioInput}</Answer>
         <DateAndUser>
           {' '}
-          {moment(item.createdAt).format('LL')}{' '}
-          {/* <span> {item.user.username}</span> */}
+          {moment(item.createdAt).fromNow()}{' '}
+          <span>by {item.user.username}</span>
         </DateAndUser>
       </RatingText>
       <Button

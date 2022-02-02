@@ -2,7 +2,14 @@ import React, { useState, useRef } from 'react';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import thunkMiddleware from 'redux-thunk';
+import {
+  configureStore,
+  combineReducers,
+  createStore,
+  compose,
+  applyMiddleware,
+} from '@reduxjs/toolkit';
 import { useOnClickOutside } from './hooks';
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyles } from './styles/Globalstyles';
@@ -28,13 +35,30 @@ const reducer = combineReducers({
   user: user.reducer,
   ratings: ratings.reducer,
 });
-const store = configureStore({ reducer });
+
+const persistedStateJSON = localStorage.getItem('userReduxState');
+let persistedState = {};
+if (persistedStateJSON) {
+  persistedState = JSON.parse(persistedStateJSON);
+}
+
+const composedEnhancers =
+  (process.env.NODE_ENV !== 'production' &&
+    typeof window !== 'undefined' &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+  compose;
+
+const store = createStore(reducer, persistedState);
+store.subscribe(() => {
+  localStorage.setItem('userReduxState', JSON.stringify(store.getState()));
+  composedEnhancers(applyMiddleware(thunkMiddleware));
+});
 
 export const App = () => {
   const [open, setOpen] = useState(false);
   const [theme, themeToggler] = useDarkMode();
 
-  const themeMode = theme === 'light' ? lightTheme : darkTheme;
+  const themeMode = theme === 'dark' ? darkTheme : lightTheme;
 
   // this makes it so we can close the menu anywhere on the screen
   const node = useRef();
@@ -67,7 +91,7 @@ export const App = () => {
             <Route path='/add' element={<AddRating />} /> */}
 
               {/* user page */}
-              <Route path='/userpage' element={<UserPage />} />
+              <Route path='/userpage/:userId' element={<UserPage />} />
             </Routes>
           </Provider>
 

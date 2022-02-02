@@ -144,7 +144,9 @@ export const RatingCard = styled.div`
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 `;
 
-export const RatingText = styled.div``;
+export const RatingText = styled.div`
+  margin-left: 15px;
+`;
 
 export const Question = styled.p`
   margin-bottom: 3px;

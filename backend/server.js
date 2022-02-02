@@ -188,7 +188,7 @@ app.get('/feed/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const profile = await User.findById(userId);
+    const profile = await User.findById({ _id: userId });
     res.status(200).json({
       response: profile,
       success: true,
@@ -199,15 +199,17 @@ app.get('/feed/:userId', async (req, res) => {
 });
 
 // -- PATCH user info -- //
-app.patch('/feed/:userId', authenticateUser);
-app.patch('/feed/:userId', async (req, res) => {
+//app.patch('/feed/:userId', authenticateUser);
+app.patch('/userpage/:userId', async (req, res) => {
   // req.query - ?user=id?
+  const updatedUserInfo = req.body;
   const { userId } = req.params;
 
   try {
     const updatedUserProfile = await User.findOneAndUpdate(
       { _id: userId },
-      req.body,
+      { $set: updatedUserInfo },
+
       { new: true }
     );
     if (updatedUserProfile) {
@@ -244,29 +246,6 @@ app.get('/userpage/:userId', async (req, res) => {
     res.status(400).json({ response: error, success: false });
   }
 });
-
-// // -- for the search path of restaurants -- //
-// app.get('/restaurant', async (req, res) => {
-//   // on FE /restaurant?username=${name} or restaurantName
-//   const restaurantName = req.query.restaurantName;
-//   // const username = req.query.username
-
-//   const findRestaurant = await Rating.find({ restaurantName: restaurantName });
-//   try {
-//     if (findRestaurant.length > 0) {
-//       res.status(200).json({
-//         response: findRestaurant,
-//         success: true,
-//       });
-//     } else {
-//       res
-//         .status(404)
-//         .json({ response: 'restaurant not found', success: false });
-//     }
-//   } catch (error) {
-//     res.status(400).json({ response: error, success: false });
-//   }
-// });
 
 // --- delete feed, maybe not neccesary?--- //
 app.delete('/feed/:ratingId', async (req, res) => {
