@@ -22,7 +22,7 @@ import { Burger } from './components/Burger/Burger';
 import { Menu } from './components/Menu/Menu';
 import { SortingSelect } from './components/SortingSelect';
 import { AddRating } from './components/AddRating';
-import { SearchBar } from './components/SearchBar';
+import { MainFeed } from './components/MainFeed';
 
 const reducer = combineReducers({
   user: user.reducer,
@@ -36,6 +36,7 @@ export const App = () => {
 
   const themeMode = theme === 'light' ? lightTheme : darkTheme;
 
+  // this makes it so we can close the menu anywhere on the screen
   const node = useRef();
   useOnClickOutside(node, () => setOpen(false));
 
@@ -61,7 +62,7 @@ export const App = () => {
               <Route path='/signup' element={<SignupPage />} />
 
               {/* main page once logged in */}
-              <Route path='/feed' element={<SearchBar />} />
+              <Route path='/feed' element={<MainFeed />} />
               {/*             
             <Route path='/add' element={<AddRating />} /> */}
 

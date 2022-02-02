@@ -20,7 +20,7 @@ const FoodImage = styled.img`
 `;
 
 // signed in content, first page you see
-export const SearchBar = props => {
+export const MainFeed = props => {
   const [restaurantName, setRestaurantName] = useState([]);
   const [validationError, setValidationError] = useState(null); // setValidationErrors needs to be connected to backend error msg
   const [data, setData] = useState([]);
@@ -71,6 +71,7 @@ export const SearchBar = props => {
         dispatch(ratings.actions.setError(null));
         //  dispatch(user.actions.setUsername(data.response.username));
         console.log(data.response);
+        setData(data.response);
       });
   }, [dispatch, accessToken]);
 
@@ -87,78 +88,78 @@ export const SearchBar = props => {
 
   console.log('restaurant NAME', restaurantName);
 
-  if (data.length > 0) {
-    return (
-      <div>
-        <ScrollToTop smooth />
-        <AddRating canWrite={props.canWrite} />
-        <SearchAndSortContainer>
-          <label htmlFor='searchbar'>SEARCH</label>
-          <input
-            type='text'
-            id='searchbar'
-            placeholder='search'
-            onChange={e => onSearchInput(e.target.value)}
-          />
-          <select onChange={event => setSortType(event.target.value)}>
-            <option value='all' defaultValue>
-              all
-            </option>
-            <option value='highToLow'>high to low</option>
-            <option value='lowToHigh'>low to high</option>
-            <option></option>
-          </select>
-          {/* <SortingSelect /> */}
-        </SearchAndSortContainer>
-        <RatingContainer>
-          {data &&
-            data.map(item => (
+  // if (data.length > 0) {
+  //   return (
+  //     <div>
+  //       <ScrollToTop smooth />
+  //       <AddRating canWrite={props.canWrite} />
+  //       <SearchAndSortContainer>
+  //         <label htmlFor='searchbar'>SEARCH</label>
+  //         <input
+  //           type='text'
+  //           id='searchbar'
+  //           placeholder='search'
+  //           onChange={e => onSearchInput(e.target.value)}
+  //         />
+  //         <select onChange={event => setSortType(event.target.value)}>
+  //           <option value='all' defaultValue>
+  //             all
+  //           </option>
+  //           <option value='highToLow'>high to low</option>
+  //           <option value='lowToHigh'>low to high</option>
+  //           <option></option>
+  //         </select>
+  //         {/* <SortingSelect /> */}
+  //       </SearchAndSortContainer>
+  //       <RatingContainer>
+  //         {data &&
+  //           data.map(item => (
+  //             <div key={item._id}>
+  //               <RatingCardComponent item={item} />
+  //             </div>
+  //           ))}
+  //       </RatingContainer>
+  //     </div>
+  //   );
+  // } else if (data.length === 0) {
+  return (
+    <div>
+      <ScrollToTop smooth />
+      <AddRating canWrite={props.canWrite} />
+      <SearchAndSortContainer>
+        <label htmlFor='searchbar'>SEARCH</label>
+        <input
+          type='text'
+          id='searchbar'
+          placeholder='search'
+          onChange={e => onSearchInput(e.target.value)}
+        />
+        SORT
+        <select onChange={event => setSortType(event.target.value)}>
+          <option value='all' defaultValue>
+            all
+          </option>
+          <option value='highToLow'>high to low</option>
+          <option value='lowToHigh'>low to high</option>
+          <option></option>
+        </select>
+      </SearchAndSortContainer>
+      <RatingContainer>
+        {data && restaurantName.length === 0
+          ? data.map(item => (
+              <div key={item._id}>
+                <RatingCardComponent item={item} />
+              </div>
+            ))
+          : restaurantName.map(item => (
               <div key={item._id}>
                 <RatingCardComponent item={item} />
               </div>
             ))}
-        </RatingContainer>
-      </div>
-    );
-  } else if (data.length === 0) {
-    return (
-      <div>
-        <ScrollToTop smooth />
-        <AddRating canWrite={props.canWrite} />
-        <SearchAndSortContainer>
-          <label htmlFor='searchbar'>SEARCH</label>
-          <input
-            type='text'
-            id='searchbar'
-            placeholder='search'
-            onChange={e => onSearchInput(e.target.value)}
-          />
-          <select onChange={event => setSortType(event.target.value)}>
-            <option value='all' defaultValue>
-              all
-            </option>
-            <option value='highToLow'>high to low</option>
-            <option value='lowToHigh'>low to high</option>
-            <option></option>
-          </select>
-        </SearchAndSortContainer>
-        <RatingContainer>
-          {rating && restaurantName.length === 0
-            ? rating.map(item => (
-                <div key={item._id}>
-                  <RatingCardComponent item={item} />
-                </div>
-              ))
-            : restaurantName.map(item => (
-                <div key={item._id}>
-                  <RatingCardComponent item={item} />
-                </div>
-              ))}
-        </RatingContainer>
+      </RatingContainer>
 
-        {/* this handles the error messages */}
-        {validationError !== null && <p>{validationError}</p>}
-      </div>
-    );
-  }
+      {/* this handles the error messages */}
+      {validationError !== null && <p>{validationError}</p>}
+    </div>
+  );
 };

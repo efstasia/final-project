@@ -11,7 +11,7 @@ const Button = styled.button`
   padding: 0.6rem;
   font-family: 'Fredoka One', cursive;
   position: relative;
-  left: 94%;
+  left: 91%;
   margin-top: 5px;
 `;
 const Toggle = ({ theme, toggleTheme }) => {

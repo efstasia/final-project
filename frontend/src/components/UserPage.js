@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { user } from '../reducers/user';
+import { ratings } from '../reducers/ratings';
 
 const Title = styled.p`
   text-align: center;
@@ -52,11 +53,11 @@ export const UserPage = () => {
       },
     };
 
-    fetch(`http://localhost:8080/feed/${userId}`, options) // needs ${userId}
+    fetch(`http://localhost:8080/userpage/${userId}`, options) // needs ${userId}
       .then(res => res.json())
       .then(data => {
         if (data.success) {
-          // dispatch(ratings.actions.setRating(data.response));
+          dispatch(ratings.actions.setItems(data.response));
           // dispatch(ratings.actions.setError(null));
 
           setRating(data.response);

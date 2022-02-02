@@ -91,7 +91,7 @@ export const RatingCardComponent = ({ item }) => {
         <DateAndUser>
           {' '}
           {moment(item.createdAt).format('LL')}{' '}
-          <span> {item.user.username}</span>
+          {/* <span> {item.user.username}</span> */}
         </DateAndUser>
       </RatingText>
       <Button

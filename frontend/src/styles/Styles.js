@@ -23,7 +23,6 @@ export const InputWrapper = styled.div`
   
     display: flex;
     flex-direction: column;
- 
     align-items: center;
     gap: 7px;
     width: 50%;

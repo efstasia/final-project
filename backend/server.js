@@ -31,6 +31,7 @@ mongoose.Promise = Promise;
 // const parser = multer({ storage });
 
 // a schema to sign up/sign in to the user page
+// a schema to sign up/sign in to the user page
 const UserSchema = new mongoose.Schema({
   email: {
     type: String,
@@ -75,10 +76,6 @@ const RatingSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    createdAt: {
-      type: Date,
-      default: () => new Date(), // could also pass Date.now and change the type to Number
-    },
   },
   restaurantName: {
     type: String,
@@ -162,6 +159,7 @@ app.post('/feed', async (req, res) => {
       radioInput,
       user,
     }).save();
+
     // const updatedUser = await User.findByIdAndUpdate(id, {
     //   $push: { rating: newRatingText },
     // });
@@ -178,7 +176,7 @@ app.post('/feed', async (req, res) => {
 // --- GET ratings to feed --- //
 app.get('/feed', authenticateUser);
 app.get('/feed', async (req, res) => {
-  const main = await Rating.find({}).sort({ ratingText: -1 }).populate('user');
+  const main = await Rating.find({}).populate('user');
 
   res
     .status(201)
@@ -186,7 +184,7 @@ app.get('/feed', async (req, res) => {
 });
 
 // --- get USER profile info --- //
-app.get('/userpage/:userId', async (req, res) => {
+app.get('/feed/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {
@@ -201,26 +199,16 @@ app.get('/userpage/:userId', async (req, res) => {
 });
 
 // -- PATCH user info -- //
-app.patch('/user', async (req, res) => {
+app.patch('/feed/:userId', authenticateUser);
+app.patch('/feed/:userId', async (req, res) => {
   // req.query - ?user=id?
-  const userId = req.query.id;
+  const { userId } = req.params;
 
   try {
-    // salt -> randomizer
-    const salt = bcrypt.genSaltSync();
-    // if user change password -> hashing the password
-    // if the req.body.password is empty (no change at all by user) -> delete the req.body
-    if (req.body.password) {
-      req.body.password = bcrypt.hashSync(req.body.password, salt);
-    } else {
-      delete req.body.password;
-    }
-    // console.log(req.body)
-
     const updatedUserProfile = await User.findOneAndUpdate(
       { _id: userId },
       req.body,
-      { new: true, useFindAndModify: false }
+      { new: true }
     );
     if (updatedUserProfile) {
       res.status(200).json({ response: updatedUserProfile, success: true });
@@ -241,7 +229,7 @@ app.patch('/user', async (req, res) => {
 });
 
 // -- GETTING the users personal ratings -- //
-app.get('/feed/:userId', async (req, res) => {
+app.get('/userpage/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {
@@ -257,28 +245,28 @@ app.get('/feed/:userId', async (req, res) => {
   }
 });
 
-// -- for the search path of restaurants -- //
-app.get('/restaurant', async (req, res) => {
-  // on FE /restaurant?username=${name} or restaurantName
-  const restaurantName = req.query.restaurantName;
-  // const username = req.query.username
+// // -- for the search path of restaurants -- //
+// app.get('/restaurant', async (req, res) => {
+//   // on FE /restaurant?username=${name} or restaurantName
+//   const restaurantName = req.query.restaurantName;
+//   // const username = req.query.username
 
-  const findRestaurant = await Rating.find({ restaurantName: restaurantName });
-  try {
-    if (findRestaurant.length > 0) {
-      res.status(200).json({
-        response: findRestaurant,
-        success: true,
-      });
-    } else {
-      res
-        .status(404)
-        .json({ response: 'restaurant not found', success: false });
-    }
-  } catch (error) {
-    res.status(400).json({ response: error, success: false });
-  }
-});
+//   const findRestaurant = await Rating.find({ restaurantName: restaurantName });
+//   try {
+//     if (findRestaurant.length > 0) {
+//       res.status(200).json({
+//         response: findRestaurant,
+//         success: true,
+//       });
+//     } else {
+//       res
+//         .status(404)
+//         .json({ response: 'restaurant not found', success: false });
+//     }
+//   } catch (error) {
+//     res.status(400).json({ response: error, success: false });
+//   }
+// });
 
 // --- delete feed, maybe not neccesary?--- //
 app.delete('/feed/:ratingId', async (req, res) => {
