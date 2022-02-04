@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, batch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { user } from '../reducers/user';
+import { Collapse } from '@chakra-ui/core';
+import food2 from '../videos/food.mp4';
+
+import { SignupContainer, PageWrapper, Button } from '../styles/Styles';
 
 const SignupPage = () => {
   const [email, setEmail] = useState('');
@@ -9,11 +14,13 @@ const SignupPage = () => {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-
   const [usernameSignin, setUsernameSignin] = useState('');
   const [passwordSignin, setPasswordSignin] = useState('');
-
   const [validationError, setValidationError] = useState(null);
+  const [show, setShow] = useState(false);
+
+  const handleToggle = () => setShow(!show);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -54,17 +61,6 @@ const SignupPage = () => {
             dispatch(user.actions.setLastName(data.response.lastName));
             dispatch(user.actions.setEmail(data.response.email));
             dispatch(user.actions.setError(null));
-            // localStorage.setItem(
-            //   'user',
-            //   JSON.stringify({
-            //     userId: data.response.userId,
-            //     username: data.response.username,
-            //     firstName: data.response.firstName,
-            //     lastName: data.response.lastName,
-            //     email: data.response.email,
-            //     accessToken: data.response.accessToken,
-            //   })
-            // );
           });
           console.log(data.response.userId);
         } else {
@@ -72,8 +68,8 @@ const SignupPage = () => {
             dispatch(user.actions.setUserId(null));
             dispatch(user.actions.setUsername(null));
             dispatch(user.actions.setAccessToken(null));
-
             dispatch(user.actions.setError(data.response));
+
             setValidationError(data.message);
           });
         }
@@ -102,17 +98,11 @@ const SignupPage = () => {
             dispatch(user.actions.setAccessToken(data.response.accessToken));
             dispatch(user.actions.setEmail(data.response.email));
             dispatch(user.actions.setError(null));
-            // localStorage.setItem(
-            //   'user',
-            //   JSON.stringify({
-            //     userId: data.response.userId,
-            //     username: data.response.username,
-            //     firstName: data.response.firstName,
-            //     lastName: data.response.lastName,
-            //     email: data.response.email,
-            //     accessToken: data.response.accessToken,
-            //   })
-            // );
+          });
+          Swal.fire({
+            icon: 'success',
+            title: 'Yay',
+            text: "You're now a member",
           });
         } else {
           batch(() => {
@@ -126,68 +116,95 @@ const SignupPage = () => {
             setValidationError(data.message);
           });
           console.log(data);
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong',
+          });
         }
       });
   };
 
   return (
-    <div>
-      <form onSubmit={onFormSubmit}>
-        <label htmlFor='email'>Email</label>
-        <input
-          value={email}
-          onChange={e => setEmail(e.target.value)}
-          id='email'
-        />
-        <label htmlFor='username'>Username</label>
-        <input
-          value={username}
-          id='username'
-          onChange={e => setUsername(e.target.value)}
-        />
-        <label htmlFor='password'>Password</label>
-        <input
-          type='password'
-          value={password}
-          id='password'
-          onChange={e => setPassword(e.target.value)}
-        />
-        <label htmlFor='firstName'>First name</label>
-        <input
-          value={firstName}
-          id='firstName'
-          onChange={e => setFirstName(e.target.value)}
-        />
-        <label htmlFor='lastName'>Last name</label>
-        <input
-          value={lastName}
-          id='lastName'
-          onChange={e => setLastName(e.target.value)}
-        />
-        <button type='submit'>submit</button>
-      </form>
-      {validationError !== null && (
-        <p style={{ fontSize: '21px', color: 'red' }}>{validationError}</p>
-      )}
+    <PageWrapper>
+      <div>
+        <video loop muted autoPlay>
+          <source src={food2} type='video/mp4' />
+        </video>
+      </div>
+      <SignupContainer>
+        <form onSubmit={onFormSubmit}>
+          <fieldset>
+            <legend>signup</legend>
+            <label htmlFor='email'>Email</label>
+            <input
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              id='email'
+            />
+            <label htmlFor='username'>Username</label>
+            <input
+              value={username}
+              id='username'
+              onChange={e => setUsername(e.target.value)}
+            />
+            <label htmlFor='password'>Password</label>
+            <input
+              type='password'
+              value={password}
+              id='password'
+              onChange={e => setPassword(e.target.value)}
+            />
+            <label htmlFor='firstName'>First name</label>
+            <input
+              value={firstName}
+              id='firstName'
+              onChange={e => setFirstName(e.target.value)}
+            />
+            <label htmlFor='lastName'>Last name</label>
+            <input
+              value={lastName}
+              id='lastName'
+              onChange={e => setLastName(e.target.value)}
+            />
+            <button type='submit'>submit</button>
+          </fieldset>
+        </form>
 
-      <h2>already a member? SIGN IN</h2>
-      <form onSubmit={onSignInSubmit}>
-        <label htmlFor='usernameSignup'>Username</label>
-        <input
-          value={usernameSignin}
-          id='usernameSignup'
-          onChange={e => setUsernameSignin(e.target.value)}
-        />
-        <label htmlFor='passwordSignin'>Password</label>
-        <input
-          type='password'
-          value={passwordSignin}
-          id='passwordSign'
-          onChange={e => setPasswordSignin(e.target.value)}
-        />
-        <button type='submit'>SIGN IN</button>
-      </form>
-    </div>
+        {/* {validationError !== null && (
+        <p style={{ fontSize: '21px', color: 'red' }}>{validationError}</p>
+      )} */}
+        {/* <h2>already a member? SIGN IN</h2> */}
+        <Button
+          style={{ marginTop: '20px' }}
+          variantColor='blue'
+          onClick={handleToggle}
+        >
+          already a member?
+        </Button>
+        <Collapse mt={4} isOpen={show}>
+          <form onSubmit={onSignInSubmit}>
+            <fieldset>
+              <legend>sign in</legend>
+              <label htmlFor='usernameSignup'>Username</label>
+              <input
+                value={usernameSignin}
+                id='usernameSignup'
+                onChange={e => setUsernameSignin(e.target.value)}
+              />
+              <label htmlFor='passwordSignin'>Password</label>
+              <input
+                type='password'
+                value={passwordSignin}
+                id='passwordSign'
+                onChange={e => setPasswordSignin(e.target.value)}
+              />
+              <button type='submit'>SIGN IN</button>
+            </fieldset>
+          </form>
+        </Collapse>
+      </SignupContainer>
+    </PageWrapper>
   );
 };
 export default SignupPage;

@@ -1,7 +1,8 @@
 import React from 'react';
 import { HeaderContainer } from '../styles/Styles';
+import Toggle from './Toggler';
 
-export const Header = () => {
+export const Header = ({ theme, themeToggler }) => {
   return (
     <HeaderContainer>
       <img
@@ -9,6 +10,7 @@ export const Header = () => {
         alt='logo'
       />{' '}
       | MINECHIES
+      <Toggle theme={theme} toggleTheme={themeToggler} />
     </HeaderContainer>
   );
 };

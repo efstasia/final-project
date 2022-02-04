@@ -72,7 +72,6 @@ export const App = () => {
       <ThemeProvider theme={themeMode}>
         <GlobalStyles />
 
-        <Toggle theme={theme} toggleTheme={themeToggler} />
         <BrowserRouter>
           <Provider store={store}>
             <div ref={node}>

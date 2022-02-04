@@ -5,30 +5,34 @@ import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import multer from 'multer';
 import cloudinaryFramework from 'cloudinary';
-import cloudinaryStorage from 'multer-storage-cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/finalProject';
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 // mongoose.set('useCreateIndex', true); //added due to deprecation error 26868
 mongoose.Promise = Promise;
+mongoose.set('useCreateIndex', true); //added due to deprecation error 26868
 
 // -- cloudinary setup to store images -- //
-// const cloudinary = cloudinaryFramework.v2;
-// cloudinary.config({
-//   cloud_name: 'minechies',
-//   api_key: process.env.CLOUDINARY_API_KEY,
-//   api_secret: process.env.CLOUDINARY_API_SECRET,
-// });
+const cloudinary = cloudinaryFramework.v2;
+cloudinary.config({
+  cloud_name: 'minechies',
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-// const storage = cloudinaryStorage({
-//   cloudinary,
-//   params: {
-//     folder: 'profileImages',
-//     allowedFormats: ['jpg', 'png', 'jpeg'],
-//     transformation: [{ width: 100, height: 100, crop: 'limit' }],
-//   },
-// });
-// const parser = multer({ storage });
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: 'profileImages',
+    allowedFormats: ['jpg', 'png', 'jpeg'],
+    transformation: [{ width: 100, height: 100, crop: 'limit' }],
+  },
+});
+const parser = multer({ storage });
 
 // a schema to sign up/sign in to the user page
 // a schema to sign up/sign in to the user page
@@ -68,6 +72,10 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Rating',
   },
+  image: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image',
+  },
 });
 
 // a schema to add the rating to the database
@@ -95,6 +103,11 @@ const RatingSchema = new mongoose.Schema({
     default: 'Pizza',
     required: true,
   },
+  createdAt: {
+    type: Date,
+    default: () => new Date(),
+    timestamps: true,
+  },
   radioInput: {
     type: String,
     possibleValues: ['Yes', 'No'],
@@ -105,9 +118,17 @@ const RatingSchema = new mongoose.Schema({
   },
 });
 
+// schema to add image //
+const ImageSchema = new mongoose.Schema({
+  imageUrl: {
+    type: String,
+  },
+});
+
 // --- models --- //
 const User = mongoose.model('User', UserSchema);
 const Rating = mongoose.model('Rating', RatingSchema);
+const Image = mongoose.model('Image', ImageSchema);
 
 // Defines the port the app will run on. Defaults to 8080, but can be
 // overridden when starting the server. For example:
@@ -188,11 +209,15 @@ app.get('/feed/:userId', async (req, res) => {
   const { userId } = req.params;
 
   try {
-    const profile = await User.findById({ _id: userId });
-    res.status(200).json({
-      response: profile,
-      success: true,
-    });
+    const profile = await User.findById(userId).populate('image');
+    if (profile) {
+      res.status(200).json({
+        response: profile,
+        success: true,
+      });
+    } else {
+      res.status(404).json({ response: 'User not found', success: false });
+    }
   } catch (error) {
     res.status(400).json({ response: error, success: false });
   }
@@ -326,6 +351,12 @@ app.post('/signup', async (req, res) => {
         response: error,
         success: false,
       });
+    } else if (error.code === 11000 && error.keyPattern.email) {
+      res.status(400).json({
+        message: 'Validation failed: email already exist',
+        response: error,
+        success: false,
+      });
     } else if (password === '') {
       res.status(400).json({
         message: 'Validation failed: provide password',
@@ -404,23 +435,47 @@ app.post('/signin', async (req, res) => {
 });
 
 // -- add profile picture -- //
-// app.post('/userpage/image', authenticateUser);
-// app.post('/userpage/image', parser.single('image'), async (req, res) => {
-//   const userId = req.user.id;
-//   try {
-//     await User.findOneAndUpdate(
-//       { userId },
-//       { profileImageUrl: req.file.path },
-//       { new: true }
-//     );
-//     res.status(200).json({ success: 'Profile picture added' });
-//   } catch (error) {
-//     res.status(400).json({
-//       message:
-//         'Sorry, could not save profile picture, formats allowed: png, jpg or jpeg',
-//     });
-//   }
-// });
+//app.post('/userpage/:id/image', authenticateUser);
+app.post('/userpage/:id/image', parser.single('image'), async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const updatedImage = await new Image({
+      imageUrl: req.file.path,
+    }).save();
+
+    if (updatedImage) {
+      const updatedUser = await User.findByIdAndUpdate(id, {
+        $set: { image: updatedImage },
+      });
+      res.status(200).json({
+        response: updatedImage,
+        success: true,
+      });
+    } else {
+      res.status(404).json({ response: 'Image not found', success: false });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
+
+// GET the user image //
+app.get('/userpage/:id/image', authenticateUser);
+app.get('/userpage/:id/image', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const queriedUser = await User.findById(id).populate('image');
+    if (queriedUser) {
+      res.status(200).json({ response: queriedUser.image, success: true });
+    } else {
+      res.status(404).json({ response: 'User not found', success: false });
+    }
+  } catch (error) {
+    res.status(400).json({ response: error, success: false });
+  }
+});
 
 // Start the server
 app.listen(port, () => {

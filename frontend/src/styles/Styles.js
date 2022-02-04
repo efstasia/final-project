@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 
 // HEADER //
 export const HeaderContainer = styled.div`
@@ -160,4 +160,79 @@ export const DateAndUser = styled.p`
   font-style: italic;
   font-size: 12px;
   align-self: flex-end;
+`;
+
+export const PageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`;
+
+export const PageWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  height: 100vh;
+
+  video {
+    width: auto;
+    height: 20%;
+  }
+`;
+
+export const SignupContainer = styled.div`
+  width: 40%;
+  /* margin: auto; */
+
+  fieldset {
+    display: flex;
+    flex-direction: column;
+
+    border: 2px solid;
+    border-radius: 2px;
+  }
+
+  legend {
+    font-family: 'Yellowtail', cursive;
+    font-size: 32px;
+  }
+
+  form {
+    font-family: 'Poppins', sans-serif;
+  }
+`;
+
+export const StartPageContainer = styled.div`
+  .parent {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 15px;
+    grid-row-gap: 15px;
+    width: 80%;
+    margin: 50px auto;
+  }
+
+  .div1 {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  .div2 {
+    grid-area: 1 / 2 / 2 / 3;
+    transform: translateY(25%);
+  }
+  .div3 {
+    grid-area: 2 / 1 / 3 / 2;
+    transform: translateY(25%);
+  }
+  .div4 {
+    grid-area: 2 / 2 / 3 / 3;
+  }
+
+  img {
+    height: 70%;
+    width: auto;
+  }
+
+  .signup-link {
+    text-decoration: none;
+    color: red;
+  }
 `;

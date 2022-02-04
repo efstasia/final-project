@@ -80,6 +80,7 @@ export const RatingCardComponent = ({ item }) => {
           // filter: 'brightness(0) invert(1);',
         }}
       ></div>
+
       <RatingText>
         <Question>RESTAURANT NAME:</Question>
         <Answer> {item.restaurantName}</Answer>
@@ -89,9 +90,8 @@ export const RatingCardComponent = ({ item }) => {
         <Question>RATING:</Question> <Answer> {item.selectRating} </Answer>
         <Question>RECOMMEND? </Question> <Answer> {item.radioInput}</Answer>
         <DateAndUser>
-          {' '}
-          {moment(item.createdAt).fromNow()}{' '}
-          <span>by {item.user.username}</span>
+          {moment(item.createdAt).format('ll')}
+          {item.user.username ? <span> by {item.user.username}</span> : ''}
         </DateAndUser>
       </RatingText>
       <Button

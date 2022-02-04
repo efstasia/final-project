@@ -4,6 +4,7 @@ import { useDispatch, useSelector, batch } from 'react-redux';
 import styled from 'styled-components';
 import moment from 'moment';
 import ScrollToTop from 'react-scroll-to-top';
+import ShowMore from 'react-show-more-button';
 
 import { API_URL } from '../utils/urls';
 import { ratings } from '../reducers/ratings';
@@ -11,7 +12,12 @@ import { RatingCardComponent } from './RatingCardComponent';
 
 import { AddRating } from './AddRating';
 
-import { RatingContainer, SearchAndSortContainer } from '../styles/Styles';
+import {
+  RatingContainer,
+  SearchAndSortContainer,
+  PageContainer,
+  Button,
+} from '../styles/Styles';
 
 const FoodImage = styled.img`
   height: 100px;
@@ -25,6 +31,7 @@ export const MainFeed = props => {
   const [validationError, setValidationError] = useState(null); // setValidationErrors needs to be connected to backend error msg
   const [data, setData] = useState([]);
   const [sortType, setSortType] = useState('ratings');
+  const [mapCount, setMapCount] = useState(9);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -34,6 +41,10 @@ export const MainFeed = props => {
 
   console.log(rating);
   // console.log('USER ID', userId);
+
+  const getMoreRatings = () => {
+    setMapCount(data.length);
+  };
 
   // if there is no accessToken then redirect to login
   useEffect(() => {
@@ -45,14 +56,13 @@ export const MainFeed = props => {
   // this handles the searching of ratings //
   const onSearchInput = input => {
     let matches = [];
-    if (input.length > 0) {
+    if (input.length >= 0) {
       matches = rating.filter(item => {
         const regex = new RegExp(`${input}`, 'gi'); // Case insensitive
         return item.restaurantName.match(regex);
       });
     }
-    setRestaurantName(matches);
-    // setInput(input);
+    setData(matches);
   };
 
   // handles  the GETTING of rating to show //
@@ -88,40 +98,6 @@ export const MainFeed = props => {
 
   console.log('restaurant NAME', restaurantName);
 
-  // if (data.length > 0) {
-  //   return (
-  //     <div>
-  //       <ScrollToTop smooth />
-  //       <AddRating canWrite={props.canWrite} />
-  //       <SearchAndSortContainer>
-  //         <label htmlFor='searchbar'>SEARCH</label>
-  //         <input
-  //           type='text'
-  //           id='searchbar'
-  //           placeholder='search'
-  //           onChange={e => onSearchInput(e.target.value)}
-  //         />
-  //         <select onChange={event => setSortType(event.target.value)}>
-  //           <option value='all' defaultValue>
-  //             all
-  //           </option>
-  //           <option value='highToLow'>high to low</option>
-  //           <option value='lowToHigh'>low to high</option>
-  //           <option></option>
-  //         </select>
-  //         {/* <SortingSelect /> */}
-  //       </SearchAndSortContainer>
-  //       <RatingContainer>
-  //         {data &&
-  //           data.map(item => (
-  //             <div key={item._id}>
-  //               <RatingCardComponent item={item} />
-  //             </div>
-  //           ))}
-  //       </RatingContainer>
-  //     </div>
-  //   );
-  // } else if (data.length === 0) {
   return (
     <div>
       <ScrollToTop smooth />
@@ -144,9 +120,19 @@ export const MainFeed = props => {
           <option></option>
         </select>
       </SearchAndSortContainer>
+
+      {/* <PageContainer> */}
       <RatingContainer>
-        {data && restaurantName.length === 0
-          ? data.map(item => (
+        {data &&
+          data.length >= 0 &&
+          data.slice(0, mapCount).map(item => (
+            <div key={item._id}>
+              <RatingCardComponent item={item} />
+            </div>
+          ))}
+
+        {/* {data && restaurantName.length === 0
+          ? data.slice(0, mapCount).map(item => (
               <div key={item._id}>
                 <RatingCardComponent item={item} />
               </div>
@@ -155,8 +141,10 @@ export const MainFeed = props => {
               <div key={item._id}>
                 <RatingCardComponent item={item} />
               </div>
-            ))}
+            ))} */}
       </RatingContainer>
+      <Button onClick={getMoreRatings}>LOAD MORE</Button>
+      {/* </PageContainer> */}
 
       {/* this handles the error messages */}
       {validationError !== null && <p>{validationError}</p>}
