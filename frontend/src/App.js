@@ -66,12 +66,10 @@ export const App = () => {
 
   return (
     <>
-      <div>
-        <Header />
-      </div>
-      <ThemeProvider theme={themeMode}>
-        <GlobalStyles />
+      <ThemeProvider theme={themeMode} themeToggler={themeToggler}>
+        <Header theme={theme} themeToggler={themeToggler} />
 
+        <GlobalStyles />
         <BrowserRouter>
           <Provider store={store}>
             <div ref={node}>
@@ -93,9 +91,8 @@ export const App = () => {
               <Route path='/userpage/:userId' element={<UserPage />} />
             </Routes>
           </Provider>
-
-          {/* <Footer /> */}
         </BrowserRouter>
+        {/* <Footer /> */}
       </ThemeProvider>
     </>
   );

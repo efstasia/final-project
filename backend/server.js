@@ -436,7 +436,7 @@ app.post('/signin', async (req, res) => {
 
 // -- add profile picture -- //
 //app.post('/userpage/:id/image', authenticateUser);
-app.post('/userpage/:id/image', parser.single('image'), async (req, res) => {
+app.post('/feed/:id/image', parser.single('image'), async (req, res) => {
   const { id } = req.params;
 
   try {
