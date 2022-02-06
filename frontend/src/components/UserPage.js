@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector, batch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import styled from 'styled-components';
 
@@ -33,6 +33,7 @@ export const UserPage = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { id } = useParams();
 
   const imageInput = useRef();
 
@@ -43,6 +44,7 @@ export const UserPage = () => {
   const username = useSelector(store => store.user.username);
   const firstName = useSelector(store => store.user.firstName);
   const lastName = useSelector(store => store.user.lastName);
+  const image = useSelector(store => store.user.image);
 
   const [userInfoEdit, setUserInfoEdit] = useState({
     username: username,
@@ -54,7 +56,8 @@ export const UserPage = () => {
   console.log('RATING MAP', rating);
   console.log(userId);
 
-  const { profileImageUrl } = profileImageData;
+  const dummyImage =
+    'https://i.postimg.cc/MpzWNG5g/87409506116276584393773-128.png';
 
   const handleEdit = () => {
     setCanWrite(true);
@@ -94,11 +97,8 @@ export const UserPage = () => {
     const formData = new FormData();
     formData.append('image', imageInput.current.files[0]);
 
-    fetch('http://localhost:8080/userpage/image', {
+    fetch(`http://localhost:8080/userpage/${id}/image`, {
       method: 'POST',
-      headers: {
-        Authorization: accessToken,
-      },
       body: formData,
     })
       .then(res => {
@@ -109,9 +109,8 @@ export const UserPage = () => {
         }
         return res.json();
       })
-      .then(() => {
-        window.location.reload();
-      })
+      .then(data => dispatch(user.actions.setImage(data.response.imageUrl)))
+
       .catch(error => {
         console.log(error);
       });
@@ -178,19 +177,14 @@ export const UserPage = () => {
       <Title>Welcome, {firstName}! This is your profile.</Title>
       <RatingContainer>
         <div>
-          <label htmlFor='profilepic-button'>
-            {profileImageUrl ? (
-              <img src={`${profileImageUrl}`} alt='profile-pic' />
-            ) : (
-              <img
-                src='https://i.postimg.cc/MpzWNG5g/87409506116276584393773-128.png'
-                alt='robot'
-              />
-            )}
+          <label htmlFor="profilepic-button">
+            <img src={image || dummyImage} alt="profile-pic" />
           </label>
-          <button type='submit' onClick={uploadImage}>
-            upload
-          </button>
+          <input type="file" ref={imageInput} />
+
+          <Button type="submit" onClick={uploadImage}>
+            Upload image
+          </Button>
         </div>
         <p>USERNAME: {username}</p>
         <p>EMAIL: {email}</p>
@@ -200,19 +194,19 @@ export const UserPage = () => {
       </RatingContainer>
       {canWrite && (
         <Form onSubmit={onChangeUserInfo}>
-          <label htmlFor='username'>change username</label>
+          <label htmlFor="username">change username</label>
           <input
-            id='username'
-            type='text'
+            id="username"
+            type="text"
             defaultValue={userInfoEdit.username}
             onChange={event =>
               setUserInfoEdit({ ...userInfoEdit, username: event.target.value })
             }
           />
-          <label htmlFor='first-name'>change first name</label>
+          <label htmlFor="first-name">change first name</label>
           <input
-            type='text'
-            id='first-name'
+            type="text"
+            id="first-name"
             defaultValue={userInfoEdit.firstName}
             onChange={event =>
               setUserInfoEdit({
@@ -221,16 +215,16 @@ export const UserPage = () => {
               })
             }
           />
-          <label htmlFor='last-name'>last name</label>
+          <label htmlFor="last-name">last name</label>
           <input
-            id='last-name'
-            type='text'
+            id="last-name"
+            type="text"
             defaultValue={userInfoEdit.lastName}
             onChange={event =>
               setUserInfoEdit({ ...userInfoEdit, lastName: event.target.value })
             }
           />
-          <Button type='submit' onClick={onChangeUserInfo}>
+          <Button type="submit" onClick={onChangeUserInfo}>
             SUBMIT
           </Button>
           <Button onClick={handleEditClose}>CLOSE</Button>

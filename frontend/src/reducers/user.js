@@ -27,6 +27,7 @@ export const user = createSlice({
     error: null,
     firstName: null,
     lastName: null,
+    image: null,
   },
   reducers: {
     setEmail: (store, action) => {
@@ -50,6 +51,9 @@ export const user = createSlice({
     },
     setError: (store, action) => {
       store.error = action.payload;
+    },
+    setImage: (store, action) => {
+      store.image = action.payload;
     },
     logout: (store, action) => {
       store.userId = null;
