@@ -56,20 +56,6 @@ export const RatingCardComponent = ({ item }) => {
 
   const dispatch = useDispatch();
 
-  const onDeleteRating = ratingId => {
-    window.location.reload(true);
-    const options = {
-      method: 'DELETE',
-    };
-
-    fetch(`http://localhost:8080/feed/${ratingId}`, options)
-      .then(res => res.json())
-      .then(data => {
-        dispatch(ratings.actions.setRating(data.response));
-        console.log(data.response);
-      });
-  };
-
   return (
     <RatingCard>
       <div
@@ -82,24 +68,18 @@ export const RatingCardComponent = ({ item }) => {
       ></div>
 
       <RatingText>
-        <Question>RESTAURANT NAME:</Question>
+        <Question>RESTAURANT NAME</Question>
         <Answer> {item.restaurantName}</Answer>
-        <Question>RATING TEXT: </Question>
+        <Question>RATING TEXT </Question>
         <Answer>{item.ratingText}</Answer>
-        <Question>CATEGORY: </Question> <Answer>{item.selectCategory}</Answer>
-        <Question>RATING:</Question> <Answer> {item.selectRating} </Answer>
+        <Question>CATEGORY </Question> <Answer>{item.selectCategory}</Answer>
+        <Question>RATING</Question> <Answer> {item.selectRating} </Answer>
         <Question>RECOMMEND? </Question> <Answer> {item.radioInput}</Answer>
         <DateAndUser>
           {moment(item.createdAt).format('ll')}
           {item.user.username ? <span> by {item.user.username}</span> : ''}
         </DateAndUser>
       </RatingText>
-      <Button
-        style={{ borderRadius: '0' }}
-        onClick={() => onDeleteRating(item._id)}
-      >
-        DELETE
-      </Button>
     </RatingCard>
   );
 };

@@ -14,6 +14,7 @@ const SignupPage = () => {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [role, setRole] = useState('');
   const [usernameSignin, setUsernameSignin] = useState('');
   const [passwordSignin, setPasswordSignin] = useState('');
   const [validationError, setValidationError] = useState(null);
@@ -60,6 +61,7 @@ const SignupPage = () => {
             dispatch(user.actions.setFirstName(data.response.firstName));
             dispatch(user.actions.setLastName(data.response.lastName));
             dispatch(user.actions.setEmail(data.response.email));
+            dispatch(user.actions.setRole(data.response.role));
             dispatch(user.actions.setError(null));
           });
           console.log(data.response.userId);
@@ -83,7 +85,14 @@ const SignupPage = () => {
     const options = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password, email, firstName, lastName }),
+      body: JSON.stringify({
+        username,
+        password,
+        email,
+        firstName,
+        lastName,
+        role,
+      }),
     };
     fetch('http://localhost:8080/signup', options)
       .then(res => res.json())
@@ -97,6 +106,7 @@ const SignupPage = () => {
             dispatch(user.actions.setLastName(data.response.lastName));
             dispatch(user.actions.setAccessToken(data.response.accessToken));
             dispatch(user.actions.setEmail(data.response.email));
+
             dispatch(user.actions.setError(null));
           });
           Swal.fire({
@@ -112,6 +122,7 @@ const SignupPage = () => {
             dispatch(user.actions.setLastName(null));
             dispatch(user.actions.setAccessToken(null));
             dispatch(user.actions.setEmail(null));
+            dispatch(user.actions.setRole(null));
             dispatch(user.actions.setError(data.response));
             setValidationError(data.message);
           });

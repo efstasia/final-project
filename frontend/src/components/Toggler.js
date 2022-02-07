@@ -11,7 +11,7 @@ const Button = styled.button`
   padding: 0.6rem;
   font-family: 'Fredoka One', cursive;
   position: relative;
-  left: 40%;
+  left: 38%;
   top: 30%;
   margin-top: 5px;
 `;

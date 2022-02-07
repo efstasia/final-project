@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import hamburger from '../images/hamburger.jpg';
 import pasta from '../images/pasta.jpg';
+import neon from '../images/neon.jpg';
 
 import { StartPageContainer, Button } from '../styles/Styles';
 
@@ -24,7 +25,7 @@ export const StartPage = () => {
             culpa qui officia deserunt mollit anim id est laborum.
             <Button>
               <Link className='signup-link' to='/signup'>
-                Signup
+                SIGNUP/LOGIN
               </Link>
             </Button>
           </p>
@@ -41,7 +42,7 @@ export const StartPage = () => {
           </p>
         </div>
         <div className='div4'>
-          <img src={pasta} alt='pasta' />
+          <img src={neon} alt='neon sign' />
         </div>
 
         {/* add info about page here */}

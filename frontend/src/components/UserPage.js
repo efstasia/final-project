@@ -8,13 +8,14 @@ import { user } from '../reducers/user';
 import { ratings } from '../reducers/ratings';
 import { RatingCardComponent } from './RatingCardComponent';
 
-import { Button, Form } from '../styles/Styles';
-
-const Title = styled.p`
-  text-align: center;
-  font-weight: bold;
-  font-size: 24px;
-`;
+import {
+  Button,
+  Form,
+  ProfileContainer,
+  EditImageDiv,
+  Title,
+  UserpageContainer,
+} from '../styles/Styles';
 
 const RatingContainer = styled.div`
   border: 2px solid black;
@@ -30,6 +31,7 @@ export const UserPage = () => {
   const [profileImageData, setprofileImageData] = useState({});
   const [password, setPassword] = useState('');
   const [canWrite, setCanWrite] = useState(false);
+  const [editImage, setEditImage] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -45,6 +47,8 @@ export const UserPage = () => {
   const firstName = useSelector(store => store.user.firstName);
   const lastName = useSelector(store => store.user.lastName);
   const image = useSelector(store => store.user.image);
+  const role = useSelector(store => store.user.role);
+  console.log(role);
 
   const [userInfoEdit, setUserInfoEdit] = useState({
     username: username,
@@ -65,6 +69,14 @@ export const UserPage = () => {
 
   const handleEditClose = () => {
     setCanWrite(false);
+  };
+
+  const handleImageUpload = () => {
+    setEditImage(true);
+  };
+
+  const handleImageUploadClose = () => {
+    setEditImage(false);
   };
 
   // --- fetches the ratings. GET method --- //
@@ -175,38 +187,64 @@ export const UserPage = () => {
   return (
     <div>
       <Title>Welcome, {firstName}! This is your profile.</Title>
-      <RatingContainer>
-        <div>
-          <label htmlFor="profilepic-button">
-            <img src={image || dummyImage} alt="profile-pic" />
-          </label>
-          <input type="file" ref={imageInput} />
+      <ProfileContainer>
+        <div className='grid-wrapper'>
+          <div className='image-grid'>
+            <img src={image || dummyImage} alt='profile-pic' />
 
-          <Button type="submit" onClick={uploadImage}>
-            Upload image
-          </Button>
+            {!editImage && (
+              <Button onClick={handleImageUpload}>CHANGE IMAGE</Button>
+            )}
+          </div>
+          <div className='info-grid'>
+            <p>USERNAME: {username}</p>
+            <p>EMAIL: {email}</p>
+            <p>FIRSTNAME: {firstName}</p>
+            <p>LASTNAME: {lastName}</p>
+            {!canWrite && <Button onClick={handleEdit}>EDIT INFO</Button>}
+          </div>
         </div>
-        <p>USERNAME: {username}</p>
-        <p>EMAIL: {email}</p>
-        <p>FIRSTNAME: {firstName}</p>
-        <p>LASTNAME: {lastName}</p>
-        {!canWrite && <Button onClick={handleEdit}>EDIT INFO</Button>}
-      </RatingContainer>
+      </ProfileContainer>
+      {editImage && (
+        <EditImageDiv>
+          <img src={image || dummyImage} alt='profile-pic' />
+          <label htmlFor='profilepic-button'>
+            <input type='file' ref={imageInput} />
+          </label>
+          <Button style={{ top: '23%' }} type='submit' onClick={uploadImage}>
+            SAVE
+          </Button>
+          <Button
+            style={{
+              borderRadius: '50%',
+              width: '60px',
+              height: '60px',
+
+              position: 'absolute',
+              left: '82%',
+              bottom: '75%',
+            }}
+            onClick={handleImageUploadClose}
+          >
+            <i className='fas fa-times'></i>
+          </Button>
+        </EditImageDiv>
+      )}
       {canWrite && (
         <Form onSubmit={onChangeUserInfo}>
-          <label htmlFor="username">change username</label>
+          <label htmlFor='username'>change username</label>
           <input
-            id="username"
-            type="text"
+            id='username'
+            type='text'
             defaultValue={userInfoEdit.username}
             onChange={event =>
               setUserInfoEdit({ ...userInfoEdit, username: event.target.value })
             }
           />
-          <label htmlFor="first-name">change first name</label>
+          <label htmlFor='first-name'>change first name</label>
           <input
-            type="text"
-            id="first-name"
+            type='text'
+            id='first-name'
             defaultValue={userInfoEdit.firstName}
             onChange={event =>
               setUserInfoEdit({
@@ -215,33 +253,41 @@ export const UserPage = () => {
               })
             }
           />
-          <label htmlFor="last-name">last name</label>
+          <label htmlFor='last-name'>last name</label>
           <input
-            id="last-name"
-            type="text"
+            id='last-name'
+            type='text'
             defaultValue={userInfoEdit.lastName}
             onChange={event =>
               setUserInfoEdit({ ...userInfoEdit, lastName: event.target.value })
             }
           />
-          <Button type="submit" onClick={onChangeUserInfo}>
+          <Button type='submit' onClick={onChangeUserInfo}>
             SUBMIT
           </Button>
           <Button onClick={handleEditClose}>CLOSE</Button>
         </Form>
       )}
 
-      <RatingContainer>
+      <UserpageContainer>
         {rating &&
           rating.map(item => (
             <div key={item._id}>
               <RatingCardComponent item={item} />
-              {/* <Button onClick={() => onDeleteUserRating(item._id)}>
+              <Button
+                style={{
+                  top: '-9%',
+                  display: 'block',
+                  width: '90%',
+                  margin: 'auto',
+                }}
+                onClick={() => onDeleteUserRating(item._id)}
+              >
                 DELETE
-              </Button> */}
+              </Button>
             </div>
           ))}
-      </RatingContainer>
+      </UserpageContainer>
     </div>
   );
 };

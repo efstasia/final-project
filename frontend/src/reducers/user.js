@@ -1,22 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// const initialState = localStorage.getItem('user')
-//   ? {
-//       userId: JSON.parse(localStorage.getItem('user')).userId,
-//       username: JSON.parse(localStorage.getItem('user')).username,
-//       email: JSON.parse(localStorage.getItem('user')).email,
-//       firstName: JSON.parse(localStorage.getItem('user')).firstName,
-//       lastName: JSON.parse(localStorage.getItem('user')).lastName,
-//       accessToken: JSON.parse(localStorage.getItem('user')).accessToken,
-//     }
-//   : {
-//       userId: null,
-//       username: null,
-//       accessToken: null,
-//       email: null,
-//       error: null,
-//     };
-
 export const user = createSlice({
   name: 'user',
   initialState: {
@@ -28,6 +11,7 @@ export const user = createSlice({
     firstName: null,
     lastName: null,
     image: null,
+    role: null,
   },
   reducers: {
     setEmail: (store, action) => {
@@ -54,6 +38,9 @@ export const user = createSlice({
     },
     setImage: (store, action) => {
       store.image = action.payload;
+    },
+    setRole: (store, action) => {
+      store.role = action.payload;
     },
     logout: (store, action) => {
       store.userId = null;

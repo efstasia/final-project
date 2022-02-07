@@ -76,6 +76,12 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Image',
   },
+  role: {
+    type: String,
+    enum: ['Admin', 'Member'],
+    default: 'Member',
+    required: false,
+  },
 });
 
 // a schema to add the rating to the database
@@ -84,6 +90,7 @@ const RatingSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
+    max: 50,
   },
   restaurantName: {
     type: String,
@@ -169,6 +176,7 @@ app.post('/feed', async (req, res) => {
     selectCategory,
     radioInput,
     user,
+    createdAt,
   } = req.body;
 
   try {
@@ -179,6 +187,7 @@ app.post('/feed', async (req, res) => {
       selectCategory,
       radioInput,
       user,
+      createdAt,
     }).save();
 
     // const updatedUser = await User.findByIdAndUpdate(id, {
@@ -195,7 +204,7 @@ app.post('/feed', async (req, res) => {
 });
 
 // --- GET ratings to feed --- //
-app.get('/feed', authenticateUser);
+//app.get('/feed', authenticateUser);
 app.get('/feed', async (req, res) => {
   const main = await Rating.find({}).populate('user');
 
@@ -310,7 +319,7 @@ app.delete('/userpage/:userRatingId', async (req, res) => {
 
 // --- signup --- //
 app.post('/signup', async (req, res) => {
-  const { username, password, email, firstName, lastName } = req.body;
+  const { username, password, email, firstName, lastName } = req.body; // role
 
   try {
     const salt = bcrypt.genSaltSync(); // this creates a randomizer to randomize the password string
@@ -324,6 +333,7 @@ app.post('/signup', async (req, res) => {
       email,
       firstName,
       lastName,
+      // role,
       password: bcrypt.hashSync(password, salt), // the "salt" passes the randomizer to the password
     }).save();
 
@@ -335,6 +345,7 @@ app.post('/signup', async (req, res) => {
         email: newUser.email,
         firstName: newUser.firstName,
         lastName: newUser.lastName,
+        // role: newUser.role,
       },
       success: true,
     });
@@ -401,6 +412,7 @@ app.post('/signin', async (req, res) => {
           lastName: user.lastName,
           email: user.email,
           accessToken: user.accessToken,
+          role: user.role,
         },
         success: true,
       });

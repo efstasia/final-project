@@ -11,7 +11,7 @@ export const ratings = createSlice({
     selectCategory: null,
     ratingText: null,
     user: '',
-    //createdAt: new Date(),
+    //createdAt: null,
   },
 
   reducers: {

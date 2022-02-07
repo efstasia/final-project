@@ -38,6 +38,7 @@ export const MainFeed = props => {
 
   const accessToken = useSelector(store => store.user.accessToken);
   const rating = useSelector(store => store.ratings.items);
+  const role = useSelector(store => store.user.role);
 
   console.log(rating);
   // console.log('USER ID', userId);
@@ -98,22 +99,36 @@ export const MainFeed = props => {
 
   console.log('restaurant NAME', restaurantName);
 
+  const onDeleteRating = ratingId => {
+    window.location.reload(true);
+    const options = {
+      method: 'DELETE',
+    };
+
+    fetch(`http://localhost:8080/feed/${ratingId}`, options)
+      .then(res => res.json())
+      .then(data => {
+        dispatch(ratings.actions.setRating(data.response));
+        console.log(data.response);
+      });
+  };
+
   return (
     <div>
       <ScrollToTop smooth />
       <AddRating canWrite={props.canWrite} />
       <SearchAndSortContainer>
-        <label htmlFor='searchbar'>SEARCH</label>
+        <label htmlFor='searchbar'></label>
         <input
           type='text'
           id='searchbar'
-          placeholder='search'
+          placeholder='search for a restaurant'
           onChange={e => onSearchInput(e.target.value)}
         />
-        SORT
+
         <select onChange={event => setSortType(event.target.value)}>
           <option value='all' defaultValue>
-            all
+            sort by rating
           </option>
           <option value='highToLow'>high to low</option>
           <option value='lowToHigh'>low to high</option>
@@ -128,20 +143,24 @@ export const MainFeed = props => {
           data.slice(0, mapCount).map(item => (
             <div key={item._id}>
               <RatingCardComponent item={item} />
+              {role === 'Admin' ? (
+                <Button
+                  style={{
+                    borderRadius: '0',
+                    width: '50%',
+                    top: '-10%',
+                    margin: '5px auto',
+                    display: 'block',
+                  }}
+                  onClick={() => onDeleteRating(item._id)}
+                >
+                  DELETE
+                </Button>
+              ) : (
+                ''
+              )}
             </div>
           ))}
-
-        {/* {data && restaurantName.length === 0
-          ? data.slice(0, mapCount).map(item => (
-              <div key={item._id}>
-                <RatingCardComponent item={item} />
-              </div>
-            ))
-          : restaurantName.map(item => (
-              <div key={item._id}>
-                <RatingCardComponent item={item} />
-              </div>
-            ))} */}
       </RatingContainer>
       <Button onClick={getMoreRatings}>LOAD MORE</Button>
       {/* </PageContainer> */}
