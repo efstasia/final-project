@@ -1,4 +1,6 @@
 import styled, { keyframes } from 'styled-components';
+import darkbackground from '../images/darkbackground.jpg';
+import darkpaint from '../images/darkpaint.jpg';
 
 // HEADER //
 export const HeaderContainer = styled.div`
@@ -153,6 +155,12 @@ export const UserpageContainer = styled.div`
   width: 70%;
   margin: auto;
   gap: 15px;
+  border: 2px solid red;
+  margin-top: 40px;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `;
 
 export const RatingCard = styled.div`
@@ -284,9 +292,10 @@ export const ProfileContainer = styled.div`
   margin: 10px auto;
   font-family: 'Poppins', sans-serif;
   border: 1px solid black;
-  background: #44a08d;
+  /* background: #44a08d;
   background: -webkit-linear-gradient(to left, #093637, #44a08d);
-  background: linear-gradient(to left, #093637, #44a08d);
+  background: linear-gradient(to left, #093637, #44a08d); */
+  background-image: url(${darkpaint});
 
   .grid-wrapper {
     display: grid;

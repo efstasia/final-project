@@ -7,6 +7,8 @@ import styled from 'styled-components';
 import { user } from '../reducers/user';
 import { ratings } from '../reducers/ratings';
 import { RatingCardComponent } from './RatingCardComponent';
+import darkbackground from '../images/darkbackground.jpg';
+import darkpaint from '../images/darkpaint.jpg';
 
 import {
   Button,
@@ -268,7 +270,7 @@ export const UserPage = () => {
           <Button onClick={handleEditClose}>CLOSE</Button>
         </Form>
       )}
-
+      <h3>your personal ratings</h3>
       <UserpageContainer>
         {rating &&
           rating.map(item => (
@@ -278,7 +280,7 @@ export const UserPage = () => {
                 style={{
                   top: '-9%',
                   display: 'block',
-                  width: '90%',
+                  width: '70%',
                   margin: 'auto',
                 }}
                 onClick={() => onDeleteUserRating(item._id)}
