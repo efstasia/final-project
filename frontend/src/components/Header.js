@@ -8,8 +8,9 @@ export const Header = ({ theme, themeToggler }) => {
       <img
         src='https://i.postimg.cc/LXVg21Qk/message-square-outline.png'
         alt='logo'
-      />{' '}
-      | MINECHIES
+      />
+      <h1>| MINECHIES</h1>
+
       <Toggle theme={theme} toggleTheme={themeToggler} />
     </HeaderContainer>
   );

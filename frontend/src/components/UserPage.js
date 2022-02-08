@@ -17,6 +17,7 @@ import {
   EditImageDiv,
   Title,
   UserpageContainer,
+  RatingHeaderText,
 } from '../styles/Styles';
 
 const RatingContainer = styled.div`
@@ -144,10 +145,7 @@ export const UserPage = () => {
     fetch(`http://localhost:8080/feed/${userRatingId}`, options)
       .then(res => res.json())
       .then(data => {
-        const remainingRatings = deleteRating.filter(
-          rate => rate._id !== data._id
-        );
-        return remainingRatings;
+        dispatch(ratings.actions.deleteRating(data.response));
       });
   };
 
@@ -199,10 +197,10 @@ export const UserPage = () => {
             )}
           </div>
           <div className='info-grid'>
-            <p>USERNAME: {username}</p>
-            <p>EMAIL: {email}</p>
-            <p>FIRSTNAME: {firstName}</p>
-            <p>LASTNAME: {lastName}</p>
+            <p>USERNAME | {username}</p>
+            <p>EMAIL | {email}</p>
+            <p>FIRSTNAME | {firstName}</p>
+            <p>LASTNAME | {lastName}</p>
             {!canWrite && <Button onClick={handleEdit}>EDIT INFO</Button>}
           </div>
         </div>
@@ -270,25 +268,22 @@ export const UserPage = () => {
           <Button onClick={handleEditClose}>CLOSE</Button>
         </Form>
       )}
-      <h3>your personal ratings</h3>
+      <RatingHeaderText>YOUR PERSONAL RATINGS</RatingHeaderText>
       <UserpageContainer>
-        {rating &&
-          rating.map(item => (
-            <div key={item._id}>
-              <RatingCardComponent item={item} />
-              <Button
-                style={{
-                  top: '-9%',
-                  display: 'block',
-                  width: '70%',
-                  margin: 'auto',
-                }}
-                onClick={() => onDeleteUserRating(item._id)}
-              >
-                DELETE
-              </Button>
-            </div>
-          ))}
+        <div className='inner-div'>
+          {rating &&
+            rating.map(item => (
+              <div className='inner-card' key={item._id}>
+                <RatingCardComponent item={item} />
+                <Button
+                  className='delete-userpage-button'
+                  onClick={() => onDeleteUserRating(item._id)}
+                >
+                  DELETE
+                </Button>
+              </div>
+            ))}
+        </div>
       </UserpageContainer>
     </div>
   );

@@ -11,12 +11,17 @@ const Button = styled.button`
   padding: 0.6rem;
   font-family: 'Fredoka One', cursive;
   position: relative;
-  left: 38%;
+  left: 32%;
   top: 30%;
   margin-top: 5px;
 
-  @media (max-width: 767px) {
+  @media (max-width: 768px) {
     left: 25%;
+  }
+
+  @media (max-width: 481px) {
+    left: 0;
+    margin-bottom: 8px;
   }
 `;
 const Toggle = ({ theme, toggleTheme }) => {

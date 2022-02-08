@@ -67,7 +67,7 @@ export const RatingCardComponent = ({ item }) => {
         }}
       ></div>
 
-      <RatingText>
+      <div>
         <Question>RESTAURANT NAME</Question>
         <Answer> {item.restaurantName}</Answer>
         <Question>RATING TEXT </Question>
@@ -79,7 +79,7 @@ export const RatingCardComponent = ({ item }) => {
           {moment(item.createdAt).format('ll')}
           {item.user.username ? <span> by {item.user.username}</span> : ''}
         </DateAndUser>
-      </RatingText>
+      </div>
     </RatingCard>
   );
 };

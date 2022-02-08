@@ -17,6 +17,7 @@ import {
   SearchAndSortContainer,
   PageContainer,
   Button,
+  LoadMoreContainer,
 } from '../styles/Styles';
 
 const FoodImage = styled.img`
@@ -100,7 +101,6 @@ export const MainFeed = props => {
   console.log('restaurant NAME', restaurantName);
 
   const onDeleteRating = ratingId => {
-    window.location.reload(true);
     const options = {
       method: 'DELETE',
     };
@@ -108,7 +108,7 @@ export const MainFeed = props => {
     fetch(`http://localhost:8080/feed/${ratingId}`, options)
       .then(res => res.json())
       .then(data => {
-        dispatch(ratings.actions.setRating(data.response));
+        dispatch(ratings.actions.deleteRating(data.response.items));
         console.log(data.response);
       });
   };
@@ -145,6 +145,7 @@ export const MainFeed = props => {
               <RatingCardComponent item={item} />
               {role === 'Admin' ? (
                 <Button
+                  className='add-button'
                   style={{
                     borderRadius: '0',
                     width: '50%',
@@ -162,7 +163,11 @@ export const MainFeed = props => {
             </div>
           ))}
       </RatingContainer>
-      <Button onClick={getMoreRatings}>LOAD MORE</Button>
+      <LoadMoreContainer>
+        <Button className='load-more-button' onClick={getMoreRatings}>
+          LOAD MORE
+        </Button>
+      </LoadMoreContainer>
       {/* </PageContainer> */}
 
       {/* this handles the error messages */}
