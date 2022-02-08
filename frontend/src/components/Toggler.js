@@ -14,6 +14,10 @@ const Button = styled.button`
   left: 38%;
   top: 30%;
   margin-top: 5px;
+
+  @media (max-width: 767px) {
+    left: 25%;
+  }
 `;
 const Toggle = ({ theme, toggleTheme }) => {
   return <Button onClick={toggleTheme}>Switch Theme</Button>;

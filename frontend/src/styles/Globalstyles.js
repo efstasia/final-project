@@ -6,5 +6,9 @@ export const GlobalStyles = createGlobalStyle`
     color: ${({ theme }) => theme.text};
     font-family: Tahoma, Helvetica, Arial, Roboto, sans-serif;
     transition: all 0.50s linear;
+    @media (max-width: 767px) {
+      max-width: 80%;
+      overflow-X: none;
+    }
   }
   `;

@@ -249,6 +249,37 @@ export const StartPageContainer = styled.div`
     grid-row-gap: 30px;
     width: 80%;
     margin: 50px auto;
+    @media (max-width: 767px) {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      align-items: center;
+
+      .div1 {
+        order: 2;
+        width: 80%;
+        margin: auto;
+      }
+      .div1 img {
+        /* align-content: center; */
+        margin: auto;
+      }
+      .div2 {
+        order: 1;
+        margin-bottom: 30px;
+      }
+      .div3 {
+        order: 3;
+        margin-bottom: 30px;
+        width: 75%;
+      }
+      .div4 {
+        order: 4;
+      }
+      .div4 img {
+        width: 64%;
+      }
+    }
   }
 
   .div1 {
