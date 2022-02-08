@@ -33,13 +33,13 @@ export const AddRating = () => {
     setCanWrite(false);
   };
 
-  const handleFormSubmit = event => {
-    event.preventDefault();
-  };
+  // const handleFormSubmit = event => {
+  //   event.preventDefault();
+  // };
 
   const onRatingPost = event => {
-    window.location.reload(true);
-    event.preventDefault();
+    // window.location.reload(true);
+    // event.preventDefault();
     const optionsAll = {
       method: 'POST',
       headers: {
@@ -94,11 +94,11 @@ export const AddRating = () => {
           }}
           onClick={handleWriteRating}
         >
-          <i className='fas fa-plus'></i>
+          <i className="fas fa-plus"></i>
         </Button>
       )}
       {canWrite && (
-        <Form onSubmit={handleFormSubmit}>
+        <Form onSubmit={onRatingPost}>
           <Button
             style={{
               borderRadius: '50%',
@@ -108,75 +108,75 @@ export const AddRating = () => {
               left: '90%',
             }}
             onClick={handleInputClose}
-            className='toggle-button'
+            className="toggle-button"
           >
-            <i className='fas fa-times'></i>
+            <i className="fas fa-times"></i>
           </Button>
-          <label htmlFor='restaurant'>Restaurant</label>
+          <label htmlFor="restaurant">Restaurant</label>
           <input
-            type='text'
+            type="text"
             value={restaurantName}
             onChange={event => setRestaurantName(event.target.value)}
           />
-          <label htmlFor='ratingText'>Rating text</label>
+          <label htmlFor="ratingText">Rating text</label>
           <textarea
-            rows='4'
-            cols='50'
+            rows="4"
+            cols="50"
             value={input}
             onChange={event => setInput(event.target.value)}
           ></textarea>
-          <label htmlFor='rating'>rating 1-10</label>
+          <label htmlFor="rating">rating 1-10</label>
           <select
-            id='rating'
+            id="rating"
             value={selectRating}
             onChange={event => setSelectRating(event.target.value)}
           >
             <option>choose rating here</option>
-            <option value='1'>1</option>
-            <option value='2'>2</option>
-            <option value='3'>3</option>
-            <option value='4'>4</option>
-            <option value='5'>5</option>
-            <option value='6'>6</option>
-            <option value='7'>7</option>
-            <option value='8'>8</option>
-            <option value='9'>9</option>
-            <option value='10'>10</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
           </select>
-          <label htmlFor='category'>category</label>
+          <label htmlFor="category">category</label>
           <select
-            id='category'
+            id="category"
             value={selectCategory}
             onChange={event => setSelectCategory(event.target.value)}
           >
             <option>choose category here</option>
-            <option value='Pizza'>Pizza</option>
-            <option value='Pasta'>Pasta</option>
-            <option value='Hamburger'>Hamburger</option>
-            <option value='Sushi'>Sushi</option>
-            <option value='Other'>Other</option>
+            <option value="Pizza">Pizza</option>
+            <option value="Pasta">Pasta</option>
+            <option value="Hamburger">Hamburger</option>
+            <option value="Sushi">Sushi</option>
+            <option value="Other">Other</option>
           </select>
 
-          <label htmlFor='radio-buttons'>Would you recommend?</label>
-          <label htmlFor='yes'>yes</label>
+          <label htmlFor="radio-buttons">Would you recommend?</label>
+          <label htmlFor="yes">yes</label>
           <input
-            id='radio-buttons'
-            type='radio'
-            name='recommend'
-            value='yes'
+            id="radio-buttons"
+            type="radio"
+            name="recommend"
+            value="yes"
             onChange={event => setRadioInput(event.target.value)}
           />
-          <label htmlFor='no'>no</label>
+          <label htmlFor="no">no</label>
           <input
-            id='radio-buttons'
-            type='radio'
-            name='recommend'
-            value='no'
+            id="radio-buttons"
+            type="radio"
+            name="recommend"
+            value="no"
             onChange={event => setRadioInput(event.target.value)}
           />
 
           <AddButtonContainer>
-            <Button onClick={onRatingPost}>ADD RATING</Button>
+            <Button type="submit">ADD RATING</Button>
           </AddButtonContainer>
         </Form>
       )}
