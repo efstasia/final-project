@@ -1,6 +1,8 @@
 import styled, { keyframes } from 'styled-components';
 import darkbackground from '../images/darkbackground.jpg';
 import darkpaint from '../images/darkpaint.jpg';
+import darkfeed from '../images/darkfeed.jpg';
+import backgroundsignup from '../images/backgroundsignup.jpg';
 
 // HEADER //
 export const HeaderContainer = styled.div`
@@ -25,9 +27,25 @@ export const HeaderContainer = styled.div`
   }
 
   @media (max-width: 768px) {
-    /* max-width: 100vw; */
-  }
+    display: flex;
+    justify-content: center;
+    height: 160px;
+    margin-bottom: 10px;
+    width: 100vw;
 
+    div {
+      display: flex;
+      margin-top: auto;
+    }
+
+    h1 {
+      font-size: 28px;
+    }
+    img {
+      height: 30%;
+    }
+  }
+  /* 
   @media (max-width: 481px) {
     display: flex;
     justify-content: end;
@@ -40,12 +58,12 @@ export const HeaderContainer = styled.div`
     }
 
     h1 {
-      font-size: 20px;
+      font-size: 12px;
     }
     img {
       height: 30%;
     }
-  }
+  } */
 `;
 
 export const Title = styled.p`
@@ -79,12 +97,28 @@ export const InputWrapper = styled.div`
    left: 94%;
    top: 10px:
    margin: 5px;
+   border: 1px solid #e8993a;
+  }
+
+  .toggle-button {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    left: 90%;  
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    left: 90%;
   }
 
   @media (max-width:768px) {
     .add-button {
-      border: 2px solid red;
-      left: 80%;
+    
+      left: 0;
+      margin-bottom: 24px;
+      width: 70px;
+      height: 70px;
     }
   }
 
@@ -94,7 +128,7 @@ export const InputWrapper = styled.div`
     }
    
   }
- 
+
 `;
 
 // RATING FORM //
@@ -176,47 +210,72 @@ export const LogOutButtonContainer = styled.div`
   top: 300px;
 `;
 
-export const DateAndUser = styled.p`
-  font-style: italic;
-  font-size: 12px;
-
-  padding-right: 10px;
-  background: #242424;
-  display: flex;
-  justify-content: flex-end;
-`;
-
 //  SEARCH AND SORT CONTAINER //
 export const SearchAndSortContainer = styled.div`
   display: flex;
   justify-content: space-around;
   width: 20%;
-  margin: 5px auto;
+  margin: 20px auto;
 
   input,
   select {
     margin: 0 5px;
     border-radius: 10px 0;
-    padding: 5px;
+    padding: 8px;
   }
 `;
 
 // FEED RATING CONTAINER //
 export const RatingContainer = styled.div`
-  width: 70%;
-  margin: auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
+  width: 100%;
+  /* display: grid; */
+  background-image: url(${darkfeed});
+  background-size: cover;
+  padding-top: 50px;
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr 1fr;
-    width: 70%;
+  .inner-div-feed {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 80%;
+    margin: auto;
+    padding-top: 40px;
+    background: rgba(255, 255, 255, 0.6);
+    margin-bottom: 20px;
+    border: 2px solid #e8993a;
   }
 
+  .inner-card-feed {
+    margin: auto;
+    padding: 10px;
+    border: 2px solid black;
+    margin-bottom: 10px;
+    /* z-index: 10; */
+  }
+  .no-ratings {
+    display: hidden;
+  }
+
+  @media (max-width: 768px) {
+    width: 100vw;
+    .inner-div-feed {
+      grid-template-columns: 1fr;
+      width: 80%;
+    }
+    .inner-card-feed {
+      width: 80%;
+    }
+  }
+  /* 
   @media (max-width: 481px) {
     display: flex;
     flex-direction: column;
+  } */
+`;
+
+export const NoRatingDiv = styled.div`
+  display: flex;
+  img {
+    margin: auto;
   }
 `;
 
@@ -245,8 +304,10 @@ export const ProfileContainer = styled.div`
     margin: 20px auto;
     align-content: center;
     backdrop-filter: blur(5px);
+    z-index: 1;
   }
-  @media (max-width: 481px) {
+  @media (max-width: 768px) {
+    width: 100vw;
     .grid-wrapper {
       display: flex;
       flex-direction: column;
@@ -302,6 +363,16 @@ export const EditImageDiv = styled.div`
     display: block;
     top: 30px;
     position: relative;
+    z-index: 10;
+  }
+
+  .closeImageUpload {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    left: 82%;
+    bottom: 75%;
   }
 `;
 
@@ -309,7 +380,6 @@ export const EditImageDiv = styled.div`
 export const UserpageContainer = styled.div`
   display: grid;
   width: 100%;
-
   background-image: url(${darkpaint});
   background-size: cover;
 
@@ -328,13 +398,15 @@ export const UserpageContainer = styled.div`
     padding: 10px;
     border: 2px solid black;
     margin-bottom: 10px;
+    z-index: 10;
   }
 
   .delete-userpage-button {
     border-radius: none;
   }
 
-  @media (max-width: 481px) {
+  @media (max-width: 768px) {
+    width: 100vw;
     .inner-div {
       grid-template-columns: repeat(1, 1fr);
     }
@@ -365,33 +437,51 @@ export const Answer = styled.p`
   color: #161616;
 `;
 
+export const DateAndUser = styled.p`
+  font-style: italic;
+  font-size: 12px;
+  color: #fafafa;
+  padding-right: 10px;
+  background: #242424;
+  display: flex;
+  justify-content: flex-end;
+`;
+
 export const PageContainer = styled.div`
   width: 100%;
   height: 100%;
 `;
 
 export const PageWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 2fr;
+  background-image: url(${backgroundsignup});
   height: 100vh;
 
-  video {
-    width: auto;
-    height: 20%;
+  .signin-button {
+    width: 20%;
+    margin: 20px auto;
+  }
+
+  @media (max-width: 768px) {
+    width: 100vw;
   }
 `;
 
 // ** SIGNUP/LOGIN PAGE ** //
 export const SignupContainer = styled.div`
-  width: 40%;
-  /* margin: auto; */
-
+  /* display: flex; */
+  margin: auto;
+  padding-top: 50px;
+  grid-template-columns: 1fr;
+  display: grid;
+  /* align-items: center; */
   fieldset {
     display: flex;
     flex-direction: column;
-
+    margin: auto;
+    width: 30%;
     border: 2px solid;
     border-radius: 2px;
+    background: rgba(0, 0, 0, 0.7);
   }
 
   legend {
@@ -401,6 +491,25 @@ export const SignupContainer = styled.div`
 
   form {
     font-family: 'Poppins', sans-serif;
+  }
+
+  label,
+  input {
+    width: 70%;
+    margin: auto;
+  }
+
+  .submit-user-button {
+    width: 50%;
+    margin: 10px auto;
+  }
+  @media (max-width: 768px) {
+    fieldset {
+      width: 80%;
+    }
+    input {
+      padding: 10px;
+    }
   }
 `;
 
@@ -496,11 +605,12 @@ export const RatingCard = styled.div`
   width: 400px;
   height: 100%;
 
-  @media (min-width: 482px) and (max-width: 768px) {
+  @media (max-width: 768px) {
     width: 90%;
+    margin: auto;
   }
-  @media (max-width: 481px) {
+  /* @media (max-width: 481px) {
     width: 100%;
     margin-top: 10px;
-  }
+  } */
 `;

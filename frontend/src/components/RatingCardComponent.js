@@ -1,18 +1,7 @@
 import React from 'react';
-import { useDispatch, useSelector, batch } from 'react-redux';
 import moment from 'moment';
 
-import { ratings } from '../reducers/ratings';
-import {
-  Button,
-  SearchAndSortContainer,
-  RatingContainer,
-  RatingCard,
-  RatingText,
-  Question,
-  Answer,
-  DateAndUser,
-} from '../styles/Styles';
+import { RatingCard, Question, Answer, DateAndUser } from '../styles/Styles';
 
 export const RatingCardComponent = ({ item }) => {
   const backgroundColor = selectCategory => {
@@ -52,18 +41,14 @@ export const RatingCardComponent = ({ item }) => {
     }
   };
 
-  //const username = useSelector(store => store.user.username);
-
-  const dispatch = useDispatch();
-
   return (
     <RatingCard>
       <div
         style={{
           height: '120px',
-          background: backgroundColor(item.selectCategory),
+          // background: backgroundColor(item.selectCategory),
+          background: 'rgba(249, 105, 14, 0.7)',
           backgroundImage: backgroundImage(item.selectCategory),
-          // filter: 'brightness(0) invert(1);',
         }}
       ></div>
 

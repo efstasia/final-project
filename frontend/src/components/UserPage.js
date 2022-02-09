@@ -7,8 +7,6 @@ import styled from 'styled-components';
 import { user } from '../reducers/user';
 import { ratings } from '../reducers/ratings';
 import { RatingCardComponent } from './RatingCardComponent';
-import darkbackground from '../images/darkbackground.jpg';
-import darkpaint from '../images/darkpaint.jpg';
 
 import {
   Button,
@@ -20,48 +18,32 @@ import {
   RatingHeaderText,
 } from '../styles/Styles';
 
-const RatingContainer = styled.div`
-  border: 2px solid black;
-  width: 50%;
-  margin: auto;
-  text-align: center;
-`;
-
 export const UserPage = () => {
   const [rating, setRating] = useState([]);
-  const [deleteRating, setDeleteRating] = useState([]);
-  const [userInfo, setUserInfo] = useState([]);
-  const [profileImageData, setprofileImageData] = useState({});
-  const [password, setPassword] = useState('');
   const [canWrite, setCanWrite] = useState(false);
   const [editImage, setEditImage] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { id } = useParams();
+  const { userId } = useParams();
 
   const imageInput = useRef();
 
   const ratingItems = useSelector(store => store.ratings.items);
   const accessToken = useSelector(store => store.user.accessToken);
-  const userId = useSelector(store => store.user.userId);
+
   const email = useSelector(store => store.user.email);
   const username = useSelector(store => store.user.username);
   const firstName = useSelector(store => store.user.firstName);
   const lastName = useSelector(store => store.user.lastName);
   const image = useSelector(store => store.user.image);
   const role = useSelector(store => store.user.role);
-  console.log(role);
 
   const [userInfoEdit, setUserInfoEdit] = useState({
     username: username,
     firstName: firstName,
     lastName: lastName,
   });
-
-  console.log('RATING ITEMS', ratingItems);
-  console.log('RATING MAP', rating);
-  console.log(userId);
 
   const dummyImage =
     'https://i.postimg.cc/MpzWNG5g/87409506116276584393773-128.png';
@@ -91,19 +73,11 @@ export const UserPage = () => {
       },
     };
 
-    fetch(`http://localhost:8080/userpage/${userId}`, options) // needs ${userId}
+    fetch(`http://localhost:8080/userpage/${userId}`, options)
       .then(res => res.json())
       .then(data => {
-        if (data.success) {
-          dispatch(ratings.actions.setItems(data.response));
-          // dispatch(ratings.actions.setError(null));
-
-          setRating(data.response);
-          console.log(data.response);
-        } else {
-          // dispatch(ratings.actions.setRating([]));
-        }
-        console.log(data.response);
+        dispatch(ratings.actions.setItems(data.response));
+        setRating(data.response);
       });
   }, [dispatch, accessToken, userId]);
 
@@ -112,7 +86,7 @@ export const UserPage = () => {
     const formData = new FormData();
     formData.append('image', imageInput.current.files[0]);
 
-    fetch(`http://localhost:8080/userpage/${id}/image`, {
+    fetch(`http://localhost:8080/userpage/${userId}/image`, {
       method: 'POST',
       body: formData,
     })
@@ -126,9 +100,7 @@ export const UserPage = () => {
       })
       .then(data => dispatch(user.actions.setImage(data.response.imageUrl)))
 
-      .catch(error => {
-        console.log(error);
-      });
+      .catch(error => {});
   };
 
   useEffect(() => {
@@ -154,7 +126,6 @@ export const UserPage = () => {
     const options = {
       method: 'PATCH',
       headers: {
-        // Authorization: accessToken,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ ...userInfoEdit }),
@@ -175,10 +146,6 @@ export const UserPage = () => {
           dispatch(user.actions.setUsername(null));
           dispatch(user.actions.setError(data.response));
         }
-        console.log(data.response);
-        console.log(userId);
-
-        // console.log(userProfile)
       });
     setCanWrite(false);
   };
@@ -214,18 +181,7 @@ export const UserPage = () => {
           <Button style={{ top: '23%' }} type='submit' onClick={uploadImage}>
             SAVE
           </Button>
-          <Button
-            style={{
-              borderRadius: '50%',
-              width: '60px',
-              height: '60px',
-
-              position: 'absolute',
-              left: '82%',
-              bottom: '75%',
-            }}
-            onClick={handleImageUploadClose}
-          >
+          <Button className='closeImageUpload' onClick={handleImageUploadClose}>
             <i className='fas fa-times'></i>
           </Button>
         </EditImageDiv>

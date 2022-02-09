@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import { useDispatch, useSelector, batch } from 'react-redux';
 
-import { user } from '../reducers/user';
 import { ratings } from '../reducers/ratings';
 
 import {
@@ -33,12 +31,7 @@ export const AddRating = () => {
     setCanWrite(false);
   };
 
-  // const handleFormSubmit = event => {
-  //   event.preventDefault();
-  // };
-
   const onRatingPost = () => {
-    // event.preventDefault();
     const optionsAll = {
       method: 'POST',
       headers: {
@@ -82,34 +75,13 @@ export const AddRating = () => {
   return (
     <InputWrapper>
       {!canWrite && (
-        <Button
-          className='add-button'
-          // style={{
-          //   borderRadius: '50%',
-          //   width: '60px',
-          //   height: '60px',
-          //   position: 'relative',
-          //   left: '94%',
-          //   top: '10px',
-          // }}
-          onClick={handleWriteRating}
-        >
+        <Button className='add-button' onClick={handleWriteRating}>
           <i className='fas fa-plus'></i>
         </Button>
       )}
       {canWrite && (
         <Form onSubmit={onRatingPost}>
-          <Button
-            style={{
-              borderRadius: '50%',
-              width: '60px',
-              height: '60px',
-              position: 'absolute',
-              left: '90%',
-            }}
-            onClick={handleInputClose}
-            className='toggle-button'
-          >
+          <Button onClick={handleInputClose} className='toggle-button'>
             <i className='fas fa-times'></i>
           </Button>
           <label htmlFor='restaurant'>Restaurant</label>
@@ -150,10 +122,10 @@ export const AddRating = () => {
             onChange={event => setSelectCategory(event.target.value)}
           >
             <option>choose category here</option>
-            <option value='Pizza'>Pizza</option>
-            <option value='Pasta'>Pasta</option>
             <option value='Hamburger'>Hamburger</option>
             <option value='Sushi'>Sushi</option>
+            <option value='Pizza'>Pizza</option>
+            <option value='Pasta'>Pasta</option>
             <option value='Other'>Other</option>
           </select>
 

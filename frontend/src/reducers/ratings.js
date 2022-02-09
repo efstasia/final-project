@@ -1,7 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import uniqid from 'uniqid';
-
 export const ratings = createSlice({
   name: 'ratings',
   initialState: {
@@ -11,19 +9,9 @@ export const ratings = createSlice({
     selectCategory: null,
     ratingText: null,
     user: '',
-    //createdAt: null,
   },
 
   reducers: {
-    // addRating: (store, action) => {
-    //   const newRating = {
-    //     id: uniqid(),
-    //     text: action.payload,
-    //     //   createdAt: new Date(),
-    //   };
-
-    //   store.items = [...store.items, newRating];
-    // },
     setItems: (store, action) => {
       store.items = action.payload;
     },
@@ -46,14 +34,14 @@ export const ratings = createSlice({
       store.user = action.payload;
     },
     deleteRating: (store, action) => {
+      console.log(action.payload);
       const decreasedItems = store.items.filter(
-        item => item.id !== action.payload
+        item => item._id !== action.payload
       );
       store.items = decreasedItems;
     },
     setError: (store, action) => {
       store.error = action.payload;
     },
-    //do we need to add a reducer for search, filter etc?
   },
 });

@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { user } from '../reducers/user';
 import { Collapse } from '@chakra-ui/core';
-import food2 from '../videos/food.mp4';
 
 import { SignupContainer, PageWrapper, Button } from '../styles/Styles';
 
@@ -55,7 +54,6 @@ const SignupPage = () => {
           batch(() => {
             console.log(data.response);
             dispatch(user.actions.setUserId(data.response.userId));
-
             dispatch(user.actions.setUsername(data.response.username));
             dispatch(user.actions.setAccessToken(data.response.accessToken));
             dispatch(user.actions.setFirstName(data.response.firstName));
@@ -64,14 +62,12 @@ const SignupPage = () => {
             dispatch(user.actions.setRole(data.response.role));
             dispatch(user.actions.setError(null));
           });
-          console.log(data.response.userId);
         } else {
           batch(() => {
             dispatch(user.actions.setUserId(null));
             dispatch(user.actions.setUsername(null));
             dispatch(user.actions.setAccessToken(null));
             dispatch(user.actions.setError(data.response));
-
             setValidationError(data.message);
           });
         }
@@ -79,7 +75,6 @@ const SignupPage = () => {
   };
 
   // this handles the SIGN UP
-
   const onFormSubmit = event => {
     event.preventDefault();
     const options = {
@@ -126,7 +121,6 @@ const SignupPage = () => {
             dispatch(user.actions.setError(data.response));
             setValidationError(data.message);
           });
-          console.log(data);
           Swal.fire({
             icon: 'error',
             title: 'Oops...',
@@ -138,11 +132,6 @@ const SignupPage = () => {
 
   return (
     <PageWrapper>
-      <div>
-        <video loop muted autoPlay>
-          <source src={food2} type='video/mp4' />
-        </video>
-      </div>
       <SignupContainer>
         <form onSubmit={onFormSubmit}>
           <fieldset>
@@ -178,16 +167,18 @@ const SignupPage = () => {
               id='lastName'
               onChange={e => setLastName(e.target.value)}
             />
-            <button type='submit'>submit</button>
+            <Button className='submit-user-button' type='submit'>
+              submit
+            </Button>
           </fieldset>
         </form>
 
         {/* {validationError !== null && (
         <p style={{ fontSize: '21px', color: 'red' }}>{validationError}</p>
       )} */}
-        {/* <h2>already a member? SIGN IN</h2> */}
+
         <Button
-          style={{ marginTop: '20px' }}
+          className='signin-button'
           variantColor='blue'
           onClick={handleToggle}
         >
@@ -210,7 +201,9 @@ const SignupPage = () => {
                 id='passwordSign'
                 onChange={e => setPasswordSignin(e.target.value)}
               />
-              <button type='submit'>SIGN IN</button>
+              <Button className='signin-button' type='submit'>
+                SIGN IN
+              </Button>
             </fieldset>
           </form>
         </Collapse>

@@ -12,7 +12,6 @@ dotenv.config();
 
 const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/finalProject';
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
-// mongoose.set('useCreateIndex', true); //added due to deprecation error 26868
 mongoose.Promise = Promise;
 mongoose.set('useCreateIndex', true); //added due to deprecation error 26868
 
@@ -29,12 +28,11 @@ const storage = new CloudinaryStorage({
   params: {
     folder: 'profileImages',
     allowedFormats: ['jpg', 'png', 'jpeg'],
-    transformation: [{ width: 100, height: 100, crop: 'limit' }],
+    transformation: [{ width: 200, height: 200, crop: 'limit' }],
   },
 });
 const parser = multer({ storage });
 
-// a schema to sign up/sign in to the user page
 // a schema to sign up/sign in to the user page
 const UserSchema = new mongoose.Schema({
   email: {
@@ -148,6 +146,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
 const authenticateUser = async (req, res, next) => {
   const accessToken = req.header('Authorization');
   try {
@@ -163,12 +162,8 @@ const authenticateUser = async (req, res, next) => {
 };
 
 // --- POST to feed --- //
-// add the POPULATE here
 app.post('/feed', authenticateUser);
 app.post('/feed', async (req, res) => {
-  // const { id } = req.params;
-  // console.log(req.user);
-  // console.log(req.user._id);
   const {
     ratingText,
     restaurantName,
@@ -189,11 +184,6 @@ app.post('/feed', async (req, res) => {
       user,
       createdAt,
     }).save();
-
-    // const updatedUser = await User.findByIdAndUpdate(id, {
-    //   $push: { rating: newRatingText },
-    // });
-    // res.status(201).json({ response: updatedUser, success: true });
     res.status(201).json({
       response: newRatingText,
       success: true,
@@ -204,7 +194,7 @@ app.post('/feed', async (req, res) => {
 });
 
 // --- GET ratings to feed --- //
-//app.get('/feed', authenticateUser);
+app.get('/feed', authenticateUser);
 app.get('/feed', async (req, res) => {
   const main = await Rating.find({}).sort({ createdAt: -1 }).populate('user');
 
@@ -233,9 +223,8 @@ app.get('/feed/:userId', async (req, res) => {
 });
 
 // -- PATCH user info -- //
-//app.patch('/feed/:userId', authenticateUser);
+app.patch('/feed/:userId', authenticateUser);
 app.patch('/userpage/:userId', async (req, res) => {
-  // req.query - ?user=id?
   const updatedUserInfo = req.body;
   const { userId } = req.params;
 
@@ -281,7 +270,6 @@ app.get('/userpage/:userId', async (req, res) => {
   }
 });
 
-// --- delete feed, maybe not neccesary?--- //
 app.delete('/feed/:ratingId', async (req, res) => {
   const { ratingId } = req.params;
 
@@ -298,10 +286,10 @@ app.delete('/feed/:ratingId', async (req, res) => {
 });
 
 // --- delete on user page --- //
-//app.delete('/feed/:userId', authenticateUser);
+app.delete('/feed/:userId', authenticateUser);
 app.delete('/userpage/:userRatingId', async (req, res) => {
-  const { userRatingId } = req.params; // body or params?
-  // const { user } = req.body;
+  const { userRatingId } = req.params;
+
   const deletedUserRating = await Profile.findOneAndDelete({
     ratingId: userRatingId,
   });
@@ -333,7 +321,6 @@ app.post('/signup', async (req, res) => {
       email,
       firstName,
       lastName,
-      // role,
       password: bcrypt.hashSync(password, salt), // the "salt" passes the randomizer to the password
     }).save();
 
@@ -345,7 +332,6 @@ app.post('/signup', async (req, res) => {
         email: newUser.email,
         firstName: newUser.firstName,
         lastName: newUser.lastName,
-        // role: newUser.role,
       },
       success: true,
     });
@@ -447,8 +433,7 @@ app.post('/signin', async (req, res) => {
 });
 
 // -- add profile picture -- //
-//app.post('/userpage/:id/image', authenticateUser);
-app.post('/feed/:id/image', parser.single('image'), async (req, res) => {
+app.post('/userpage/:id/image', parser.single('image'), async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -473,7 +458,6 @@ app.post('/feed/:id/image', parser.single('image'), async (req, res) => {
 });
 
 // GET the user image //
-app.get('/userpage/:id/image', authenticateUser);
 app.get('/userpage/:id/image', async (req, res) => {
   const { id } = req.params;
 

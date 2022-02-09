@@ -4,7 +4,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import thunkMiddleware from 'redux-thunk';
 import {
-  configureStore,
   combineReducers,
   createStore,
   compose,
@@ -15,7 +14,6 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyles } from './styles/Globalstyles';
 import { lightTheme, darkTheme } from './styles/Themes';
 import { useDarkMode } from './components/UseDarkMode';
-import Toggle from './components/Toggler';
 
 import { user } from './reducers/user';
 import { ratings } from './reducers/ratings';
@@ -27,8 +25,6 @@ import { UserPage } from './components/UserPage';
 import { Footer } from './components/Footer';
 import { Burger } from './components/Burger/Burger';
 import { Menu } from './components/Menu/Menu';
-import { SortingSelect } from './components/SortingSelect';
-import { AddRating } from './components/AddRating';
 import { MainFeed } from './components/MainFeed';
 
 const reducer = combineReducers({
@@ -84,15 +80,13 @@ export const App = () => {
 
               {/* main page once logged in */}
               <Route path='/feed' element={<MainFeed />} />
-              {/*             
-            <Route path='/add' element={<AddRating />} /> */}
 
               {/* user page */}
               <Route path='/userpage/:userId' element={<UserPage />} />
             </Routes>
           </Provider>
         </BrowserRouter>
-        {/* <Footer /> */}
+        <Footer />
       </ThemeProvider>
     </>
   );

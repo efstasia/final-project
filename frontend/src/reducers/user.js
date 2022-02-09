@@ -46,7 +46,6 @@ export const user = createSlice({
       store.userId = null;
       store.username = null;
       store.accessToken = null;
-      // localStorage.removeItem('accessToken');
     },
   },
 });

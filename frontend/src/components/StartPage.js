@@ -1,12 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import hamburger from '../images/hamburger.jpg';
-import pasta from '../images/pasta.jpg';
 import neon from '../images/neon.jpg';
 
 import { StartPageContainer, Button } from '../styles/Styles';
 
-// add the info about the website here
 export const StartPage = () => {
   return (
     <StartPageContainer>
@@ -16,13 +14,10 @@ export const StartPage = () => {
         </div>
         <div className='div2'>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            Welcome to minechies. This a website where we can add our own
+            ratings, or, minchies as we like to call them. We can also look at
+            the feed to see what other people have enjoyed, or not enjoyed,
+            eating.
             <Button>
               <Link className='signup-link' to='/signup'>
                 SIGNUP/LOGIN
@@ -32,20 +27,18 @@ export const StartPage = () => {
         </div>
         <div className='div3'>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
+            This is an application created as a final project in the Technigo
+            bootcamp. It's creators are Sofia Wallerberg & Eddie Lundgren. This
+            is an idea that grew from a common fondness of burgers and being
+            tired of having to go through a hundred notes on your phone to find
+            and add a rating or comment about food you've eaten or a place you
+            wish to avoid. We all know that food is life and you shouldn't be
+            going through life eating bad food.
           </p>
         </div>
         <div className='div4'>
           <img src={neon} alt='neon sign' />
         </div>
-
-        {/* add info about page here */}
       </div>
     </StartPageContainer>
   );
