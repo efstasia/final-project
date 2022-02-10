@@ -1,10 +1,9 @@
-import styled, { keyframes } from 'styled-components';
-import darkbackground from '../images/darkbackground.jpg';
+import styled from 'styled-components';
 import darkpaint from '../images/darkpaint.jpg';
 import darkfeed from '../images/darkfeed.jpg';
 import backgroundsignup from '../images/backgroundsignup.jpg';
 
-// HEADER //
+/* -------------HEADER--------------- */
 export const HeaderContainer = styled.div`
   height: 150px;
   color: white;
@@ -45,37 +44,95 @@ export const HeaderContainer = styled.div`
       height: 30%;
     }
   }
-  /* 
-  @media (max-width: 481px) {
-    display: flex;
-    justify-content: end;
-    height: 160px;
-    margin-bottom: 10px;
+`;
 
-    div {
+/* -------------START PAGE--------------- */
+export const StartPageContainer = styled.div`
+  .parent {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 15px;
+    grid-row-gap: 30px;
+    width: 80%;
+    margin: 50px auto;
+    @media (max-width: 767px) {
       display: flex;
-      margin-top: auto;
-    }
+      flex-direction: column;
+      width: 100%;
+      align-items: center;
 
-    h1 {
-      font-size: 12px;
+      .div1 {
+        order: 2;
+        width: 80%;
+        margin: auto;
+      }
+      .div1 img {
+        margin: auto;
+      }
+      .div2 {
+        order: 1;
+        margin-bottom: 30px;
+      }
+      .div3 {
+        order: 3;
+        margin-bottom: 30px;
+        width: 75%;
+      }
+      .div4 {
+        order: 4;
+      }
+      .div4 img {
+        width: 64%;
+      }
     }
-    img {
-      height: 30%;
-    }
-  } */
+  }
+
+  .div1 {
+    grid-area: 1 / 1 / 2 / 2;
+  }
+  .div2 {
+    grid-area: 1 / 2 / 2 / 3;
+    transform: translateY(25%);
+    width: 70%;
+  }
+  .div3 {
+    grid-area: 2 / 1 / 3 / 2;
+    transform: translateY(25%);
+  }
+  .div4 {
+    grid-area: 2 / 2 / 3 / 3;
+  }
+
+  .div4 > img {
+    height: 80%;
+  }
+
+  .signup-link {
+    text-decoration: none;
+    color: #fafafa;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+  }
 `;
 
-export const Title = styled.p`
-  text-align: center;
-  font-weight: bold;
-  font-size: 24px;
-  font-family: 'Poppins', sans-serif;
+/* -------------SEARCH AND SORT CONTAINER--------------- */
+export const SearchAndSortContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  width: 20%;
+  margin: 20px auto;
+
+  input,
+  select {
+    margin: 0 5px;
+    border-radius: 10px 0;
+    padding: 8px;
+    font-family: 'Poppins', sans-serif;
+  }
 `;
 
-// *** FEED ** //
+/* -------------FEED--------------- */
 export const InputWrapper = styled.div`
- 
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -85,8 +142,7 @@ export const InputWrapper = styled.div`
     transition: transform 0.3s ease-in-out;
 
     textarea {
-      resize: none;
-   
+      resize: none;   
 }
 
   .add-button {
@@ -114,7 +170,6 @@ export const InputWrapper = styled.div`
 
   @media (max-width:768px) {
     .add-button {
-    
       left: 0;
       margin-bottom: 24px;
       width: 70px;
@@ -126,12 +181,10 @@ export const InputWrapper = styled.div`
     .add-button {
       left: 10%
     }
-   
   }
-
 `;
 
-// RATING FORM //
+/* -------------RATING INPUT FORM--------------- */
 export const Form = styled.form`
   position: absolute;
   width: 50%;
@@ -163,72 +216,9 @@ export const Form = styled.form`
   }
 `;
 
-export const AddButtonContainer = styled.div`
-  display: grid;
-  width: 40%;
-  align-items: center;
-  margin: 0px auto;
-`;
-
-// LOG OUT BUTTON/ GLOBAL BUTTON //
-export const Button = styled.button`
-    background-color: #222;
-    border-radius: 4px;
-    border-style: none;
-    box-sizing: border-box;
-    color: #fff;
-    cursor: pointer;
-    display: inline-block;
-    font-family: 'Fredoka One', cursive;
-    font-size: 16px;
-    font-weight: 200;
-    line-height: 1.5;
-    margin: 0;
-    max-width: none;
-    min-height: 44px;
-    min-width: 10px;
-    outline: none;
-    overflow: hidden;
-    padding: 9px 20px 8px;
-    position: relative;
-    text-align: center;
-    text-transform: none;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
-    width: 100%;
-  }
-
-  &:hover,
-  &:focus {
-    opacity: 0.75;
-  }
-`;
-
-export const LogOutButtonContainer = styled.div`
-  position: relative;
-  top: 300px;
-`;
-
-//  SEARCH AND SORT CONTAINER //
-export const SearchAndSortContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  width: 20%;
-  margin: 20px auto;
-
-  input,
-  select {
-    margin: 0 5px;
-    border-radius: 10px 0;
-    padding: 8px;
-  }
-`;
-
-// FEED RATING CONTAINER //
+/* -------------RATING FEED CONTAINER--------------- */
 export const RatingContainer = styled.div`
   width: 100%;
-  /* display: grid; */
   background-image: url(${darkfeed});
   background-size: cover;
   padding-top: 50px;
@@ -249,7 +239,6 @@ export const RatingContainer = styled.div`
     padding: 10px;
     border: 2px solid black;
     margin-bottom: 10px;
-    /* z-index: 10; */
   }
   .no-ratings {
     display: hidden;
@@ -265,11 +254,6 @@ export const RatingContainer = styled.div`
       width: 80%;
     }
   }
-  /* 
-  @media (max-width: 481px) {
-    display: flex;
-    flex-direction: column;
-  } */
 `;
 
 export const NoRatingDiv = styled.div`
@@ -279,7 +263,14 @@ export const NoRatingDiv = styled.div`
   }
 `;
 
-// *** USERPAGE *** //
+export const LoadMoreContainer = styled.div`
+  @media (max-width: 768px) {
+    width: 50%;
+    margin: 10px auto;
+  }
+`;
+
+/* -------------------USERPAGE-------------------------- */
 export const ProfileContainer = styled.div`
   height: 500px;
   padding-top: 40px;
@@ -288,9 +279,6 @@ export const ProfileContainer = styled.div`
   margin: 10px auto;
   font-family: 'Poppins', sans-serif;
   border: 1px solid black;
-  /* background: #44a08d;
-  background: -webkit-linear-gradient(to left, #093637, #44a08d);
-  background: linear-gradient(to left, #093637, #44a08d); */
   background-image: url(${darkpaint});
   background-size: cover;
 
@@ -343,6 +331,13 @@ export const ProfileContainer = styled.div`
   }
 `;
 
+export const UserpageTitle = styled.p`
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+  font-family: 'Poppins', sans-serif;
+`;
+
 export const RatingHeaderText = styled.h3`
   text-align: center;
   font-family: 'Poppins', sans-serif;
@@ -376,7 +371,7 @@ export const EditImageDiv = styled.div`
   }
 `;
 
-// USERPAGE RATING CONTAINER //
+/* -------------USERPAGE RATING CONTAINER--------------- */
 export const UserpageContainer = styled.div`
   display: grid;
   width: 100%;
@@ -419,7 +414,6 @@ export const UserpageContainer = styled.div`
 
 export const Question = styled.p`
   font-weight: bold;
-  /* background: #242424; */
   text-align: center;
   padding: 2px 0;
   margin-bottom: 3px;
@@ -466,14 +460,13 @@ export const PageWrapper = styled.div`
   }
 `;
 
-// ** SIGNUP/LOGIN PAGE ** //
+/* -------------SIGNUP/LOGIN PAGE--------------- */
 export const SignupContainer = styled.div`
-  /* display: flex; */
   margin: auto;
   padding-top: 50px;
   grid-template-columns: 1fr;
   display: grid;
-  /* align-items: center; */
+
   fieldset {
     display: flex;
     flex-direction: column;
@@ -513,93 +506,8 @@ export const SignupContainer = styled.div`
   }
 `;
 
-// ** START PAGE ** //
-export const StartPageContainer = styled.div`
-  .parent {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-
-    grid-column-gap: 15px;
-    grid-row-gap: 30px;
-    width: 80%;
-    margin: 50px auto;
-    @media (max-width: 767px) {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      align-items: center;
-
-      .div1 {
-        order: 2;
-        width: 80%;
-        margin: auto;
-      }
-      .div1 img {
-        /* align-content: center; */
-        margin: auto;
-      }
-      .div2 {
-        order: 1;
-        margin-bottom: 30px;
-      }
-      .div3 {
-        order: 3;
-        margin-bottom: 30px;
-        width: 75%;
-      }
-      .div4 {
-        order: 4;
-      }
-      .div4 img {
-        width: 64%;
-      }
-    }
-  }
-
-  .div1 {
-    grid-area: 1 / 1 / 2 / 2;
-  }
-  .div2 {
-    grid-area: 1 / 2 / 2 / 3;
-    transform: translateY(25%);
-    width: 70%;
-  }
-  .div3 {
-    grid-area: 2 / 1 / 3 / 2;
-    transform: translateY(25%);
-  }
-  .div4 {
-    grid-area: 2 / 2 / 3 / 3;
-  }
-
-  .div4 > img {
-    height: 80%;
-  }
-
-  img {
-    /* height: 70%;
-    width: auto; */
-  }
-
-  .signup-link {
-    text-decoration: none;
-    color: #fafafa;
-    font-family: 'Poppins', sans-serif;
-    font-weight: bold;
-  }
-`;
-
-export const LoadMoreContainer = styled.div`
-  @media (max-width: 768px) {
-    width: 50%;
-    margin: 10px auto;
-  }
-`;
-
-// GLOBAL RATING CARDS //
+/* -------------GLOBAL RATING CARDS--------------- */
 export const RatingCard = styled.div`
-  /* border: 2px solid black;
-  border-radius: 2px; */
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   font-family: 'Poppins', sans-serif;
   width: 400px;
@@ -609,8 +517,65 @@ export const RatingCard = styled.div`
     width: 90%;
     margin: auto;
   }
-  /* @media (max-width: 481px) {
+`;
+
+/* -------------FOOTER--------------- */
+export const FooterContainer = styled.footer`
+  height: 5%;
+  width: 100%;
+  background-color: #161616;
+  position: relative;
+  bottom: 0;
+  left: 0;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  font-family: 'Poppins', sans-serif;
+`;
+
+/* -------------GLOBAL BUTTON/BUTTONS--------------- */
+export const Button = styled.button`
+    background-color: #222;
+    border-radius: 4px;
+    border-style: none;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'Fredoka One', cursive;
+    font-size: 16px;
+    font-weight: 200;
+    line-height: 1.5;
+    margin: 0;
+    max-width: none;
+    min-height: 44px;
+    min-width: 10px;
+    outline: none;
+    overflow: hidden;
+    padding: 9px 20px 8px;
+    position: relative;
+    text-align: center;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
     width: 100%;
-    margin-top: 10px;
-  } */
+  }
+
+  &:hover,
+  &:focus {
+    opacity: 0.75;
+  }
+`;
+
+export const LogOutButtonContainer = styled.div`
+  position: relative;
+  top: 300px;
+`;
+
+export const AddButtonContainer = styled.div`
+  display: grid;
+  width: 40%;
+  align-items: center;
+  margin: 0px auto;
 `;

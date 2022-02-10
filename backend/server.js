@@ -10,7 +10,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/finalProject';
+const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/final-project';
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = Promise;
 mongoose.set('useCreateIndex', true); //added due to deprecation error 26868
@@ -147,6 +147,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+if (process.env.RESET_DB) {
+  const seedDatabase = async () => {
+    // the seed isn't necessary when creating a new database. seed it once and then only run npm run dev
+    await Rating.deleteMany({});
+
+    // loop through all of the companies in our json file
+    Rating.forEach(item => {
+      // for each of the company, we're creating new data that will be shown. new company for each item in the data
+      const newRating = new Rating(item);
+      newRating.save();
+    });
+  };
+  seedDatabase();
+}
+
 const authenticateUser = async (req, res, next) => {
   const accessToken = req.header('Authorization');
   try {
@@ -162,7 +177,7 @@ const authenticateUser = async (req, res, next) => {
 };
 
 // --- POST to feed --- //
-app.post('/feed', authenticateUser);
+//app.post('/feed', authenticateUser);
 app.post('/feed', async (req, res) => {
   const {
     ratingText,

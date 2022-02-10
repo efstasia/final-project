@@ -4,25 +4,6 @@ import moment from 'moment';
 import { RatingCard, Question, Answer, DateAndUser } from '../styles/Styles';
 
 export const RatingCardComponent = ({ item }) => {
-  const backgroundColor = selectCategory => {
-    if (selectCategory === 'Pizza') {
-      return '#1F6F8B';
-    }
-    if (selectCategory === 'Hamburger') {
-      return '#346751';
-    }
-
-    if (selectCategory === 'Sushi') {
-      return ' #C84B31';
-    }
-    if (selectCategory === 'Pasta') {
-      return '#FFC947';
-    }
-    if (selectCategory === 'Other') {
-      return '#CF455C';
-    }
-  };
-
   const backgroundImage = selectCategory => {
     if (selectCategory === 'Pizza') {
       return 'url(https://i.postimg.cc/6qCg1BMm/16399430961571183077-128-1.png)';
@@ -46,7 +27,6 @@ export const RatingCardComponent = ({ item }) => {
       <div
         style={{
           height: '120px',
-          // background: backgroundColor(item.selectCategory),
           background: 'rgba(249, 105, 14, 0.7)',
           backgroundImage: backgroundImage(item.selectCategory),
         }}

@@ -13,6 +13,10 @@ export const Menu = ({ open }) => {
 
   const handleLogout = () => {
     dispatch(user.actions.logout());
+    dispatch(user.actions.setUsername(null));
+    dispatch(user.actions.setUserId(null));
+    dispatch(user.actions.setAccessToken(null));
+    localStorage.removeItem('user');
   };
 
   return (

@@ -1,25 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector, batch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import styled from 'styled-components';
 
 import { user } from '../reducers/user';
 import { ratings } from '../reducers/ratings';
-import { RatingCardComponent } from './RatingCardComponent';
+import { RatingCardComponent } from '../components/RatingCardComponent';
+
+import { API_URL } from '../utils/urls';
 
 import {
   Button,
   Form,
   ProfileContainer,
   EditImageDiv,
-  Title,
+  UserpageTitle,
   UserpageContainer,
   RatingHeaderText,
 } from '../styles/Styles';
 
 export const UserPage = () => {
-  const [rating, setRating] = useState([]);
   const [canWrite, setCanWrite] = useState(false);
   const [editImage, setEditImage] = useState(false);
 
@@ -29,15 +28,13 @@ export const UserPage = () => {
 
   const imageInput = useRef();
 
-  const ratingItems = useSelector(store => store.ratings.items);
   const accessToken = useSelector(store => store.user.accessToken);
-
   const email = useSelector(store => store.user.email);
   const username = useSelector(store => store.user.username);
   const firstName = useSelector(store => store.user.firstName);
   const lastName = useSelector(store => store.user.lastName);
   const image = useSelector(store => store.user.image);
-  const role = useSelector(store => store.user.role);
+  const rating = useSelector(store => store.ratings.items);
 
   const [userInfoEdit, setUserInfoEdit] = useState({
     username: username,
@@ -73,11 +70,11 @@ export const UserPage = () => {
       },
     };
 
-    fetch(`http://localhost:8080/userpage/${userId}`, options)
+    fetch(API_URL(`userpage/${userId}`), options)
       .then(res => res.json())
       .then(data => {
         dispatch(ratings.actions.setItems(data.response));
-        setRating(data.response);
+        dispatch(ratings.actions.setError(null));
       });
   }, [dispatch, accessToken, userId]);
 
@@ -86,7 +83,7 @@ export const UserPage = () => {
     const formData = new FormData();
     formData.append('image', imageInput.current.files[0]);
 
-    fetch(`http://localhost:8080/userpage/${userId}/image`, {
+    fetch(API_URL(`userpage/${userId}/image`), {
       method: 'POST',
       body: formData,
     })
@@ -109,18 +106,20 @@ export const UserPage = () => {
     }
   }, [accessToken, navigate]);
 
-  const onDeleteUserRating = userRatingId => {
+  // this deletes the ratings
+  const onDeleteRating = ratingId => {
     const options = {
       method: 'DELETE',
     };
 
-    fetch(`http://localhost:8080/feed/${userRatingId}`, options)
+    fetch(API_URL(`feed/${ratingId}`), options)
       .then(res => res.json())
       .then(data => {
-        dispatch(ratings.actions.deleteRating(data.response));
+        dispatch(ratings.actions.deleteRating(data._id));
       });
   };
 
+  // this fetch patches the user info
   const onChangeUserInfo = event => {
     event.preventDefault();
     const options = {
@@ -131,7 +130,7 @@ export const UserPage = () => {
       body: JSON.stringify({ ...userInfoEdit }),
     };
 
-    fetch(`http://localhost:8080/userpage/${userId}`, options)
+    fetch(API_URL(`userpage/${userId}`), options)
       .then(res => res.json())
       .then(data => {
         setUserInfoEdit(data.response);
@@ -153,7 +152,7 @@ export const UserPage = () => {
   // --- getting the user info -- //
   return (
     <div>
-      <Title>Welcome, {firstName}! This is your profile.</Title>
+      <UserpageTitle>Welcome, {firstName}! This is your profile.</UserpageTitle>
       <ProfileContainer>
         <div className='grid-wrapper'>
           <div className='image-grid'>
@@ -233,7 +232,7 @@ export const UserPage = () => {
                 <RatingCardComponent item={item} />
                 <Button
                   className='delete-userpage-button'
-                  onClick={() => onDeleteUserRating(item._id)}
+                  onClick={() => onDeleteRating(item._id)}
                 >
                   DELETE
                 </Button>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector, batch } from 'react-redux';
+import { API_URL } from '../utils/urls';
 
 import { ratings } from '../reducers/ratings';
 
@@ -48,7 +49,7 @@ export const AddRating = () => {
       }),
     };
 
-    fetch(`http://localhost:8080/feed`, optionsAll)
+    fetch(API_URL('feed'), optionsAll)
       .then(res => res.json())
       .then(data => {
         if (data.success) {

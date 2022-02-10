@@ -1,21 +1,12 @@
 import React from 'react';
-import styled from 'styled-components';
-
-const FooterContainer = styled.footer`
-  height: 5%;
-  width: 100%;
-  background-color: #161616;
-  position: relative;
-  bottom: 0;
-  left: 0;
-  color: white;
-  text-align: center;
-`;
+import { FooterContainer } from '../styles/Styles';
 
 export const Footer = () => {
   return (
     <div>
-      <FooterContainer>this is a footer</FooterContainer>
+      <FooterContainer>
+        Created by Sofia Wallerberg & Eddie Lundgren | Technigo 2022
+      </FooterContainer>
     </div>
   );
 };

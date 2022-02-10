@@ -20,8 +20,7 @@ const Button = styled.button`
   }
 
   @media (max-width: 481px) {
-    left: 0;
-    margin-bottom: 8px;
+    display: none;
   }
 `;
 const Toggle = ({ theme, toggleTheme }) => {

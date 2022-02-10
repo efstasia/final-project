@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { user } from '../reducers/user';
 import { Collapse } from '@chakra-ui/core';
+import { API_URL } from '../utils/urls';
 
 import { SignupContainer, PageWrapper, Button } from '../styles/Styles';
 
@@ -13,10 +14,8 @@ const SignupPage = () => {
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [role, setRole] = useState('');
   const [usernameSignin, setUsernameSignin] = useState('');
   const [passwordSignin, setPasswordSignin] = useState('');
-  const [validationError, setValidationError] = useState(null);
   const [show, setShow] = useState(false);
 
   const handleToggle = () => setShow(!show);
@@ -47,7 +46,7 @@ const SignupPage = () => {
       }),
     };
 
-    fetch('http://localhost:8080/signin', options)
+    fetch(API_URL('signin'), options)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -68,7 +67,6 @@ const SignupPage = () => {
             dispatch(user.actions.setUsername(null));
             dispatch(user.actions.setAccessToken(null));
             dispatch(user.actions.setError(data.response));
-            setValidationError(data.message);
           });
         }
       });
@@ -86,10 +84,9 @@ const SignupPage = () => {
         email,
         firstName,
         lastName,
-        role,
       }),
     };
-    fetch('http://localhost:8080/signup', options)
+    fetch(API_URL('signup'), options)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -101,7 +98,6 @@ const SignupPage = () => {
             dispatch(user.actions.setLastName(data.response.lastName));
             dispatch(user.actions.setAccessToken(data.response.accessToken));
             dispatch(user.actions.setEmail(data.response.email));
-
             dispatch(user.actions.setError(null));
           });
           Swal.fire({
@@ -119,7 +115,6 @@ const SignupPage = () => {
             dispatch(user.actions.setEmail(null));
             dispatch(user.actions.setRole(null));
             dispatch(user.actions.setError(data.response));
-            setValidationError(data.message);
           });
           Swal.fire({
             icon: 'error',
@@ -172,10 +167,6 @@ const SignupPage = () => {
             </Button>
           </fieldset>
         </form>
-
-        {/* {validationError !== null && (
-        <p style={{ fontSize: '21px', color: 'red' }}>{validationError}</p>
-      )} */}
 
         <Button
           className='signin-button'

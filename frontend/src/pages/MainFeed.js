@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
 import ScrollToTop from 'react-scroll-to-top';
 
 import { API_URL } from '../utils/urls';
 import { ratings } from '../reducers/ratings';
-import { RatingCardComponent } from './RatingCardComponent';
+import { RatingCardComponent } from '../components/RatingCardComponent';
 
-import { AddRating } from './AddRating';
+import { AddRating } from '../components/AddRating';
 import catmeme from '../images/catmeme.jpg';
 
 import {
@@ -33,6 +32,7 @@ export const MainFeed = props => {
   const accessToken = useSelector(store => store.user.accessToken);
   const rating = useSelector(store => store.ratings.items);
   const role = useSelector(store => store.user.role);
+  console.log(rating);
 
   const getMoreRatings = () => {
     setMapCount(data.length);
@@ -117,32 +117,33 @@ export const MainFeed = props => {
 
       <RatingContainer>
         <AddRating canWrite={props.canWrite} />
-        <div className={rating.length > 0 ? 'inner-div-feed' : 'no-ratings'}>
-          {rating &&
-            rating.length > 0 &&
-            rating
-              .slice(0, mapCount)
-              .filter(onRatingFilter)
-              .sort(onRatingSort)
-              .map(item => (
-                <div className='inner-card-feed' key={item._id}>
-                  <RatingCardComponent item={item} />
-                  {role === 'Admin' ? (
-                    <Button
-                      className='add-button'
-                      onClick={() => onDeleteRating(item._id)}
-                    >
-                      DELETE
-                    </Button>
-                  ) : (
-                    ''
-                  )}
-                </div>
-              ))}
-        </div>
-        <NoRatingDiv>
-          {rating.length === 0 && <img src={catmeme} alt='cat meme' />}
-        </NoRatingDiv>
+        {/* <div className={rating.length > 0 ? 'inner-div-feed' : 'no-ratings'}> */}
+        {rating.length === 0 ? (
+          <div>
+            <img src={catmeme} alt='cat meme' />{' '}
+          </div>
+        ) : (
+          rating
+            .slice(0, mapCount)
+            .filter(onRatingFilter)
+            .sort(onRatingSort)
+            .map(item => (
+              <div className='inner-card-feed' key={item._id}>
+                <RatingCardComponent item={item} />
+                {role === 'Admin' ? (
+                  <Button
+                    className='add-button'
+                    onClick={() => onDeleteRating(item._id)}
+                  >
+                    DELETE
+                  </Button>
+                ) : (
+                  ''
+                )}
+              </div>
+            ))
+        )}
+        {/* </div> */}
       </RatingContainer>
       <LoadMoreContainer>
         <Button className='load-more-button' onClick={getMoreRatings}>

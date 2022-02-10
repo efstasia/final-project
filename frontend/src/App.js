@@ -19,13 +19,15 @@ import { user } from './reducers/user';
 import { ratings } from './reducers/ratings';
 
 import { Header } from './components/Header';
-import { StartPage } from './components/StartPage';
-import SignupPage from './components/SignupPage';
-import { UserPage } from './components/UserPage';
+
 import { Footer } from './components/Footer';
 import { Burger } from './components/Burger/Burger';
 import { Menu } from './components/Menu/Menu';
-import { MainFeed } from './components/MainFeed';
+
+import { MainFeed } from './pages/MainFeed';
+import { StartPage } from './pages/StartPage';
+import SignupPage from './pages/SignupPage';
+import { UserPage } from './pages/UserPage';
 
 const reducer = combineReducers({
   user: user.reducer,
