@@ -151,13 +151,7 @@ if (process.env.RESET_DB) {
   const seedDatabase = async () => {
     // the seed isn't necessary when creating a new database. seed it once and then only run npm run dev
     await Rating.deleteMany({});
-
-    // loop through all of the companies in our json file
-    Rating.forEach(item => {
-      // for each of the company, we're creating new data that will be shown. new company for each item in the data
-      const newRating = new Rating(item);
-      newRating.save();
-    });
+    await User.deleteMany({});
   };
   seedDatabase();
 }

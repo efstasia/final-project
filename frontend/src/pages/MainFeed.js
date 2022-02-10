@@ -117,33 +117,33 @@ export const MainFeed = props => {
 
       <RatingContainer>
         <AddRating canWrite={props.canWrite} />
-        {/* <div className={rating.length > 0 ? 'inner-div-feed' : 'no-ratings'}> */}
-        {rating.length === 0 ? (
-          <div>
-            <img src={catmeme} alt='cat meme' />{' '}
-          </div>
-        ) : (
-          rating
-            .slice(0, mapCount)
-            .filter(onRatingFilter)
-            .sort(onRatingSort)
-            .map(item => (
-              <div className='inner-card-feed' key={item._id}>
-                <RatingCardComponent item={item} />
-                {role === 'Admin' ? (
-                  <Button
-                    className='add-button'
-                    onClick={() => onDeleteRating(item._id)}
-                  >
-                    DELETE
-                  </Button>
-                ) : (
-                  ''
-                )}
-              </div>
-            ))
-        )}
-        {/* </div> */}
+        <div className={rating.length > 0 ? 'inner-div-feed' : 'no-ratings'}>
+          {rating.length === 0 ? (
+            <div>
+              <img src={catmeme} alt='cat meme' />{' '}
+            </div>
+          ) : (
+            rating
+              .slice(0, mapCount)
+              .filter(onRatingFilter)
+              .sort(onRatingSort)
+              .map(item => (
+                <div className='inner-card-feed' key={item._id}>
+                  <RatingCardComponent item={item} />
+                  {role === 'Admin' ? (
+                    <Button
+                      className='add-button'
+                      onClick={() => onDeleteRating(item._id)}
+                    >
+                      DELETE
+                    </Button>
+                  ) : (
+                    ''
+                  )}
+                </div>
+              ))
+          )}
+        </div>
       </RatingContainer>
       <LoadMoreContainer>
         <Button className='load-more-button' onClick={getMoreRatings}>
