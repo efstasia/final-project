@@ -20,7 +20,6 @@ import {
 
 // signed in content, first page you see
 export const MainFeed = props => {
-  const [validationError, setValidationError] = useState(null); // setValidationErrors needs to be connected to backend error msg
   const [data, setData] = useState([]);
   const [sortType, setSortType] = useState('ratings');
   const [mapCount, setMapCount] = useState(9);
@@ -84,7 +83,7 @@ export const MainFeed = props => {
       method: 'DELETE',
     };
 
-    fetch(`http://localhost:8080/feed/${ratingId}`, options)
+    fetch(API_URL(`feed/${ratingId}`), options)
       .then(res => res.json())
       .then(data => {
         dispatch(ratings.actions.deleteRating(data._id));
@@ -119,9 +118,9 @@ export const MainFeed = props => {
         <AddRating canWrite={props.canWrite} />
         <div className={rating.length > 0 ? 'inner-div-feed' : 'no-ratings'}>
           {rating.length === 0 ? (
-            <div>
+            <NoRatingDiv>
               <img src={catmeme} alt='cat meme' />{' '}
-            </div>
+            </NoRatingDiv>
           ) : (
             rating
               .slice(0, mapCount)
@@ -150,9 +149,6 @@ export const MainFeed = props => {
           LOAD MORE
         </Button>
       </LoadMoreContainer>
-
-      {/* this handles the error messages */}
-      {validationError !== null && <p>{validationError}</p>}
     </div>
   );
 };

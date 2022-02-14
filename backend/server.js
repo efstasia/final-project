@@ -10,7 +10,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/final-project';
+const mongoUrl = process.env.MONGO_URL || 'https://minechies.herokuapp.com/';
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = Promise;
 mongoose.set('useCreateIndex', true); //added due to deprecation error 26868
@@ -203,7 +203,7 @@ app.post('/feed', async (req, res) => {
 });
 
 // --- GET ratings to feed --- //
-app.get('/feed', authenticateUser);
+//app.get('/feed', authenticateUser);
 app.get('/feed', async (req, res) => {
   const main = await Rating.find({}).sort({ createdAt: -1 }).populate('user');
 
@@ -316,7 +316,7 @@ app.delete('/userpage/:userRatingId', async (req, res) => {
 
 // --- signup --- //
 app.post('/signup', async (req, res) => {
-  const { username, password, email, firstName, lastName } = req.body; // role
+  const { username, password, email, firstName, lastName, role } = req.body;
 
   try {
     const salt = bcrypt.genSaltSync(); // this creates a randomizer to randomize the password string
@@ -331,6 +331,7 @@ app.post('/signup', async (req, res) => {
       firstName,
       lastName,
       password: bcrypt.hashSync(password, salt), // the "salt" passes the randomizer to the password
+      role,
     }).save();
 
     res.status(201).json({
@@ -341,6 +342,7 @@ app.post('/signup', async (req, res) => {
         email: newUser.email,
         firstName: newUser.firstName,
         lastName: newUser.lastName,
+        role: newUser.role,
       },
       success: true,
     });
@@ -378,12 +380,6 @@ app.post('/signup', async (req, res) => {
     } else if (lastName === '') {
       res.status(400).json({
         message: 'Validation failed: provide last name',
-        response: error,
-        success: false,
-      });
-    } else {
-      res.status(400).json({
-        message: 'Validation failed: please provide username and password',
         response: error,
         success: false,
       });

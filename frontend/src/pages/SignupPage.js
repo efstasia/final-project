@@ -51,7 +51,6 @@ const SignupPage = () => {
       .then(data => {
         if (data.success) {
           batch(() => {
-            console.log(data.response);
             dispatch(user.actions.setUserId(data.response.userId));
             dispatch(user.actions.setUsername(data.response.username));
             dispatch(user.actions.setAccessToken(data.response.accessToken));
@@ -91,7 +90,6 @@ const SignupPage = () => {
       .then(data => {
         if (data.success) {
           batch(() => {
-            console.log(data.response);
             dispatch(user.actions.setUserId(data.response.userId));
             dispatch(user.actions.setUsername(data.response.username));
             dispatch(user.actions.setFirstName(data.response.firstName));

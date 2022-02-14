@@ -95,9 +95,7 @@ export const UserPage = () => {
         }
         return res.json();
       })
-      .then(data => dispatch(user.actions.setImage(data.response.imageUrl)))
-
-      .catch(error => {});
+      .then(data => dispatch(user.actions.setImage(data.response.imageUrl)));
   };
 
   useEffect(() => {
