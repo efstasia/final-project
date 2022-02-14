@@ -85,26 +85,29 @@ export const AddRating = () => {
           <Button onClick={handleInputClose} className='toggle-button'>
             <i className='fas fa-times'></i>
           </Button>
-          <label htmlFor='restaurant'>Restaurant</label>
+          <label htmlFor='restaurant'>Restaurant*</label>
           <input
+            required
             type='text'
             value={restaurantName}
             onChange={event => setRestaurantName(event.target.value)}
           />
-          <label htmlFor='ratingText'>Rating text</label>
+          <label htmlFor='ratingText'>Rating text*</label>
           <textarea
+            required
             rows='4'
             cols='50'
             value={input}
             onChange={event => setInput(event.target.value)}
           ></textarea>
-          <label htmlFor='rating'>rating 1-10</label>
+          <label htmlFor='rating'>rating 1-10*</label>
           <select
+            required
             id='rating'
             value={selectRating}
             onChange={event => setSelectRating(event.target.value)}
           >
-            <option>choose rating here</option>
+            <option required>choose rating here*</option>
             <option value='1'>1</option>
             <option value='2'>2</option>
             <option value='3'>3</option>
@@ -118,11 +121,12 @@ export const AddRating = () => {
           </select>
           <label htmlFor='category'>category</label>
           <select
+            required
             id='category'
             value={selectCategory}
             onChange={event => setSelectCategory(event.target.value)}
           >
-            <option>choose category here</option>
+            <option required>choose category here*</option>
             <option value='Hamburger'>Hamburger</option>
             <option value='Sushi'>Sushi</option>
             <option value='Pizza'>Pizza</option>
@@ -130,9 +134,10 @@ export const AddRating = () => {
             <option value='Other'>Other</option>
           </select>
 
-          <label htmlFor='radio-buttons'>Would you recommend?</label>
+          <label htmlFor='radio-buttons'>Would you recommend?*</label>
           <label htmlFor='yes'>yes</label>
           <input
+            required
             id='radio-buttons'
             type='radio'
             name='recommend'
@@ -141,13 +146,14 @@ export const AddRating = () => {
           />
           <label htmlFor='no'>no</label>
           <input
+            required
             id='radio-buttons'
             type='radio'
             name='recommend'
             value='no'
             onChange={event => setRadioInput(event.target.value)}
           />
-
+          <p>*required fields</p>
           <AddButtonContainer>
             <Button type='submit'>ADD RATING</Button>
           </AddButtonContainer>

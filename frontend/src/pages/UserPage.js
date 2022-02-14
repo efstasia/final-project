@@ -16,6 +16,7 @@ import {
   UserpageTitle,
   UserpageContainer,
   RatingHeaderText,
+  InputWrapper,
 } from '../styles/Styles';
 
 export const UserPage = () => {
@@ -96,6 +97,7 @@ export const UserPage = () => {
         return res.json();
       })
       .then(data => dispatch(user.actions.setImage(data.response.imageUrl)));
+    setEditImage(false);
   };
 
   useEffect(() => {
@@ -151,6 +153,52 @@ export const UserPage = () => {
   return (
     <div>
       <UserpageTitle>Welcome, {firstName}! This is your profile.</UserpageTitle>
+      {canWrite && (
+        <InputWrapper className='user-info-edit'>
+          <Form onSubmit={onChangeUserInfo}>
+            <label htmlFor='username'>change username</label>
+            <input
+              id='username'
+              type='text'
+              defaultValue={userInfoEdit.username}
+              onChange={event =>
+                setUserInfoEdit({
+                  ...userInfoEdit,
+                  username: event.target.value,
+                })
+              }
+            />
+            <label htmlFor='first-name'>change first name</label>
+            <input
+              type='text'
+              id='first-name'
+              defaultValue={userInfoEdit.firstName}
+              onChange={event =>
+                setUserInfoEdit({
+                  ...userInfoEdit,
+                  firstName: event.target.value,
+                })
+              }
+            />
+            <label htmlFor='last-name'>last name</label>
+            <input
+              id='last-name'
+              type='text'
+              defaultValue={userInfoEdit.lastName}
+              onChange={event =>
+                setUserInfoEdit({
+                  ...userInfoEdit,
+                  lastName: event.target.value,
+                })
+              }
+            />
+            <Button type='submit' onClick={onChangeUserInfo}>
+              SUBMIT
+            </Button>
+            <Button onClick={handleEditClose}>CLOSE</Button>
+          </Form>
+        </InputWrapper>
+      )}
       <ProfileContainer>
         <div className='grid-wrapper'>
           <div className='image-grid'>
@@ -183,44 +231,7 @@ export const UserPage = () => {
           </Button>
         </EditImageDiv>
       )}
-      {canWrite && (
-        <Form onSubmit={onChangeUserInfo}>
-          <label htmlFor='username'>change username</label>
-          <input
-            id='username'
-            type='text'
-            defaultValue={userInfoEdit.username}
-            onChange={event =>
-              setUserInfoEdit({ ...userInfoEdit, username: event.target.value })
-            }
-          />
-          <label htmlFor='first-name'>change first name</label>
-          <input
-            type='text'
-            id='first-name'
-            defaultValue={userInfoEdit.firstName}
-            onChange={event =>
-              setUserInfoEdit({
-                ...userInfoEdit,
-                firstName: event.target.value,
-              })
-            }
-          />
-          <label htmlFor='last-name'>last name</label>
-          <input
-            id='last-name'
-            type='text'
-            defaultValue={userInfoEdit.lastName}
-            onChange={event =>
-              setUserInfoEdit({ ...userInfoEdit, lastName: event.target.value })
-            }
-          />
-          <Button type='submit' onClick={onChangeUserInfo}>
-            SUBMIT
-          </Button>
-          <Button onClick={handleEditClose}>CLOSE</Button>
-        </Form>
-      )}
+
       <RatingHeaderText>YOUR PERSONAL RATINGS</RatingHeaderText>
       <UserpageContainer>
         <div className='inner-div'>

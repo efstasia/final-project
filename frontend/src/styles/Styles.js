@@ -168,6 +168,10 @@ export const InputWrapper = styled.div`
     left: 90%;
   }
 
+  .user-info-edit {
+
+  }
+
   @media (max-width:768px) {
     .add-button {
       left: 0;
