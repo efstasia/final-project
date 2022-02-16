@@ -3,10 +3,5 @@
   "version": "1.0.0",
   "scripts": {
     "postinstall": "npm install --prefix backend"
-  },
-  "dependencies": {
-    "moment": "^2.29.1",
-    "styled-react-modal": "^3.0.0",
-    "sweetalert2": "^11.3.10"
   }
 }

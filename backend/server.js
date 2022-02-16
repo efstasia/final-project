@@ -10,7 +10,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost/final-project';
+const mongoUrl =
+  process.env.MONGO_URL || 'https://https://minechies.herokuapp.com/';
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = Promise;
 mongoose.set('useCreateIndex', true); //added due to deprecation error 26868
@@ -171,7 +172,7 @@ const authenticateUser = async (req, res, next) => {
 };
 
 // --- POST to feed --- //
-//app.post('/feed', authenticateUser);
+app.post('/feed', authenticateUser);
 app.post('/feed', async (req, res) => {
   const {
     ratingText,
@@ -203,7 +204,7 @@ app.post('/feed', async (req, res) => {
 });
 
 // --- GET ratings to feed --- //
-//app.get('/feed', authenticateUser);
+app.get('/feed', authenticateUser);
 app.get('/feed', async (req, res) => {
   const main = await Rating.find({}).sort({ createdAt: -1 }).populate('user');
 
