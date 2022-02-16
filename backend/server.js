@@ -10,8 +10,7 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const mongoUrl =
-  process.env.MONGO_URL || 'https://https://minechies.herokuapp.com/';
+const mongoUrl = process.env.MONGO_URL || 'MONGO_URL';
 mongoose.connect(mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.Promise = Promise;
 mongoose.set('useCreateIndex', true); //added due to deprecation error 26868
