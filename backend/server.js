@@ -7,6 +7,7 @@ import multer from 'multer';
 import cloudinaryFramework from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import dotenv from 'dotenv';
+import listEndpoints from 'express-list-endpoints';
 
 dotenv.config();
 
@@ -169,6 +170,10 @@ const authenticateUser = async (req, res, next) => {
     res.status(400).json({ response: error, success: false });
   }
 };
+
+app.get('/endpoints', (req, res) => {
+  res.send(listEndpoints(app));
+});
 
 // --- POST to feed --- //
 app.post('/feed', authenticateUser);
