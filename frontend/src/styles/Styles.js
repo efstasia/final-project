@@ -83,6 +83,18 @@ export const StartPageContainer = styled.div`
       }
       .div4 img {
         width: 64%;
+        margin: auto;
+      }
+    }
+    @media (max-width: 481px) {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      align-items: center;
+
+      .div1 img {
+        width: 100%;
+        margin: auto;
       }
     }
   }
